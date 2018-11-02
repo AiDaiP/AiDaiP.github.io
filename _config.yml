@@ -1,0 +1,28 @@
+title: AiDai
+description: My Personal Blog
+author: AiDai
+logo: /AiDaiP.github.io/static/img/head.jpg
+github: https://github.com/codeasashu
+about: Were it to benefit my country I would lay down my life; What then is risk to me? 
+
+baseurl: "https://aidaip.github.io/"
+url: "https://aidaip.github.io"
+
+allowsearch: true
+
+disqus_shortname: aboutashu
+google_analytics: UA-72862926-1
+
+share:
+  twitter_username: \#
+  fb_appid: 000000000000
+
+
+enableTags: true
+tagarray: []
+
+paginate: 20
+per_page: 20
+paginate_path: "/page:num/"
+markdown: kramdown
+gems: [jekyll-paginate, jekyll-gist]
