@@ -2,7 +2,7 @@
 # ========================================================================================
 
 # IMPORTANT: Set the URL of your site.
-# Set to https://<username>.github.io when hosting on GitHub Pages
+# Set to https://aidaip.github.io when hosting on GitHub Pages
 # (unless you are using a custom domain).
 # url:https://aidaip.github.io
 
@@ -23,7 +23,7 @@ title:                 AiDai
 
 # A short description (~150 chars) of the page used for the meta description tag.
 # Can use markdown, but no more than one paragraph (enforced by `>`)
-description::               Were it to benefit my country I would lay down my life;What then is risk to me?
+description:               Were it to benefit my country I would lay down my life;What then is risk to me?
 
 # A shorter description for the sidebar.
 tagline:               >
