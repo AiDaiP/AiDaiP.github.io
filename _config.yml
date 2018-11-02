@@ -11,7 +11,7 @@ email:3524505602@qq.com
 description: > # this means to ignore newlines until "baseurl:"
 AiDai, 3524505602@qq.com
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site
+url: "http://yourdomain.com" # the base hostname & protocol for your site
 twitter_username: AiDai
 github_username:  AiDai
 
