@@ -1,65 +1,93 @@
-# Site
-title: Halve
-description: Stylish, Two-Column Jekyll Theme
+# Welcome to Jekyll!
+#
+# This config file is meant for settings that affect your whole blog, values
+# which you are expected to set up once and rarely need to edit after that.
+# For technical reasons, this file is *NOT* reloaded automatically when you use
+# 'jekyll serve'. If you change this file, please restart the server process.
+
+# Site settings
+title: Yummy Theme # ex. I m Chuan
+name: Your Name # ex. DONGChuan
+email: my_email_address@lalala.com
+location: My location # ex. Nice, France
+company: MyCompany
+company_url: my_company_website
+github_url: my_github_url # ex. https://github.com/AiDaiP
+github_username: # ex. DONGChuan
+description: description_of_your_web_site
+favicon: favicon.png # Image must be in assets/images
+repository: github_username/github_username.github.io # ex. DONGChuan/DONGChuan.github.io
+
+# The base hostname & protocol for your site
+# For local test, please use http://localhost:4000
+# For production, use your github page url. ex. http://dongchuan.github.io
 url: <https://aidaip.github.io/> 
-logo: halve.png                                       # Site logo
-locale: en_US
 
-# Left Block Images
-background:
-  homepage: images/home.png                           # this image will be shown on homepage's left block
-  post-list: images/unsplash-image-10.jpg             # this image will be shown on post list page
-  default-post: images/unsplash-gallery-image-3.jpg   # this image will be shown when post's front matter doesn't specify any image
+## Gem
+gems:
+  - jekyll-paginate
+  - jekyll-geo-pattern
+  - rouge
+  - kramdown
+  - jekyll-github-metadata
 
-# Jekyll
-permalink:          /:title/
-markdown:           kramdown
-highlighter:        rouge
+# Build settings
+markdown: kramdown
+highlighter: rouge
+lsi:         false
+excerpt_separator: "\n\n"
+
+source:      .
+destination: ./_site
+
+quiet:    false
+defaults: []
+
 kramdown:
-  auto_ids:         true
-  footnote_nr:      1
-  entity_output:    as_char
-  toc_levels:       1..6
-  enable_coderay:   false
-sass:
-  sass_dir:         assets/_sass
-  style:            compressed
+  input: GFM
+  enable_coderay: true
+
+# Disque
+disque: my_disque_settings # ex. httpdongchuangithubio.disqus.com
+
+# Pagination
+paginate: 10
+paginate_path: 'page:num'
+
+# Navigation. If you do not like these modules, just remove them :D
+navs:
+  -
+    href: /
+    label: Home
+
+  -
+    href: /open-source
+    label: Open-Source
+
+  -
+    href: /blog
+    label: Blog
+
+  -
+    href: /bookmark
+    label: Bookmark
+
+  -
+    href: /about
+    label: About
+
+# Sidebar to show popular repo
+side_bar_repo_limit: 5 # Number of repos to show
 
 # Google Analytics
-#google-analytics: UA-XXXXX-Y
+analytics :
+  provider : google
+  google :
+      tracking_id : 'tracking_id'  # ex. UA-72165600-X
 
-# Social Links
-#email:             email
-#google.plus:        username
-twitter:            username
-#facebook:           username
-github:             username
-stackoverflow:     123456/username   from a "http://stackoverflow.com/users/123456/username" link
-#linkedin:          username
-#xing:              username
-#instagram:          username
-#lastfm:            username
-#tumblr:            username
-#pinterest:         username
-#foursquare:        username
-#steam:              username
-#dribbble:          username
-#youtube:           username
-#soundcloud:        username
-#weibo:             username
-#flickr:            username
-#codepen:           username
-#keybase:           username
-#xmpp:              username@server.com
-#hackernews:        username
-behance:           username
 
-# Gems
-gems:
-  - jekyll-feed
-  - jekyll-sitemap
-  - jekyll-gist
-
-# Exclude list
-include: [_pages]
-exclude: [README.md, Gemfile, Gemfile.lock, _site, src, vendor, CNAME, LICENSE, Rakefile, .sass-cache, .DS_Store]
+# For about.html. Fell free to create your own!
+skill_software_keywords: [Java, C, C++, Qt, Python, MySQL, Oracle, SQLite, PL/SQL, Design Patterns]
+skill_j2ee_keywords: [Spring, Struct, Hibernet, MyBatis, JSP]
+skill_web_keywords: [HTML, CSS, JS, JQuery, Ajax, AngularJS, NodeJS, ExpressJS, MongoDB, Redis, PHP, Symfony, Boostrap]
+skill_mobile_app_keywords: [Android, Sketch UI Desgin]
