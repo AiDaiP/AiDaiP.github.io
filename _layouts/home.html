@@ -1,20 +1,50 @@
 ---
-# Copyright (c) 2018 Florian Klampfer <https://qwtel.com/>
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-layout: default
+layout: compress
 ---
-
-{{ content }}
+<!DOCTYPE html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if (IE 7)&!(IEMobile)]><html class="no-js lt-ie9 lt-ie8"><![endif]-->
+<!--[if (IE 8)&!(IEMobile)]><html class="no-js lt-ie9"><![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"><!--<![endif]-->
+<head>
+    {% include head.html %}
+</head>
+<body>
+    {% include nav.html %}
+    <!-- Header -->
+    <header class="header flex" role="banner">
+        <div class="container animated fadeIn">
+            <div class="row">
+                    <a href="{{ site.url }}">
+                        <img src="{{ site.logo }}" class="img-circle zoombtn animated rotateIn">
+                    </a>
+                    <h3 class="title">
+                        <a class="zoombtn" href="{{ site.url }}">
+                        	<p style="font-size:1.2rem;font-weight:300">{{ site.title }}</p>
+			            </a>
+                    </h3>
+                    <hr class="hr-line">
+                    <h3 class="title">
+                        <a href="{{ site.url }}">
+                        	<p style="font-size:1rem;font-weight:300">{{ site.bio }}</p>
+			            </a>
+                    </h3>
+                    {% include social-links.html %}
+                  <hr class="hr-line">
+                  <h3 class="title">
+                         <a class="btn zoombtn" href="{{ site.url }}/about">
+                         About
+                         </a>
+                         <a class="btn zoombtn" href="{{ site.url }}/posts">
+                         Posts
+                         </a>
+                         <a class="btn zoombtn" href="{{ site.url }}/projects">
+                         Projects
+                         </a>
+                 </h3>
+            </div>
+        </div>
+    </header>
+    {% include scripts.html %}
+</body>
+</html>
