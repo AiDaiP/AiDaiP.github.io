@@ -4,7 +4,7 @@
 layout: about
 
 # The title of the page.
-title: About
+title: AiDai
 
 # Write a short (~150 characters) description of each blog post.
 # This description is used to preview the page on search engines, social media, etc.
