@@ -1,18 +1,28 @@
-# Jekyll template
-Light and beautiful blog style template for jekyll
+# Project Pages
 
-[![Gitter](https://badges.gitter.im/nikrich/jekyll-slender-template.svg)](https://gitter.im/nikrich/jekyll-slender-template?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-[![Twitter](https://img.shields.io/badge/Twitter-@slender_rich-blue.svg?style=flat)](https://twitter.com/slender_rich)
+Project Pages is Jekyll Template specifically geared towards collaborative science. For more information, click [here](https://github.com/projectpages/project-pages/wiki/).
 
-![preview](http://i.imgur.com/UzW9sxd.jpg)
+# Nav Bar Jumbles
 
-## Demo
-Find a demo [here](http://nikrich.github.io/jekyll-wing-template/#)
+If you have seemingly random pages popping up on your Nav Bar recently, this is due to the fact that GitHub/Jekyll changed a fundemental rule they used to render pages. 
 
-## Contributing
+## CAUSE:
+It used to be that if a markdown file didn't have `---` frontmatter at the beginning, it wasn't rendered as a page. This was changed very recently (like in the last 2 days) so that every markdown file anywhere no matter what gets rendered as a page.  
 
-1. Clone the repo
-2. Checkout the dev branch ( Do not work directly on master )
-3. Use ```jekyll serve``` to run the project
-4. Make your changes and test
-5. Submit a pull request
+## FIX:
+
+1) Go to:
+
+`project-pages/plugin/projector/` or `yourreponame/plugin/projector/` and delete the `README.md` file. This can be done graphically for the non-Git-savvy by simply going to your:
+
+GitHub account -> Your Profile -> Repositories -> Project-Pages/Your Repo -> Plugin -> projector 
+
+and clicking on the files, then clicking on the "thrash can / delete this file" icon on the top right corner of the file.
+
+2) Go to:
+
+`project-pages/css/theme/` or `yourreponame/css/theme/` and delete the `README.md` file. This can be done graphically for the non-Git-savvy by simply going to your:
+
+GitHub account -> Your Profile -> Repositories -> Project-Pages/Your Repo -> Plugin -> projector 
+
+and clicking on the files, then clicking on the "thrash can / delete this file" icon on the top right corner of the file.
