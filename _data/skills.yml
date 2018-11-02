@@ -1,28 +1,28 @@
 -   id: javascript
     descr: javascript    
-    xp: 6
+    xp: 0
 -   id: css
     descr: css
     color: teal
-    xp: 7
+    xp: 0
 -   id: c#
     descr: c#    
-    xp: 3
+    xp: 0
 -   id: angular
     descr: angularjs    
-    xp: 8
+    xp: 0
 -   id: java
     descr: java    
-    xp: 5
+    xp: 0
 -   id: sass
     descr: sass    
-    xp: 4
+    xp: 0
 -   id: jquery
     descr: jquery    
-    xp: 3
+    xp: 0
 -   id: node.js
     descr: node.js 
-    xp: 2
+    xp: 0
 -   id: php
     descr: php
-    xp: 4
+    xp: 0
