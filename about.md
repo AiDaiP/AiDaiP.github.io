@@ -1,9 +1,8 @@
 ---
-layout: page
-title: "About"
-description: "Why use Project Pages?"
-header-img: "img/home-bg.jpg"
+title: About
+permalink: /about/
 ---
 
-Project Pages is a research blog tool that allows you to quickly show your latest results to an advisor, collaborators or your mom.
-	
+<p class="heavy-title"><a href="http://github.com/thinker3197/Ink">Ink</a> is a simple & minimalistic theme for <a href="http://jekyllrb.com">Jekyll</a>, a static site generator.</p>
+
+>Designed and developed by [@thinker3197](https://github.com/thinker3197).
