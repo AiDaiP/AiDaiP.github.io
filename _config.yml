@@ -1,28 +1,20 @@
-title: AiDai
-description: My Personal Blog
-author: AiDai
-logo: /AiDaiP.github.io/static/img/head.jpg
-github: https://github.com/codeasashu
-about: Were it to benefit my country I would lay down my life; What then is risk to me? 
+# Welcome to Jekyll!
+#
+# This config file is meant for settings that affect your whole blog, values
+# which you are expected to set up once and rarely need to edit after that.
+# For technical reasons, this file is *NOT* reloaded automatically when you use
+# 'jekyll serve'. If you change this file, please restart the server process.
 
-baseurl: "https://aidaip.github.io/"
-url: "https://aidaip.github.io"
+# Site settings
+title: The Dude
+email: your-email@domain.com
+description:  Write an awesome description for your new site here. You can edit this
+              line in _config.yml. It will appear in your document head meta (for
+              Google search results) and in your feed.xml site description.
+baseurl: "/jekyll-wing-template" # the subpath of your site, e.g. /blog
+url: "http://yourdomain.com" # the base hostname & protocol for your site
+twitter_username: jekyllrb
+github_username:  jekyll
 
-allowsearch: true
-
-disqus_shortname: aboutashu
-google_analytics: UA-72862926-1
-
-share:
-  twitter_username: \#
-  fb_appid: 000000000000
-
-
-enableTags: true
-tagarray: []
-
-paginate: 20
-per_page: 20
-paginate_path: "/page:num/"
+# Build settings
 markdown: kramdown
-gems: [jekyll-paginate, jekyll-gist]
