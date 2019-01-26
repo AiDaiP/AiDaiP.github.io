@@ -29,59 +29,9 @@
    8048b47:	90                   	nop
   ```
 
-  strings_not_equal应该是个判断字符串是否相等的函数，前面两个push是这个函数的传入实参，查看`0x80497c0` 是`Public speaking is very easy.`，eax应该是输入的字符串。
+  strings_not_equal判断字符串是否相等的函数，前面两个push是这个函数的传入实参，查看`0x80497c0` 是`Public speaking is very easy.`，eax应该是输入的字符串。
 
   <explode_bomb>就是炸了
-
-  看一眼strings_not_equal
-
-  ```assembly
-  08049030 <strings_not_equal>:
-   8049030:	55                   	push   %ebp
-   8049031:	89 e5                	mov    %esp,%ebp
-   8049033:	83 ec 0c             	sub    $0xc,%esp
-   8049036:	57                   	push   %edi
-   8049037:	56                   	push   %esi
-   8049038:	53                   	push   %ebx
-   8049039:	8b 75 08             	mov    0x8(%ebp),%esi
-   804903c:	8b 7d 0c             	mov    0xc(%ebp),%edi
-   804903f:	83 c4 f4             	add    $0xfffffff4,%esp
-   8049042:	56                   	push   %esi
-   8049043:	e8 d0 ff ff ff       	call   8049018 <string_length>
-   8049048:	89 c3                	mov    %eax,%ebx
-   804904a:	83 c4 f4             	add    $0xfffffff4,%esp
-   804904d:	57                   	push   %edi
-   804904e:	e8 c5 ff ff ff       	call   8049018 <string_length>
-   8049053:	39 c3                	cmp    %eax,%ebx
-   8049055:	74 09                	je     8049060 <strings_not_equal+0x30>
-   8049057:	b8 01 00 00 00       	mov    $0x1,%eax
-   804905c:	eb 21                	jmp    804907f <strings_not_equal+0x4f>
-   804905e:	89 f6                	mov    %esi,%esi
-   8049060:	89 f2                	mov    %esi,%edx
-   8049062:	89 f9                	mov    %edi,%ecx
-   8049064:	80 3a 00             	cmpb   $0x0,(%edx)
-   8049067:	74 14                	je     804907d <strings_not_equal+0x4d>
-   8049069:	8d b4 26 00 00 00 00 	lea    0x0(%esi,%eiz,1),%esi
-   8049070:	8a 02                	mov    (%edx),%al
-   8049072:	3a 01                	cmp    (%ecx),%al
-   8049074:	75 e1                	jne    8049057 <strings_not_equal+0x27>
-   8049076:	42                   	inc    %edx
-   8049077:	41                   	inc    %ecx
-   8049078:	80 3a 00             	cmpb   $0x0,(%edx)
-   804907b:	75 f3                	jne    8049070 <strings_not_equal+0x40>
-   804907d:	31 c0                	xor    %eax,%eax
-   804907f:	8d 65 e8             	lea    -0x18(%ebp),%esp
-   8049082:	5b                   	pop    %ebx
-   8049083:	5e                   	pop    %esi
-   8049084:	5f                   	pop    %edi
-   8049085:	89 ec                	mov    %ebp,%esp
-   8049087:	5d                   	pop    %ebp
-   8049088:	c3                   	ret    
-   8049089:	8d 76 00             	lea    0x0(%esi),%esi
-   
-  ```
-
-  strings_not_equal判断两个字符串是否相等
 
   如果相等跳转到8048b43，不相等调用<explode_bomb>爆炸。
 
