@@ -643,6 +643,6 @@
 
   答案是`4 2 6 3 1 5`
 
-  ![1](C:\Users\wdbbw\Desktop\1.png)
+  ![1](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/2019-1-25-CSAPP-Bomb%20Lab/1.png)
 
   搞完了，没有真香
