@@ -78,6 +78,7 @@
    8049087:	5d                   	pop    %ebp
    8049088:	c3                   	ret    
    8049089:	8d 76 00             	lea    0x0(%esi),%esi
+   
   ```
 
   strings_not_equal判断两个字符串是否相等
