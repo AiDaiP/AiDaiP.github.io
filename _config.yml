@@ -278,7 +278,7 @@ titles_from_headings:
 
 kramdown:
   footnote_backlink:   '&#x21a9;&#xfe0e;'
-  math_engine:         latex
+  math_engine:         mathjax
   math_engine_opts:
     preview:           true
     preview_as_code:   true
