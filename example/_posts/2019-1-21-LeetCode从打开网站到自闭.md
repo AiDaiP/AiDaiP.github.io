@@ -573,5 +573,122 @@
 
   
 
+* #### 463. Island Perimeter
 
+  You are given a map in form of a two-dimensional integer grid where 1 represents land and 0 represents water.
 
+  Grid cells are connected horizontally/vertically (not diagonally). The grid is completely surrounded by water, and there is exactly one island (i.e., one or more connected land cells).
+
+  The island doesn't have "lakes" (water inside that isn't connected to the water around the island). One cell is a square with side length 1. The grid is rectangular, width and height don't exceed 100. Determine the perimeter of the island.
+
+   
+
+  **Example:**
+
+  ```
+  Input:
+  [[0,1,0,0],
+   [1,1,1,0],
+   [0,1,0,0],
+   [1,1,0,0]]
+  
+  Output: 16
+  
+  Explanation: The perimeter is the 16 yellow stripes in the image below:
+  ```
+
+  ![island](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/LeetCode/island.png)
+
+  对每一格的四边分别处理就完事了
+
+  ```c++
+  class Solution 
+  {
+  public:
+      int islandPerimeter(vector<vector<int>>& grid) 
+      {
+          int m = grid.size();
+          int n = grid[0].size();
+          int res = 0;
+          for (int i = 0; i < m; i++) 
+          {
+              for (int j = 0; j < n; j++)
+              {
+                  if (grid[i][j] == 1) 
+                  {
+                  	if (j == 0 || grid[i][j - 1] == 0) 
+                  	    res++;
+                  	if (i == 0 || grid[i - 1][j] == 0) 
+                  	    res++;
+                  	if (j == n - 1 || grid[i][j + 1] == 0)
+                  	    res++;
+                  	if (i == m - 1 || grid[i + 1][j] == 0) 
+                   	   res++;
+                  }
+              }
+          }
+          return res;
+      }
+  };
+  ```
+
+  
+
+* #### 237. Delete Node in a Linked List
+
+  Write a function to delete a node (except the tail) in a singly linked list, given only access to that node.
+
+  Given linked list -- head = [4,5,1,9], which looks like following:
+
+  ![img](https://assets.leetcode.com/uploads/2018/12/28/237_example.png)
+
+   
+
+  **Example 1:**
+
+  ```
+  Input: head = [4,5,1,9], node = 5
+  Output: [4,1,9]
+  Explanation: You are given the second node with value 5, the linked list should become 4 -> 1 -> 9 after calling your function.
+  ```
+
+  **Example 2:**
+
+  ```
+  Input: head = [4,5,1,9], node = 1
+  Output: [4,5,9]
+  Explanation: You are given the third node with value 1, the linked list should become 4 -> 5 -> 9 after calling your function.
+  ```
+
+   
+
+  **Note:**
+
+  - The linked list will have at least two elements.
+  - All of the nodes' values will be unique.
+  - The given node will not be the tail and it will always be a valid node of the linked list.
+  - Do not return anything from your function.
+
+  把下一个节点的值和next指针赋给被删除的节点就完事了
+
+  ```c++
+  /**
+   * Definition for singly-linked list.
+   * struct ListNode {
+   *     int val;
+   *     ListNode *next;
+   *     ListNode(int x) : val(x), next(NULL) {}
+   * };
+   */
+  class Solution 
+  {
+  public:
+      void deleteNode(ListNode* node) 
+      {
+          node->val = node->next->val;
+          node->next = node->next->next;
+      }
+  };
+  ```
+
+  
