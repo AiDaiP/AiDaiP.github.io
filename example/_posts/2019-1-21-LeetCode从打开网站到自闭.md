@@ -692,3 +692,93 @@
   ```
 
   
+
+* #### 206. Reverse Linked List
+
+  Reverse a singly linked list.
+
+  **Example:**
+
+  ```
+  Input: 1->2->3->4->5->NULL
+  Output: 5->4->3->2->1->NULL
+  ```
+
+  **Follow up:**
+
+  A linked list can be reversed either iteratively or recursively. Could you implement both？
+
+  * 迭代
+
+    三个指针分别指向前节点，当前节点，后节点，遍历链表，使当前节点的next指针指向前节点，前节点指针指向当前节点，然后当前节点和后节点分别向下一节点移动。
+
+    ```c++
+    /**
+     * Definition for singly-linked list.
+     * struct ListNode {
+     *     int val;
+     *     ListNode *next;
+     *     ListNode(int x) : val(x), next(NULL) {}
+     * };
+     */
+    class Solution 
+    {
+    public:
+        ListNode* reverseList(ListNode* head) 
+        {
+            if (head == NULL)
+            {
+                return NULL;
+            }
+            
+            ListNode *curNode = head;
+            ListNode *preNode = nullptr;
+            ListNode *nextNode = head->next;
+            while (nextNode != nullptr)
+            {
+                curNode->next = preNode;
+                preNode = curNode;
+                curNode = nextNode;
+                nextNode = curNode->next;
+    
+            }
+            curNode->next = preNode;
+            return curNode;
+        }
+    };
+    ```
+
+  * 递归
+
+    从后向前翻转，每次使当前节点的下一节点的next指针指向当前节点，再把当前节点的next指针设为null
+
+    ```c++
+    /**
+     * Definition for singly-linked list.
+     * struct ListNode {
+     *     int val;
+     *     ListNode *next;
+     *     ListNode(int x) : val(x), next(NULL) {}
+     * };
+     */
+    class Solution
+    {
+    public:
+        ListNode* reverseList(ListNode* head) 
+        {
+            if (head == NULL || head->next == NULL)
+            {
+                return head;
+            }
+            
+            ListNode *curNode = head;
+            ListNode *p = reverseList(curNode->next);
+            curNode->next->next = curNode;
+            curNode->next = NULL;
+            return p;
+        }
+    };
+    
+    ```
+
+    
