@@ -1,12 +1,12 @@
-# CSAPP-Cache Lab(A)
+# CSAPP-Cache Lab
 
-* ####Part A 缓存模拟器
+* #### Part A 缓存模拟器
 
   实现一个缓存模拟器，读取给定的 trace 文件，输出对应的hit，miss，eviction次数
 
   
 
-  * #####cache的数据结构
+  * ##### cache的数据结构
 
     ![1](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/cache%20lab/1.png)
 
@@ -54,7 +54,7 @@
     }
     ```
 
-  * #####判断是否命中
+  * ##### 判断是否命中
 
     命中需要满足两个条件
 
@@ -80,7 +80,7 @@
 
     
 
-  * #####判断组是否已满
+  * ##### 判断组是否已满
 
     遍历所有行，只要有一行有效位为0则该组未满。
 
@@ -100,7 +100,7 @@
 
     若满则返回-1，未满则返回该行索引
 
-  * #####load，store，modify
+  * ##### load，store，modify
 
     ```c
     void load(Cache *cache, int set_index, int tag, int verbose) 
@@ -189,7 +189,7 @@
     }
     ```
 
-  * #####读取trace文件
+  * ##### 读取trace文件
 
     ```c
     void read_file(int s, int E, int b, char* file, Cache* cache, int verbose) 
@@ -235,7 +235,7 @@
     }
     ```
 
-  * #####main函数
+  * ##### main函数
 
     main函数需要读取命令参数，使用getopt实现
 
@@ -537,7 +537,7 @@
 
   
 
-  - #####矩阵转置
+  -  ##### 矩阵转置
 
     ```c
     for (int i = 0; i < M; i++)
@@ -551,7 +551,7 @@
 
     
 
-  - #####32 * 32
+  -  ##### 32 * 32
 
     ![3](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/cache%20lab/3.png)
 
@@ -591,7 +591,7 @@
         }
     ```
 
-  - #####64*64
+  -  ##### 64*64
 
     ![5](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/cache%20lab/5.png)
 
@@ -691,7 +691,7 @@
         }
     ```
 
-  - #####61\*67
+  -  ##### 61\*67
 
     非对称矩阵，相差4行不一定冲突，直接分块
 
