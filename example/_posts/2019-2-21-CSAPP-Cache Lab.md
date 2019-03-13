@@ -525,7 +525,7 @@
 
     
 
-* ####Part B 矩阵转制优化
+* #### Part B 矩阵转制优化
 
   编写一个函数，计算给定矩阵的转置，最小化模拟缓存中的未命中数
 
@@ -537,7 +537,7 @@
 
   
 
-  -  ##### 矩阵转置
+  - ##### 矩阵转置
 
     ```c
     for (int i = 0; i < M; i++)
@@ -551,7 +551,7 @@
 
     
 
-  -  ##### 32 * 32
+  - ##### 32 * 32
 
     ![3](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/cache%20lab/3.png)
 
@@ -591,7 +591,7 @@
         }
     ```
 
-  -  ##### 64*64
+  - ##### 64*64
 
     ![5](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/cache%20lab/5.png)
 
@@ -691,7 +691,7 @@
         }
     ```
 
-  -  ##### 61\*67
+  - ##### 61\*67
 
     非对称矩阵，相差4行不一定冲突，直接分块
 
