@@ -4,7 +4,7 @@
 
 我就是饿死，死外面，从这跳下去，也不会用IDA pro
 
-* phase_1 
+* #### phase_1 
 
   ```assembly
   08048b20 <phase_1>:
@@ -39,7 +39,7 @@
 
 
 
-* phase_2
+* #### phase_2
 
   ```assembly
   08048b48 <phase_2>:
@@ -103,7 +103,7 @@
 
   
 
-* phase_3
+* #### phase_3
 
   ```assembly
   08048b98 <phase_3>:
@@ -206,7 +206,7 @@
   | 字母       | q    | b    | b    | k    | o    | t    | v    | b    |
   | 第二个数字 | 777  | 214  | 755  | 251  | 160  | 458  | 780  | 524  |
 
-* phase_4
+* #### phase_4
 
   ```assembly
   08048ce0 <phase_4>:
@@ -328,7 +328,7 @@
 
   
 
-* phase_5
+* #### phase_5
 
   ```assembly
   08048d2c <phase_5>:
@@ -413,7 +413,7 @@
 
   
 
-* phase_6
+* #### phase_6
 
   ```assembly
   08048d98 <phase_6>:
