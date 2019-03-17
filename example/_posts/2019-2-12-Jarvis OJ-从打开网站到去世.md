@@ -361,11 +361,11 @@
 
 * ####  [XMAN]level3
 
-   ![21](C:\Users\wdbbw\Desktop\21.png)
+   ![21](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/Jarvis%20OJ/21.png)
 
   开了NX，给出libc，考虑ret2libc
 
-  ![22](C:\Users\wdbbw\Desktop\22.png)
+  ![22](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/Jarvis%20OJ/22.png)
 
   read处存在溢出
 
@@ -398,6 +398,7 @@
   r.recvuntil("Input:\n")
   r.sendline(payload2)
   r.interactive()
+  #CTF{d85346df5770f56f69025bc3f5f1d3d0}
   ```
 
   
