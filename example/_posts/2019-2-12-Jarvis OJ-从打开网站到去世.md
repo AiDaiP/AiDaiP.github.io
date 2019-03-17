@@ -1,6 +1,4 @@
-# Jarvis OJ-从打开网站到双手离开键盘
-
-在Jarvis OJ上随便玩了玩
+# Jarvis OJ-从打开网站到去世
 
 * #### FindKey
 
