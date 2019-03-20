@@ -26,17 +26,17 @@
 
 * 寻址方式
 
-   Intel语法的指令格式是segreg： [base+index*scale+disp]
+   Intel语法的指令格式是segreg： [base+index*scale+disp]
 
    AT&T 的格式是%segreg：disp(base,index,scale) 
 
-| Intel 语法                                 | AT&T 语法                                  |
-| ------------------------------------------ | ------------------------------------------ |
-| Instr foo,segreg： [base+index*scale+disp] | instr %segreg： disp(base,index,scale),foo |
-| [eax]                                      | (%eax)                                     |
-| [eax + _variable]                          | _variable(%eax)                            |
-| [eax*4 + _array]                           | _array(,%eax,4)                            |
-| [ebx + eax*8 + _array]                     | _array(%ebx,%eax,8)                        |
+   | Intel 语法                                 | AT&T 语法                                  |
+   | ------------------------------------------ | ------------------------------------------ |
+   | Instr foo,segreg： [base+index*scale+disp] | instr %segreg： disp(base,index,scale),foo |
+   | [eax]                                      | (%eax)                                     |
+   | [eax + _variable]                          | _variable(%eax)                            |
+   | [eax*4 + _array]                           | _array(,%eax,4)                            |
+   | [ebx + eax*8 + _array]                     | _array(%ebx,%eax,8)                        |
 
 * 操作码的前缀和后缀
 
