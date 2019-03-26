@@ -216,12 +216,58 @@
   * 将int型x转为float
   * 最大操作数：30
 
+  ```c
+  unsigned float_i2f(int x) 
+  {
+      unsigned shiftLeft=0;
+      unsigned afterShift, tmp, flag;
+      unsigned absX=x;
+      unsigned sign=0;
+      if (x == 0) 
+     		return 0;
+      if (x < 0)
+      {
+          sign = 0x80000000;
+          absX = -x;
+      }
+      afterShift = absX;
+      while (1)
+      {
+          tmp=afterShift;
+          afterShift <<= 1;
+          shiftLeft++;
+          if (tmp & 0x80000000) break;
+      }
+      if ((afterShift & 0x01ff)>0x0100)
+          flag = 1;
+      else if ((afterShift & 0x03ff)==0x0300)
+          flag = 1;
+      else
+          flag = 0;
+      return sign + (afterShift>>9) + ((159-shiftLeft)<<23) + flag;
+  }
+  ```
+
   
 
 * float_twice
   * 输入浮点数f，返回2f
   * 最大操作数：30
 
+  ```c
+  unsigned float_twice(unsigned uf) 
+  {
+      unsigned f = uf;
+      if ((f & 0x7F800000) == 0) 
+      {
+          f = ((f & 0x007FFFFF) << 1) | (0x80000000 & f);
+      }
+      else if ((f & 0x7F800000) != 0x7F800000)
+      {
+          f = f + 0x00800000;
+      }
+      return f;
+  }
+  ```
 
-
-有几个不会，看完书再做
+  
