@@ -1,18 +1,12 @@
 # links section data
-- last_name: Name 1
-  first_name:
-  desc: CEO
-  website: https://www.google.com
-  email: ceo@google.com
+- last_name: Cai
+  first_name: YX
+  desc: 蔡佬
+  website: https://cyx0706.github.io/
+  email: 
 
-- last_name: Donate
-  first_name: Jalpc
-  desc: Support Jalpc
-  website: http://www.jarrekk.com/donate/
-  email: me@jarrekk.com
-
-- last_name: LN
-  first_name: FN
-  desc: COO
-  website: https://github.com
-  email: coo@google.com
+- last_name: Xu
+  first_name: KX
+  desc: xkxnb
+  website: https://blog.iostream.site/
+  email: 
