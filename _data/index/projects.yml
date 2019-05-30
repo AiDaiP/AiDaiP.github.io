@@ -3,7 +3,7 @@
 # Suggest projects' img be located at '/static/assets/img/landing', and edit following img items.
 - name: GitHub
   i18n: GitHub
-  gh_user: AiDai
+  gh_user: AiDaiP
   repo: GitHub
   img: /static/assets/img/landing/github.png
   desc: My GitHub
