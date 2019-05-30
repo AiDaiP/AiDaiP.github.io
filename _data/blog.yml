@@ -4,19 +4,19 @@
 
 # edit following lines to custom your blog page, make sure name is the same as href but capitalized first letter(except HTML)
 - name: CTF
-  href: /CTF/
+  href: /ctf/
 
 - name: Pwn
-  href: /Pwn/
+  href: /pwn/
 
 - name: Reverse
-  href: /Reverse/
+  href: /reverse/
 
 - name: Crypto
-  href: /Crypto/
+  href: /crypto/
 
 - name: Misc
-  href: /Misc/
+  href: /misc/
 
 - name: Life
   href: /life/
