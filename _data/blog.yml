@@ -6,11 +6,8 @@
 - name: CTF
   href: /ctf/
 
-- name: Pwn
-  href: /pwn/
-
-- name: Reverse
-  href: /reverse/
+- name: Binary
+  href: /binary/
 
 - name: Crypto
   href: /crypto/
@@ -20,7 +17,7 @@
 
 - name: Cetus
   href: /cetus/
-  
+
 - name: Life
   href: /life/
 

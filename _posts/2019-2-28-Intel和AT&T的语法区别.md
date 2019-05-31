@@ -1,3 +1,14 @@
+---
+layout: post
+title:  "Intel和AT&T的语法区别"
+date:   2019-2-28
+desc: ""
+keywords: ""
+categories: [Binary]
+tags: [assembly]
+icon: icon-html
+---
+
 # Intel和AT&T的语法区别
 
 记录一下Intel和AT&T的语法区别，防止脑残
