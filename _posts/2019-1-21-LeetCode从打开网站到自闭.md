@@ -1,3 +1,14 @@
+---
+layout: post
+title:  "LeetCode从打开网站到自闭"
+date:   2019-1-21
+desc: ""
+keywords: ""
+categories: [Misc]
+tags: [LeetCode]
+icon: icon-html
+---
+
 # LeetCode从打开网站到自闭
 
 * #### 1. Two Sum
@@ -596,8 +607,6 @@
   
   Explanation: The perimeter is the 16 yellow stripes in the image below:
   ```
-
-  ![island](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/LeetCode/island.png)
 
   对每一格的四边分别处理就完事了
 
