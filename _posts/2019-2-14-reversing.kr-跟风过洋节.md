@@ -13,11 +13,11 @@ icon: icon-html
 
 跟风过洋节
 
-![1](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/reversing.kr/1.jpg)
+![1](https://raw.githubusercontent.com/AiDaiP/images/master/reversing.kr/1.jpg)
 
 * #### Easy_CrackMe
 
-  ![2](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/reversing.kr/2.png)
+  ![2](https://raw.githubusercontent.com/AiDaiP/images/master/reversing.kr/2.png)
 
   四段拼起来就完事了
 
@@ -31,7 +31,7 @@ icon: icon-html
   Find the Name when the Serial is 5B134977135E7D13
   ```
 
-  ![3](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/reversing.kr/3.png)
+  ![3](https://raw.githubusercontent.com/AiDaiP/images/master/reversing.kr/3.png)
 
   输入的name转化为16进制后每位与16，32，48异或，得到的值储存在v13，输入的serial储存在v9，v9与v13比较。
 
@@ -55,7 +55,7 @@ icon: icon-html
   ex) 00401000
   ```
 
-  ![4](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/reversing.kr/4.png)
+  ![4](https://raw.githubusercontent.com/AiDaiP/images/master/reversing.kr/4.png)
 
   单步发现在这窗口弹出，俺寻思这就是入口点
 
@@ -77,33 +77,33 @@ icon: icon-html
 
   播放器只能播放一分钟，绕过这个限制就可以得到flag
 
-  ![5](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/reversing.kr/5.png)
+  ![5](https://raw.githubusercontent.com/AiDaiP/images/master/reversing.kr/5.png)
 
   先查一波字符串，看看有没有和一分钟有关系的
 
   定位下断点
 
-  ![6](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/reversing.kr/6.png)
+  ![6](https://raw.githubusercontent.com/AiDaiP/images/master/reversing.kr/6.png)
 
   59秒时断
 
-  ![8](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/reversing.kr/8.png)
+  ![8](https://raw.githubusercontent.com/AiDaiP/images/master/reversing.kr/8.png)
 
   向上翻找跳转，这有个和0xEA60比较的，俺寻思这是600000毫秒
 
   把0040456B的改成jmp再跑一遍
 
-  ![9](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/reversing.kr/9.png)
+  ![9](https://raw.githubusercontent.com/AiDaiP/images/master/reversing.kr/9.png)
 
   出现新的弹窗
 
   重新跑一遍，在004045B2断，然后单步，找到弹窗位置
 
-  ![10](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/reversing.kr/10.png)
+  ![10](https://raw.githubusercontent.com/AiDaiP/images/master/reversing.kr/10.png)
 
   向上找跳转，改成jmp，再跑一遍
 
-  ![7](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/reversing.kr/7.png)
+  ![7](https://raw.githubusercontent.com/AiDaiP/images/master/reversing.kr/7.png)
 
   `LIstenCare`
 
@@ -111,7 +111,7 @@ icon: icon-html
 
 * #### ImagePrc
 
-  ![11](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/reversing.kr/11.png)
+  ![11](https://raw.githubusercontent.com/AiDaiP/images/master/reversing.kr/11.png)
 
   这玩意应该是画完图之后比较
 
@@ -125,35 +125,35 @@ icon: icon-html
 
   
 
-  ![14](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/reversing.kr/14.png)
+  ![14](https://raw.githubusercontent.com/AiDaiP/images/master/reversing.kr/14.png)
 
-  ![13](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/reversing.kr/13.png)
+  ![13](https://raw.githubusercontent.com/AiDaiP/images/master/reversing.kr/13.png)
 
   定位到`Correct!`看一下
 
-  ![15](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/reversing.kr/15.png)
+  ![15](https://raw.githubusercontent.com/AiDaiP/images/master/reversing.kr/15.png)
 
-  ![16](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/reversing.kr/16.png)
+  ![16](https://raw.githubusercontent.com/AiDaiP/images/master/reversing.kr/16.png)
 
   IDA Pro里看一下，好像没法跳转到这里
 
   俺寻思直接把前面俩jjmp全改成nop不就完事了
 
-  ![17](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/reversing.kr/17.png)
+  ![17](https://raw.githubusercontent.com/AiDaiP/images/master/reversing.kr/17.png)
 
   这题是要找输入的值，出个correct没啥用
 
   继续用OD看
 
-  ![18](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/reversing.kr/18.png)
+  ![18](https://raw.githubusercontent.com/AiDaiP/images/master/reversing.kr/18.png)
 
   在GetDlgItemInt断，输入后步过
 
-  ![19](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/reversing.kr/19.png)
+  ![19](https://raw.githubusercontent.com/AiDaiP/images/master/reversing.kr/19.png)
 
   在这里程序退出
 
-  ![20](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/reversing.kr/20.png)
+  ![20](https://raw.githubusercontent.com/AiDaiP/images/master/reversing.kr/20.png)
 
   再跑一遍，进入40466F看一眼
 
@@ -167,7 +167,7 @@ icon: icon-html
 
   0x100401071 - 0x601605CC = ‭0xA02A0AA6‬
 
-  ![21](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/reversing.kr/21.png)
+  ![21](https://raw.githubusercontent.com/AiDaiP/images/master/reversing.kr/21.png)
 
   `‭2687109798‬`
 
@@ -175,9 +175,9 @@ icon: icon-html
 
 * #### Easy ELF
 
-  ![22](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/reversing.kr/22.png)
+  ![22](https://raw.githubusercontent.com/AiDaiP/images/master/reversing.kr/22.png)
 
-  ![23](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/reversing.kr/23.png)
+  ![23](https://raw.githubusercontent.com/AiDaiP/images/master/reversing.kr/23.png)
 
   ```c
   #include <stdio.h>
@@ -201,17 +201,17 @@ icon: icon-html
 
 * #### CSHOP
 
-  ![24](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/reversing.kr/24.png)
+  ![24](https://raw.githubusercontent.com/AiDaiP/images/master/reversing.kr/24.png)
 
   c#写的，用dnSpy看看
 
-  ![25](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/reversing.kr/25.png)
+  ![25](https://raw.githubusercontent.com/AiDaiP/images/master/reversing.kr/25.png)
 
   这有个大小被设置为0的按钮，那按它一下会发生啥
 
   试试回车能不能按这个按钮
 
-  ![26](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/reversing.kr/26.png)
+  ![26](https://raw.githubusercontent.com/AiDaiP/images/master/reversing.kr/26.png)
 
   输进去试了一下还真是flag
 
@@ -222,7 +222,7 @@ icon: icon-html
 
 
 
-![15](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/reversing.kr-2/15.jpg)
+![15](https://raw.githubusercontent.com/AiDaiP/images/master/reversing.kr-2/15.jpg)
 
 - #### Position
 
@@ -233,21 +233,21 @@ icon: icon-html
   Password is ***p//找了半天Password，它说的其实是Name
   ```
 
-  ![2](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/reversing.kr-2/2.png)
+  ![2](https://raw.githubusercontent.com/AiDaiP/images/master/reversing.kr-2/2.png)
 
   找出Serial对应的Name，Name四位，最后一位是p
 
-  ![1](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/reversing.kr-2/1.png)
+  ![1](https://raw.githubusercontent.com/AiDaiP/images/master/reversing.kr-2/1.png)
 
   sub_401740
 
-  ![3](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/reversing.kr-2/3.png)
+  ![3](https://raw.githubusercontent.com/AiDaiP/images/master/reversing.kr-2/3.png)
 
   读取name和serial，name每一位都是小写字母
 
-  ![4](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/reversing.kr-2/4.png)
+  ![4](https://raw.githubusercontent.com/AiDaiP/images/master/reversing.kr-2/4.png)
 
-  ![5](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/reversing.kr-2/5.png)
+  ![5](https://raw.githubusercontent.com/AiDaiP/images/master/reversing.kr-2/5.png)
 
   name进行位运算，其中两次的运算结果相加储存在v52，该结果与serial对应位比较
 
@@ -307,15 +307,15 @@ icon: icon-html
 
 - #### Direct3D FPS
 
-  ![6](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/reversing.kr-2/6.png)
+  ![6](https://raw.githubusercontent.com/AiDaiP/images/master/reversing.kr-2/6.png)
 
   我说我天天在宿舍打游戏还有人不信，gg
 
-  ![7](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/reversing.kr-2/7.png)
+  ![7](https://raw.githubusercontent.com/AiDaiP/images/master/reversing.kr-2/7.png)
 
   应该是游戏胜利出flag，跟着game clear找判断是否胜利的函数
 
-  ![8](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/reversing.kr-2/8.png)
+  ![8](https://raw.githubusercontent.com/AiDaiP/images/master/reversing.kr-2/8.png)
 
   byte_407028可能是加密后的flag
 
@@ -323,7 +323,7 @@ icon: icon-html
 
   向上找解密函数
 
-  ![9](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/reversing.kr-2/9.png)
+  ![9](https://raw.githubusercontent.com/AiDaiP/images/master/reversing.kr-2/9.png)
 
   这里出现了dword_409194，根据判断胜利的函数可以知道这代表怪物是否存活，v3小于0时，把0赋给dword_409194，显然v3即dword_409190代表怪物血量，这个函数是一个减血函数。
 
@@ -335,9 +335,9 @@ icon: icon-html
 
   运行程序查看byte_409184
 
-  ![10](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/reversing.kr-2/10.png)
+  ![10](https://raw.githubusercontent.com/AiDaiP/images/master/reversing.kr-2/10.png)
 
-  ![11](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/reversing.kr-2/11.png)
+  ![11](https://raw.githubusercontent.com/AiDaiP/images/master/reversing.kr-2/11.png)
 
   ......
 
@@ -356,17 +356,17 @@ icon: icon-html
 
 - #### HateIntel
 
-  ![12](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/reversing.kr-2/12.png)
+  ![12](https://raw.githubusercontent.com/AiDaiP/images/master/reversing.kr-2/12.png)
 
   vars0 + i - 92就是输入的字符串，加密后与byte_3004比较
 
   sub_232C是加密函数
 
-  ![13](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/reversing.kr-2/13.png)
+  ![13](https://raw.githubusercontent.com/AiDaiP/images/master/reversing.kr-2/13.png)
 
   加密循环四次，sub_2494是加密函数
 
-  ![14](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/reversing.kr-2/14.png)
+  ![14](https://raw.githubusercontent.com/AiDaiP/images/master/reversing.kr-2/14.png)
 
   直接爆破
 
@@ -392,5 +392,5 @@ icon: icon-html
 
 
 
-![15](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/reversing.kr-2/15.jpg)
+![15](https://raw.githubusercontent.com/AiDaiP/images/master/reversing.kr-2/15.jpg)
 
