@@ -4,7 +4,7 @@ title:  "Jarvis OJ-从打开网站到去世"
 date:   2019-2-12
 desc: ""
 keywords: ""
-categories: [CTF]
+categories: [Ctf]
 tags: [CTF,JarvisOJ]
 icon: icon-html
 ---
