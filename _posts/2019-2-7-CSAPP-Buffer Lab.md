@@ -1,3 +1,14 @@
+---
+layout: post
+title:  "CSAPP-Buffer Lab"
+date:   2019-2-7
+desc: ""
+keywords: ""
+categories: [Cetus]
+tags: [CSAPP]
+icon: icon-html
+---
+
 # CSAPP-Buffer Lab
 
 * #### Level0: Candle
@@ -45,7 +56,7 @@
 
   `./hex2raw < 0.txt|./bufbomb -u aidai`
 
-  ![0](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/CSAPP-Buffer%20Lab/0.png)
+  ![0](https://raw.githubusercontent.com/AiDaiP/images/master/CSAPP-Buffer%20Lab/0.png)
 
   
 
@@ -92,7 +103,7 @@
   61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 42 8c 04 08 61 61 61 61 b0 b7 f4 67
   ```
 
-  ![1](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/CSAPP-Buffer%20Lab/1.png)
+  ![1](https://raw.githubusercontent.com/AiDaiP/images/master/CSAPP-Buffer%20Lab/1.png)
 
   
 
@@ -144,7 +155,7 @@
   68 9d 8c 04 08 b8 b0 b7 f4 67 89 04 25 00 d1 04 08 c3 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 08 35 68 55
   ```
 
-  ![2](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/CSAPP-Buffer%20Lab/2.png)
+  ![2](https://raw.githubusercontent.com/AiDaiP/images/master/CSAPP-Buffer%20Lab/2.png)
 
   
 
@@ -185,7 +196,7 @@
   68 be 8d 04 08 b8 b0 b7 f4 67 bd 60 35 68 55 c3 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 61 08 35 68 55
   ```
 
-  ![3](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/CSAPP-Buffer%20Lab/3.png)
+  ![3](https://raw.githubusercontent.com/AiDaiP/images/master/CSAPP-Buffer%20Lab/3.png)
 
   
 
@@ -282,4 +293,4 @@
   90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 b8 b0 b7 f4 67 89 e3 83 c3 28 89 dd 68 3a 8e 04 08 c3 98 33 68 55
   ```
 
-  ![4](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/CSAPP-Buffer%20Lab/4.png)
+  ![4](https://raw.githubusercontent.com/AiDaiP/images/master/CSAPP-Buffer%20Lab/4.png)

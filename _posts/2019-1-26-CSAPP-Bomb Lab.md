@@ -1,3 +1,14 @@
+---
+layout: post
+title:  "CSAPP-Bomb Lab"
+date:   2019-1-26
+desc: ""
+keywords: ""
+categories: [Cetus]
+tags: [CSAPP]
+icon: icon-html
+---
+
 # CSAPP-Bomb Lab
 
 刚看到这东西有个大胆的想法，直接IDA pro F5
@@ -594,6 +605,6 @@
 
   答案是`4 2 6 3 1 5`
 
-  ![1](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/2019-1-25-CSAPP-Bomb%20Lab/1.png)
+  ![1](https://raw.githubusercontent.com/AiDaiP/images/master/2019-1-25-CSAPP-Bomb%20Lab/1.png)
 
   搞完了，没有真香

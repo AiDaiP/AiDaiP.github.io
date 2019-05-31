@@ -1,3 +1,14 @@
+---
+layout: post
+title:  "CSAPP-Cache Lab"
+date:   2019-2-21
+desc: ""
+keywords: ""
+categories: [Cetus]
+tags: [CSAPP]
+icon: icon-html
+---
+
 # CSAPP-Cache Lab
 
 * #### Part A 缓存模拟器
@@ -8,7 +19,7 @@
 
   * ##### cache的数据结构
 
-    ![1](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/cache%20lab/1.png)
+    ![1](https://raw.githubusercontent.com/AiDaiP/images/master/cache%20lab/1.png)
 
     valid_bit是行的有效位，tag是标记位，lru表示最近最久未使用，lru越大，越久未使用，需要牺牲行时牺牲lru最大的一行
 
@@ -515,7 +526,7 @@
     
     ```
 
-    ![2](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/cache%20lab/2.png)
+    ![2](https://raw.githubusercontent.com/AiDaiP/images/master/cache%20lab/2.png)
 
     gg，差1
 
@@ -553,7 +564,7 @@
 
   - ##### 32 * 32
 
-    ![3](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/cache%20lab/3.png)
+    ![3](https://raw.githubusercontent.com/AiDaiP/images/master/cache%20lab/3.png)
 
     矩阵一行32个int，数字代表数据储存的组，缓存32组，可以储存8\*32个int，8行填满一个cache，每隔8行出现冲突，造成冲突不命中
 
@@ -593,7 +604,7 @@
 
   - ##### 64*64
 
-    ![5](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/cache%20lab/5.png)
+    ![5](https://raw.githubusercontent.com/AiDaiP/images/master/cache%20lab/5.png)
 
     一行64个int，4行填满一个cache，每隔4行出现冲突，造成冲突不命中
 
@@ -623,7 +634,7 @@
     	}
     ```
 
-    ![6](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/cache%20lab/6.png)
+    ![6](https://raw.githubusercontent.com/AiDaiP/images/master/cache%20lab/6.png)
 
     miss应该在1300以下，1699，gg
 
@@ -716,6 +727,6 @@
         }
     ```
 
-  ![7](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/cache%20lab/7.png)
+  ![7](https://raw.githubusercontent.com/AiDaiP/images/master/cache%20lab/7.png)
 
   
