@@ -1,3 +1,14 @@
+---
+layout: post
+title:  "Jarvis OJ-从打开网站到去世"
+date:   2019-2-12
+desc: ""
+keywords: ""
+categories: [CTF]
+tags: [CTF,JarvisOJ]
+icon: icon-html
+---
+
 # Jarvis OJ-从打开网站到去世
 
 * #### FindKey
@@ -59,15 +70,15 @@
 
   先查找一波看看有没有重要的字符串
 
-  ![1](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/Jarvis%20OJ/1.png)
+  ![1](https://raw.githubusercontent.com/AiDaiP/images/master/Jarvis%20OJ/1.png)
 
   定位到''你赢了''，往上翻可以看到一堆比较，应该是关键函数
 
-  ![2](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/Jarvis%20OJ/2.png)
+  ![2](https://raw.githubusercontent.com/AiDaiP/images/master/Jarvis%20OJ/2.png)
 
   在01021C53断，数据窗口跟随CTF_100_.011977F8
 
-  ![3](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/Jarvis%20OJ/3.png)
+  ![3](https://raw.githubusercontent.com/AiDaiP/images/master/Jarvis%20OJ/3.png)
 
   输入的数据在ebx，eax=ebx
 
@@ -98,11 +109,11 @@
 
 * #### [61dctf]stheasy 
 
-  ![4](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/Jarvis%20OJ/4.png)
+  ![4](https://raw.githubusercontent.com/AiDaiP/images/master/Jarvis%20OJ/4.png)
 
   看一下8049AE0和8049B15
 
-  ![5](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/Jarvis%20OJ/5.png)
+  ![5](https://raw.githubusercontent.com/AiDaiP/images/master/Jarvis%20OJ/5.png)
 
   直接写脚本
 
@@ -121,7 +132,7 @@
 
 * #### DD - Hello
 
-   ![6](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/Jarvis%20OJ/6.png)
+   ![6](https://raw.githubusercontent.com/AiDaiP/images/master/Jarvis%20OJ/6.png)
 
   其他函数都没啥用，俺寻思这是关键函数
 
@@ -145,7 +156,7 @@
 
    页面上只有一个hello world，抓包也没什么用
 
-  ![7](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/Jarvis%20OJ/7.png)
+  ![7](https://raw.githubusercontent.com/AiDaiP/images/master/Jarvis%20OJ/7.png)
 
   扫一下，发现robot.txt
 
@@ -155,7 +166,7 @@
 
   假flag，抓包
 
-  ![8](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/Jarvis%20OJ/8.png)
+  ![8](https://raw.githubusercontent.com/AiDaiP/images/master/Jarvis%20OJ/8.png)
 
   把admin=0改成1得到flag
 
@@ -165,7 +176,7 @@
 
 * #### Login
 
-   ![9](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/Jarvis%20OJ/9.png)
+   ![9](https://raw.githubusercontent.com/AiDaiP/images/master/Jarvis%20OJ/9.png)
 
   改admin没什么用
 
@@ -185,7 +196,7 @@
 
   成功绕过
 
-  ![10](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/Jarvis%20OJ/10.png)
+  ![10](https://raw.githubusercontent.com/AiDaiP/images/master/Jarvis%20OJ/10.png)
 
   `PCTF{R4w_md5_is_d4ng3rous} `
 
@@ -211,7 +222,7 @@
   -----END PUBLIC KEY-----
   ```
 
-  ![11](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/Jarvis%20OJ/11.png)
+  ![11](https://raw.githubusercontent.com/AiDaiP/images/master/Jarvis%20OJ/11.png)
 
   ```
   N = 87924348264132406875276140514499937145050893665602592992418171647042491658461
@@ -476,7 +487,7 @@
 
   64位文件
 
-  ![12](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/Jarvis%20OJ/12.png)
+  ![12](https://raw.githubusercontent.com/AiDaiP/images/master/Jarvis%20OJ/12.png)
 
   在read处溢出，调用callsystem
 
@@ -491,7 +502,7 @@
   r.interactive()
   ```
 
-  ![13](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/Jarvis%20OJ/13.png)
+  ![13](https://raw.githubusercontent.com/AiDaiP/images/master/Jarvis%20OJ/13.png)
 
   `CTF{713ca3944e92180e0ef03171981dcd41}`
 
@@ -499,13 +510,13 @@
 
 * #### [XMAN]level1
 
-  ![14](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/Jarvis%20OJ/14.png)
+  ![14](https://raw.githubusercontent.com/AiDaiP/images/master/Jarvis%20OJ/14.png)
 
   在read处溢出，前面输出buf的地址
 
   没有system函数
 
-  ![15](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/Jarvis%20OJ/15.png)
+  ![15](https://raw.githubusercontent.com/AiDaiP/images/master/Jarvis%20OJ/15.png)
 
   没有开启NX，可以用shellcode
 
@@ -524,7 +535,7 @@
   
   ```
 
-  ![16](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/Jarvis%20OJ/16.png)
+  ![16](https://raw.githubusercontent.com/AiDaiP/images/master/Jarvis%20OJ/16.png)
 
   `CTF{82c2aa534a9dede9c3a0045d0fec8617}`
 
@@ -536,7 +547,7 @@
 
   查找有没有/bin/sh
 
-  ![18](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/Jarvis%20OJ/18.png)
+  ![18](https://raw.githubusercontent.com/AiDaiP/images/master/Jarvis%20OJ/18.png)
 
   可以构造system("/bin/sh") 
 
@@ -553,7 +564,7 @@
   #CTF{1759d0cbd854c54ffa886cd9df3a3d52}
   ```
 
-   ![19](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/Jarvis%20OJ/19.png)
+   ![19](https://raw.githubusercontent.com/AiDaiP/images/master/Jarvis%20OJ/19.png)
 
 * #### [XMAN]level2(x64)
 
@@ -574,11 +585,11 @@
 
 * ####  [XMAN]level3
 
-   ![21](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/Jarvis%20OJ/21.png)
+   ![21](https://raw.githubusercontent.com/AiDaiP/images/master/Jarvis%20OJ/21.png)
 
      开了NX，给出libc，考虑ret2libc
 
-     ![22](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/Jarvis%20OJ/22.png)
+     ![22](https://raw.githubusercontent.com/AiDaiP/images/master/Jarvis%20OJ/22.png)
 
      read处存在溢出
 
@@ -659,9 +670,9 @@
 
 * #### [XMAN]level4
 
-   ![23](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/Jarvis%20OJ/23.png)
+   ![23](https://raw.githubusercontent.com/AiDaiP/images/master/Jarvis%20OJ/23.png)
 
-    ![24](https://raw.githubusercontent.com/AiDaiP/AiDaiP.github.io/master/images/Jarvis%20OJ/24.png)
+    ![24](https://raw.githubusercontent.com/AiDaiP/images/master/Jarvis%20OJ/24.png)
 
    栈溢出，ret2libc
 
