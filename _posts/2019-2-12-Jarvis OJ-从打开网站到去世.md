@@ -487,7 +487,313 @@ icon: icon-html
    #XUSTCTF{19477226185390}
    ```
 
-* 
+* #### 神秘的压缩包
+
+   CRC32爆破
+
+   https://github.com/theonlypwner/crc32
+
+   ```python
+   import itertools
+   import binascii
+   import string
+   
+   class crc32_reverse_class(object):
+       def __init__(self, crc32, length, tbl=string.printable,
+                    poly=0xEDB88320, accum=0):
+           self.char_set = set(map(ord, tbl))
+           self.crc32 = crc32
+           self.length = length
+           self.poly = poly
+           self.accum = accum
+           self.table = []
+           self.table_reverse = []
+   
+       def init_tables(self, poly, reverse=True):
+           # build CRC32 table
+           for i in range(256):
+               for j in range(8):
+                   if i & 1:
+                       i >>= 1
+                       i ^= poly
+                   else:
+                       i >>= 1
+               self.table.append(i)
+           assert len(self.table) == 256, "table is wrong size"
+           # build reverse table
+           if reverse:
+               found_none = set()
+               found_multiple = set()
+               for i in range(256):
+                   found = []
+                   for j in range(256):
+                       if self.table[j] >> 24 == i:
+                           found.append(j)
+                   self.table_reverse.append(tuple(found))
+                   if not found:
+                       found_none.add(i)
+                   elif len(found) > 1:
+                       found_multiple.add(i)
+               assert len(self.table_reverse) == 256, "reverse table is wrong size"
+   
+       def rangess(self, i):
+           return ', '.join(map(lambda x: '[{0},{1}]'.format(*x), self.ranges(i)))
+   
+       def ranges(self, i):
+           for kg in itertools.groupby(enumerate(i), lambda x: x[1] - x[0]):
+               g = list(kg[1])
+               yield g[0][1], g[-1][1]
+   
+       def calc(self, data, accum=0):
+           accum = ~accum
+           for b in data:
+               accum = self.table[(accum ^ b) & 0xFF] ^ ((accum >> 8) & 0x00FFFFFF)
+           accum = ~accum
+           return accum & 0xFFFFFFFF
+   
+       def findReverse(self, desired, accum):
+           solutions = set()
+           accum = ~accum
+           stack = [(~desired,)]
+           while stack:
+               node = stack.pop()
+               for j in self.table_reverse[(node[0] >> 24) & 0xFF]:
+                   if len(node) == 4:
+                       a = accum
+                       data = []
+                       node = node[1:] + (j,)
+                       for i in range(3, -1, -1):
+                           data.append((a ^ node[i]) & 0xFF)
+                           a >>= 8
+                           a ^= self.table[node[i]]
+                       solutions.add(tuple(data))
+                   else:
+                       stack.append(((node[0] ^ self.table[j]) << 8,) + node[1:] + (j,))
+           return solutions
+   
+       def dfs(self, length, outlist=['']):
+           tmp_list = []
+           if length == 0:
+               return outlist
+           for list_item in outlist:
+               tmp_list.extend([list_item + chr(x) for x in self.char_set])
+           return self.dfs(length - 1, tmp_list)
+   
+       def run_reverse(self):
+           # initialize tables
+           self.init_tables(self.poly)
+           # find reverse bytes
+           desired = self.crc32
+           accum = self.accum
+           # 4-byte patch
+           if self.length >= 4:
+               patches = self.findReverse(desired, accum)
+               for patch in patches:
+                   checksum = self.calc(patch, accum)
+                   print 'verification checksum: 0x{0:08x} ({1})'.format(
+                       checksum, 'OK' if checksum == desired else 'ERROR')
+               for item in self.dfs(self.length - 4):
+                   patch = map(ord, item)
+                   patches = self.findReverse(desired, self.calc(patch, accum))
+                   for last_4_bytes in patches:
+                       if all(p in self.char_set for p in last_4_bytes):
+                           patch.extend(last_4_bytes)
+                           print '[find]: {1} ({0})'.format(
+                               'OK' if self.calc(patch, accum) == desired else 'ERROR', ''.join(map(chr, patch)))
+           else:
+               for item in self.dfs(self.length):
+                   if crc32(item) == desired:
+                       print '[find]: {0} (OK)'.format(item)
+   
+   
+   def crc32_reverse(crc32, length, char_set=string.printable,
+                     poly=0xEDB88320, accum=0):
+       obj = crc32_reverse_class(crc32, length, char_set, poly, accum)
+       obj.run_reverse()
+   
+   
+   def crc32(s):
+       return binascii.crc32(s) & 0xffffffff
+   
+   crc = [0x20AE9F17,
+        0xD2D0067E,
+        0x6C53518D,
+        0x80DF4DC3,
+        0x3F637A50,
+        0xBCD9703B]
+   for k in crc:
+       crc32_reverse(k,5)
+   ```
+
+   ```
+   verification checksum: 0x20ae9f17 (OK)
+   [find]: l./rc (OK)
+   [find]: passw (OK)
+   verification checksum: 0xd2d0067e (OK)
+   [find]: "_YWn (OK)
+   [find]: N,tS* (OK)
+   [find]: Rc(R> (OK)
+   [find]: ord:f (OK)
+   [find]: s=8;r (OK)
+   verification checksum: 0x6c53518d (OK)
+   [find]: /8LWp (OK)
+   [find]: CKaS4 (OK)
+   [find]: ~Z-;l (OK)
+   verification checksum: 0x80df4dc3 (OK)
+   [find]: apEwF (OK)
+   verification checksum: 0x3f637a50 (OK)
+   ^Q6w (OK)
+   [find]: \<0Zk (OK)
+   [find]: a-|23 (OK)
+   [find]: }b 3' (OK)
+   verification checksum: 0xbcd9703b (OK)
+   [find]: hyAo5 (OK)
+   
+   password:f~Z-;lapEwF\<0ZkhyAo5
+   XUSTCTF{6ebd0342caa3cf39981b98ee24a1f0ac}
+   ```
+
+* #### 好多盐
+
+   爆破就完事了
+
+   ```python
+   import hashlib
+   password = '''f09ebdb2bb9f5eb4fbd12aad96e1e929 p5Zg6LtD
+   6cea25448314ddb70d98708553fc0928 ZwbWnG0j
+   2629906b029983a7c524114c2dd9cc36 1JE25XOn
+   2e854eb55586dc58e6758cfed62dd865 ICKTxe5j
+   7b073411ee21fcaf177972c1a644f403 0wdRCo1W
+   6795d1be7c63f30935273d9eb32c73e3 EuMN5GaH
+   d10f5340214309e3cfc00bbc7a2fa718 aOrND9AB
+   8e0dc02301debcc965ee04c7f5b5188b uQg6JMcx
+   4fec71840818d02f0603440466a892c9 XY5QnHmU
+   ee8f46142f3b5d973a01079f7b47e81c zMVNlHOr
+   e4d9e1e85f3880aedb7264054acd1896 TqRhn1Yp
+   0fd046d8ecddefc66203f6539cac486b AR5lI2He
+   f6326f02adaa31a66ed06ceab2948d01 Aax2fIPl
+   720ba10d446a337d79f1da8926835a49 ZAOYDPR2
+   06af8bcc454229fe5ca09567a9071e62 hvcECKYs
+   79f58ca7a81ae2775c2c2b73beff8644 TgFacoR3
+   46aaa5a7fef5e250a2448a8d1257e9cf GLYu0NO4
+   2149ac87790dd0fe1b43f40d527e425a 5Xk2O1sG
+   d15a36d8be574ac8fe64689c728c268e aZikhUEy
+   ff7bced91bd9067834e3ad14cc1464cd E7UROqXn
+   8cc0437187caf10e5eda345cb6296252 XPin3mVB
+   5cfcdca4a9cb2985a0b688406617689e nsGqoafv
+   5a7dfa8bc7b5dfbb914c0a78ab2760c6 YC1qZUFR
+   8061d8f222167fcc66569f6261ddd3cc wNgQi615
+   3d8a02528c949df7405f0b48afe4a626 CO2NMusb
+   70651acbc8bd027529bbcccdbf3b0f14 CAXVjFMd
+   a9dbe70e83596f2d9210970236bdd535 TL6sjEuK
+   9ed6ef5780f705ade6845b9ef349eb8f tJ90ibsz
+   4b46fac0c41b0c6244523612a6c7ac4a VTjOSNmw
+   8141e6ecb4f803426d1db8fbeb5686ef lh75cdNC
+   df803949fd13f5f7d7dd8457a673104b V39sEvYX
+   19052cc5ef69f90094753c2b3bbcd41d YwoGExpg
+   cf8591bdccfaa0cdca652f1d31dbd70f pJCLui49
+   66e10e3d4a788c335282f42b92c760a1 NQCZoIhj
+   94c3ae5bcc04c38053106916f9b99bda vOktelLQ
+   e67e88646758e465697c15b1ef164a8d x0hwJGHj
+   84d3d828e1a0c14b5b095bedc23269fb 2HVWe9fM
+   264a9e831c3401c38021ba3844479c3f Cx4og6IW
+   ed0343dec184d9d2c30a9b9c1c308356 g2rqmPkT
+   ad5ba8dc801c37037350578630783d80 pFK2JDT5
+   3f588bedb704da9448e68fe81e42bca6 4ANDOiau
+   970c9cf3cad3dfa7926f53ccaae89421 R6ML7Qy8
+   e0a097b7cceaa7a8949fe039884e4a2d dul2ynqL
+   7df505218102c64b1fe4fa5981ddb6fa jPeoyS57
+   fd4f6043da1f7d5dca993c946ef6cd7c 6p9CwGaY
+   5fe6d99b9a2824949279187c246c9c30 OGQ2J57y
+   135b150ad513a961089bb1c05085a3d9 h0dw1Fro
+   ad6af4fb623b3c51181a371911667fed HbQT4dRz
+   c9fa4b0db317d88e2b10060225e92494 ebVnpMzS
+   d0deab17d115bd6fdce8592bb3667643 bL5zwgvX
+   006f0cb3a422716692f143f28eb0d187 NHXg1Fof
+   ddc125de34da1a6ec0cbe401f147bc8f GDai9Y0n
+   be5052053c5a806e8f56ed64e0d67821 40alyH3w
+   aaf18ac446b8c385c4112c10ae87e7dc ZJQzuIL0
+   a2db20a4b7386dc2d8c30bf9a05ceef7 QnpOlPWH
+   8a4fbc32a3251bb51072d51969ba5d33 rtcbipeq
+   5e35d2c9675ed811880cea01f268e00f i1Hbne6h
+   9da23007699e832f4e9344057c5e0bd3 EtbGpMSW
+   f09233683d05171420f963fc92764e84 fxHoinEe
+   4feabf309c5872f3cca7295b3577f2a8 KymkJXqA
+   9b94da2fa9402a3fdb4ff15b9f3ba4d2 G3Tdr1Pg
+   b3cd8d6b53702d733ba515dec1d770c5 Y71LJWZz
+   6a5b3b2526bb7e94209c487585034534 rIwb4oxt
+   e9728ef776144c25ba0155a0faab2526 e1sOXSb8
+   d41a5e7a98e28d76dbd183df7e3bcb49 36bedvia
+   81d5ebfea6aff129cf515d4e0e5f8360 dDG4qTjW'''
+   
+   password = password.split('\n')
+   for i in password:
+       print(i)
+       pass_md5 = i.split(' ')[0]
+       salt = i.split(' ')[1]
+       for j in range(10000000000):
+           #j = 1234567890
+           md5 = hashlib.md5()
+           md5.update('{FLAG:' + str(j).zfill(10) + '}' + salt)
+           if md5.hexdigest() == pass_md5:
+               print(j)
+               break
+   ```
+
+* #### superexpress 
+
+   ```python
+   import sys
+   key = '****CENSORED***************'
+   flag = 'TWCTF{*******CENSORED********}'
+   
+   if len(key) % 2 == 1:
+       print("Key Length Error")
+       sys.exit(1)
+   
+   n = len(key) / 2
+   encrypted = ''
+   for c in flag:
+       c = ord(c)
+       for a, b in zip(key[0:n], key[n:2*n]):
+           c = (ord(a) * c + ord(b)) % 251
+       encrypted += '%02x' % c
+   
+   print encrypted
+   ```
+
+   若key=xyab
+
+   zip后是[(x,a),(y,b)]
+   加密操作为enc = (xyc + ay + b)%251
+
+   所以无论key的长度为多少，加密的结果一定是(Ac + B)%251  A B小于251
+
+   根据TWCTF爆破出A B，然后解密 
+
+   ```python
+   import string
+   def find_key():
+       for a in range(251):
+           for b in range(251):
+               if (ord("T") * a + b) % 251 == int_enc[0] and (ord("W") * a + b) % 251 == int_enc[1] and (ord("C") * a + b) % 251 == int_enc[2]:
+               	return a, b
+   enc = "805eed80cbbccb94c36413275780ec94a857dfec8da8ca94a8c313a8ccf9"
+   int_enc = []
+   chars = string.printable
+   flag = ''
+   for i in range(0, len(enc), 2):
+       int_enc += [int(enc[i:i + 2], 16)]
+   
+   a, b = find_key()
+   for enc in int_enc:
+       for i in chars:
+           if (ord(i) * a + b) % 251 == enc:
+               flag += chr(ord(i))
+   print(flag)
+   ```
+
+   
 
 * #### Tell Me Something 
 
