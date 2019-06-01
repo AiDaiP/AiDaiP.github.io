@@ -800,6 +800,8 @@ icon: icon-html
 
    给出rsa加密后的key和iv
 
+   给出p的高位
+
    Factoring with High Bits Known
 
    ```python
