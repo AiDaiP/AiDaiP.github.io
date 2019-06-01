@@ -30,7 +30,15 @@ author:  # change following line to your infomation.
     - name: icon-apache
   desc: Were it to benefit my country I would lay down my life;What then is risk to me?  # Describe yourself.
 
-
+# comment
+valine_comment:
+  enable: true
+# app_id
+  leancloud_appid: 03EupvC0xWXlGAK0Sijo73AU-gzGzoHsz
+# app_key
+  leancloud_appkey: 9kFbu6oQTzRucc2aScA92gmK
+# placeholde
+  placeholder: 
 
 # analytics
 ## google analytics
