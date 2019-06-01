@@ -791,6 +791,60 @@ icon: icon-html
            if (ord(i) * a + b) % 251 == enc:
                flag += chr(ord(i))
    print(flag)
+   #TWCTF{Faster_Than_Shinkansen!}
+   ```
+
+* #### Cry
+
+   flag先AES再base64
+
+   给出rsa加密后的key和iv
+
+   Factoring with High Bits Known
+
+   ```python
+   import binascii
+   n = 0x229c6c7ad1db1d76783f0bd9aabdab0af749ec4a57af53eb151d49bd3df89d083763c62cfc4d72e627c8c7d69672324fee3c6038ebf1fc576c15ee3620c95ddbaa04f39d4de32629709ac2ad55972680ab7b147e14bfae37773c462b3c6dd1a8d567ca4ae338d90337e583aaea5ec853a89083362e5cc10ca5e344870b0362897eefd508ea19378f4f6e8ef7aec87a3c226bd94a78a0f730c2ecb6aa9aef85eb3a4e3dc498f9471e538fdcbc0b4eee3075b2241072c1fe7bb004a1ae297af4d0e6a4d3c3fbadf6105afd0c4a97d9f96b80b27dc002f3bae6c3cbd0c3ede67135c30ff5a5cebbb7caae4e1b25ea3cba7eb12526d4b922a3d90edcd3ca73a54a83
+   e2 = 0x10001
+   pbits = 1024
+   p4 = 0xd0e66845c611ec90ee05dc7667cac74cb06042083944ca017fdccf5abe9c25565d36144b1c1c7dad8fde1e0ee778d6d5ed12b57b4c9adf2c0a466aa7278a03bcc26750bcf1a333fa65490a5bd160ff51c85849dc3c45ad696e42
+   kbits = pbits - p4.nbits() 
+   p4 = p4 << kbits 
+   PR.<x> = PolynomialRing(Zmod(n))
+   f = x + p4
+   roots = f.small_roots(X=2^kbits, beta=0.4) 
+   if roots: 
+     p = p4+int(roots[0])
+     assert n % p == 0
+     q = n/int(p)
+     phin = (p-1)*(q-1)
+     d = inverse_mod(e2,phin)
+     print(d)
+     cipher = 0x1889c9dd2e25036121397a86c886c794b083987f03af7ba71084203e22cb4848ddae3e74ce775b4375852c38ff4c3e62b2f22358f7aed0280b47758640627f587ef8d68472df0c354d582868aade4c0254c4e3284842340bcb8d7adea1355e0b722caa868b97832759987576f6007219d1238e0b922f3f658cda50724cc16514521bbbeffad842e2d6b77c37b92d0d5fcc7129637c8923ad7c0ebacbf8d1a873e01daffc6e8a6531a93c33b956ff0b0fdfc36dac756405910dae55e54e36760495783016d5e11ad473c703071396ec800bd1785cb1f3a1f0ee6d97f4513d2730296dbd65e9c84a7bd4d3b3e054906d93b5f58bb18fdde84ce987f845779dbe6e
+     ck = pow(cipher,d,n)
+     ck = hex(int(ck))[2:-1]
+     print ((ck))
+     cipher = 0x88cc37ab2c7193d44c8a211ea5544f2eb50912e46d24f0f8865382e6b8c411213065e00e8c0f9ca6dd98f5fa99048113e5f649c9cb5670e388ec3f9cf1b34ce378cdc3e6667b68c353c552decc3c1a1c6801af6ccc1977210cc4a123d0a5260c68ff180aa8cd83a48eb87bf253fbcede1e01e1c8873ee029876a673618a4665b59adee7c09c72e7f406f82ee2caa96de43e54b7c84800a83f720dbd54ba965dc25f284852f762328ca100f47c1149e811ce556ae7872778650dd87f6da0f7dfec8a97bc2fea14f4360e894e94dcb2b190cfa526b7a432d49617971c77c24f58416bbe6a8c5d11daf1a55c3e05a8fcb6ab04384b4efcd2b526a982ab4c6d43c8
+     civ = pow(cipher,d,n)
+     civ = hex(int(civ))[2:-1]
+     print ((civ))
+     
+   '''
+   5ae424d330bfd1f07954984a769a4e1d
+   70eb30ba8af2eff16fe31eba5defb488
+   '''
+   ```
+
+   ```python
+   import binascii
+   from Crypto.Cipher import AES
+   flag = 'SDO8O44wLIpJegdPY0/VMkPGTtUYFpWdVImiJI42IYE='
+   key = '5ae424d330bfd1f07954984a769a4e1d'
+   iv = '70eb30ba8af2eff16fe31eba5defb488'
+   cipher = AES.new(key.decode('hex'), AES.MODE_CBC, iv.decode('hex'))
+   flag = cipher.decrypt(flag.decode('base64'))
+   print(flag)
+   #aaaaaflag{ok_this_is_a_flag_rsa}
    ```
 
    
