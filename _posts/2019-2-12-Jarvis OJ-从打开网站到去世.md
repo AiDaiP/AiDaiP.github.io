@@ -420,6 +420,8 @@ icon: icon-html
 
   爆破过程就不发上来了
 
+  大佬的wphttp://73spica.tech/blog/tw_mma_ctf_2016_vigenere-cipher/
+
 * #### **BrokenPic**  
 
   ```
