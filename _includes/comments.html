@@ -1,17 +1,14 @@
-{% unless site.duoshuo_shortname
-  or site.disqus_shortname
-  or site.hypercomments_id
-  or site.gentie_productKey
-  or site.duoshuo and site.duoshuo.shortname %}
-{% if site.valine_comment.enable %}
 <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
 <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<div id="comment"></div>
 <script>
-    new Valine({
-        el: '#comments',
-        app_id: '{{ site.valine_comment.leancloud_appid }}',   //这里变量的取值在网站配置文件里_config.yml
-        app_key: '{{ site.valine_comment.leancloud_appkey }}', //这里变量的取值在网站配置文件里_config.yml
-        placeholder:'{{ site.valine_comment.placeholder }}'    //这里变量的取值在网站配置文件里_config.yml
-    });</script>
-{% endif %}
-{% endunless %}
+    var valine = new Valine();
+    valine.init({
+        el:'#comment',
+        appId:'03EupvC0xWXlGAK0Sijo73AU-gzGzoHsz',
+        appKey:'9kFbu6oQTzRucc2aScA92gmK',
+        notify:true,
+        path: '{{ page.url }}',
+        placeholder:'23333333'
+    })
+</script>
