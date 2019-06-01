@@ -420,6 +420,33 @@ icon: icon-html
 
   爆破过程就不发上来了
 
+* #### **BrokenPic**  
+
+  ```
+  42 4D 38 0C 30 00 00 00 00 00 36 00 00 00 28 00 00 00 56 05 00 00 00 03 00 00 01 00 18 00 00 00 00 00 02 0C 30 00 12 0B 00 00 12 0B 00 00 00 00 00 00 00 00 00 00
+  ```
+
+  加上bmp头
+
+  ![25](https://raw.githubusercontent.com/AiDaiP/images/master/Jarvis%20OJ/25.png)
+
+  去掉bmp头然后AES解密，key是PHRACK-BROKENPIC
+
+  ```python
+  from Crypto.Cipher import AES
+  key = 'PHRACK-BROKENPIC'
+  aes = AES.new(key)
+   
+  with open('brokenpic.bmp', 'r') as f:
+      data = f.read()
+      pic = aes.decrypt(data)
+   
+  with open('2.bmp', 'w') as f:
+      f.write(pic)
+  ```
+
+  ![26](https://raw.githubusercontent.com/AiDaiP/images/master/Jarvis%20OJ/26.png)
+
 * #### 影之密码 
 
   密文`8842101220480224404014224202480122 `
@@ -436,7 +463,31 @@ icon: icon-html
 
   `WELLDONE `
 
-  
+* #### 简单ECC概念
+
+   ```python
+   M = 15424654874903
+   a = 16546484
+   G = (6478678675, 5636379357093)
+   K = (0, 0)
+   for i in range(546768):
+       if K == (0, 0):
+           K = G
+           continue
+       x1, y1 = K
+       x2, y2 = G
+       if K != G:
+           p = (y2 - y1) * pow(x2 - x1, M - 2, M)
+       else:
+           p = (3 * x1 * x1 + a) * pow(2 * y1, M - 2, M)
+       x3 = p * p - x1 - x2
+       y3 = p * (x1 - x3) - y1
+       K = (x3 % M, y3 % M)
+   print(K[0]+K[1])
+   #XUSTCTF{19477226185390}
+   ```
+
+* 
 
 * #### Tell Me Something 
 
