@@ -261,7 +261,7 @@ icon: icon-html
 
   得到私钥，解密得到flag
 
-  `PCTF{256b_i5_m3dium`
+  `PCTF{256b_i5_m3dium}`
 
 * #### Extremely hard RSA
 
