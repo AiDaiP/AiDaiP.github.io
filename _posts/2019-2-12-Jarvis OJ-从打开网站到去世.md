@@ -491,12 +491,14 @@ icon: icon-html
 
    CRC32爆破
 
-   https://github.com/theonlypwner/crc32
-
    ```python
+   #crc32_util.py
+   # -*- coding: utf-8 -*-
+   
    import itertools
    import binascii
    import string
+   
    
    class crc32_reverse_class(object):
        def __init__(self, crc32, length, tbl=string.printable,
@@ -547,7 +549,8 @@ icon: icon-html
        def calc(self, data, accum=0):
            accum = ~accum
            for b in data:
-               accum = self.table[(accum ^ b) & 0xFF] ^ ((accum >> 8) & 0x00FFFFFF)
+               accum = self.table[(accum ^ b) & 0xFF] ^ (
+                   (accum >> 8) & 0x00FFFFFF)
            accum = ~accum
            return accum & 0xFFFFFFFF
    
@@ -580,12 +583,9 @@ icon: icon-html
            return self.dfs(length - 1, tmp_list)
    
        def run_reverse(self):
-           # initialize tables
            self.init_tables(self.poly)
-           # find reverse bytes
            desired = self.crc32
            accum = self.accum
-           # 4-byte patch
            if self.length >= 4:
                patches = self.findReverse(desired, accum)
                for patch in patches:
@@ -614,15 +614,18 @@ icon: icon-html
    
    def crc32(s):
        return binascii.crc32(s) & 0xffffffff
-   
+   ```
+
+   ```python
+   from crc32_util import *
    crc = [0x20AE9F17,
         0xD2D0067E,
         0x6C53518D,
         0x80DF4DC3,
         0x3F637A50,
         0xBCD9703B]
-   for k in crc:
-       crc32_reverse(k,5)
+   for i in crc:
+       crc32_reverse(i, 5)
    ```
 
    ```
@@ -847,6 +850,181 @@ icon: icon-html
    flag = cipher.decrypt(flag.decode('base64'))
    print(flag)
    #aaaaaflag{ok_this_is_a_flag_rsa}
+   ```
+
+* #### Complicated Crypto
+
+   CRC32爆破
+
+   ```python
+   from crc32_util import *
+   crc = [0x7C2DF918,
+          0xA58A1926,
+          0x4DAD5967]
+   for i in crc:
+       crc32_reverse(i, 6)
+   ```
+
+   然后出了一堆
+
+   我寻思密码如果不是什么洋文句子没法做了搜一下crc
+
+   ```
+   [find]: _CRC32 (OK)
+   ```
+
+   改char_set再看一下
+
+   ```python
+   from crc32_util import *
+   
+   crc = [0x7C2DF918,
+          0xA58A1926,
+          0x4DAD5967]
+   
+   for i in crc:
+       crc32_reverse(i, 6, char_set=string.letters + string.digits + '_')
+   ```
+
+   ```
+   [find]: _i5_n0 (OK)
+   [find]: t_s4f3 (OK)
+   ```
+
+   根据洋文判断，这俩是密码
+
+   ```
+   _CRC32_i5_n0t_s4f3
+   ```
+
+   解压之后是Vigenere
+
+   给了一堆key，长度为40
+
+   https://guballa.de/vigenere-solver试一下
+
+   ```
+   Clear text using key "yewrutewcybnhhipxoyubjjpqiraaymyoneomtsv"
+   
+   thegetenerecilgerisamethodofthensatingalphamagictextbutsingaseriesofschbycentcaesarnechersbasaconthelettersouumashorditisasticleformoboolyalphabetichodonttutionsoplofwordisvefenerecipherfucha
+   ```
+
+   解出来还是乱的，但是发现里面有一个word，那句话应该是password is，这个word对应的密钥位应该是准确的
+
+   先把解出来的东西按密钥长度分组，顺手把word替换成特殊符号，分组之后找他
+
+   ```python
+   c = 'thegetenerecilgerisamethodofthensatingalphamagictextbutsingaseriesofschbycentcaesarnechersbasaconthelettersouumashorditisasticleformoboolyalphabetichodonttutionsoplof!@#$isvefenerecipherfucha'
+   def devide(i):
+   	cc = ''
+   	while i < len(c):
+   		cc += c[i]
+   		i = i + 40
+   	return cc
+   for i in range(40):
+   	print(devide(i))
+   ```
+
+   ```
+   tpsss
+   hhaao
+   earsp
+   gmntl
+   eaeio
+   tgccf
+   eihl!
+   ncee@
+   etrf#
+   reso$
+   exbri
+   ctams
+   ibsov
+   luabe
+   gtcof
+   esooe
+   rinln
+   intye
+   sghar
+   aaele
+   mslpc
+   eeehi
+   trtap
+   hitbh
+   oeeee
+   dsrtr
+   oosif
+   ffocu
+   tsuhc
+   hcuoh
+   ehmda
+   nbao
+   sysn
+   acht
+   teot
+   inru
+   ntdt
+   gcii
+   aato
+   lein
+   ```
+
+   密钥的7-10位是正确的，ewcy
+
+   在给出的key中找
+
+   YEWCQGEWCYBNHDHPXOYUBJJPQIRAPSOUIYEOMTSV
+
+   ```python
+   from pycipher import Vigenere
+   key = 'YEWCQGEWCYBNHDHPXOYUBJJPQIRAPSOUIYEOMTSV'
+   c = 'rlaxymijgpfppsotowqunncwelfftfqlgnxwzzsgnlwduzmyvcygibbhfbeutnaxuaffsatzmpibfvszqeneyvlatqcnzhkdkhfymnciuzjousyygusfpbldqeokcvpahmszviwdimyfqqjqubzchmpmbgxifbgiqslciyaktbjfclntkspydrywuzwucfm'
+   print(Vigenere(key).decipher(c))
+   #THEVIGENERECIPHERISAMETHODOFENCRYPTINGALPHABETICTEXTBYUSINGASERIESOFDIFFERENTCAESARCIPHERSBASEDONTHELETTERSOFAKEYWORDITISASIMPLEFORMOFPOLYALPHABETICSUBSTITUTIONSOPASSWORDISVIGENERECIPHERFUNNY
+   #vigenere cipher funny
+   ```
+
+   sha1爆破
+
+   ```python
+   import hashlib
+   import string
+   s = "619c20c*a4de755*9be9a8b*b7cbfa5*e8b4365*"
+   chars = string.printable
+   for a in chars:
+       for b in chars:
+           for c in chars:
+               for d in chars:
+                   password = '%s7%s5-%s4%s3?' % (a, b, c, d)
+                   enc = hashlib.sha1(password).hexdigest()
+                   if enc[0:7] == s[0:7] and enc[8:15] == s[8:15] and enc[16:23] == s[16:23]:
+                       print(password)
+   #I7~5-s4F3?
+   ```
+
+   ```
+   Hello World ;-)
+   MD5校验真的安全吗？
+   有没有两个不同的程序MD5却相同呢？
+   如果有的话另一个程序输出是什么呢？
+   解压密码为单行输出结果。
+   
+   Hello World ;-)
+   MD5 check is really safe?
+   There are two different procedures MD5 is the same?
+   If so what is the output of another program?
+   The decompression password is a single-line output.
+   ```
+
+   <http://www.win.tue.nl/hashclash/SoftIntCodeSign/HelloWorld-colliding.exe>  　　<http://www.win.tue.nl/hashclash/SoftIntCodeSign/GoodbyeWorld-colliding.exe> 
+
+   wdnmd查了半天md5相同的程序，我寻思这题是用搜索引擎解密？
+
+   password：Goodbye World :-( 
+
+   下一步Wiener’s attack
+
+   ```
+   flag{W0rld_Of_Crypt0gr@phy}
    ```
 
    
