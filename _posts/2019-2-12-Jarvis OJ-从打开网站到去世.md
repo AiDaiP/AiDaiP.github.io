@@ -387,6 +387,243 @@ icon: icon-html
    #PCTF{sp3ci4l_rsa}
    ```
 
+* #### God Like RSA
+
+   私钥修复
+
+   - given a candidate for `(p mod 16**(t - 1))`, generate all possible candidates for `(p mod 16**t)` (check against mask for prime1)
+   - calculate `q = n * invmod(p, 16**t)` (and check against mask for prime2)
+   - calculate `d = invmod(e, 16**t) * (1 + k * (N - p - q + 1))` (and check against mask for private exponent)
+   - calculate `d_p = invmod(e, 16**t) * (1 + k_p * (p - 1))` (and check against mask for exponent1)
+   - calculate `d_q = invmod(e, 16**t) * (1 + k_q * (q - 1))` (and check against mask for exponent2)
+   - if any of checks failed - check next candidate
+
+   找个脚本改一下
+
+   ```python
+   #!/usr/bin/python
+   #-*- coding:utf-8 -*-
+   
+   import re
+   import pickle
+   from itertools import product
+   from libnum import invmod, gcd
+   
+   def solve_linear(a, b, mod):
+       if a & 1 == 0 or b & 1 == 0:
+           return None
+       return (b * invmod(a, mod)) & (mod - 1)  # hack for mod = power of 2
+   
+   
+   def to_n(s):
+       s = re.sub(r"[^0-9a-f]", "", s)
+       return int(s, 16)
+   
+   
+   def msk(s):
+       cleaned = "".join(map(lambda x: x[-2:], s.split(":")))
+       return msk_ranges(cleaned), msk_mask(cleaned), msk_val(cleaned)
+   
+   
+   def msk_ranges(s):
+       return [range(16) if c == " " else [int(c, 16)] for c in s]
+   
+   
+   def msk_mask(s):
+       return int("".join("0" if c == " " else "f" for c in s), 16)
+   
+   
+   def msk_val(s):
+       return int("".join("0" if c == " " else c for c in s), 16)
+   
+   
+   E = 0x10001
+   
+   N = to_n("""00:db:fa:bd:b1:49:5d:32:76:e7:62:6b:84:79:6e:
+       9f:c2:0f:a1:3c:17:44:f1:0c:8c:3f:3e:3c:2c:60:
+       40:c2:e7:f3:13:df:a3:d1:fe:10:d1:ae:57:7c:fe:
+       ab:74:52:aa:53:10:2e:ef:7b:e0:09:9c:02:25:60:
+       e5:7a:5c:30:d5:09:40:64:2d:1b:09:7d:d2:10:9a:
+       e0:2f:2d:cf:f8:19:8c:d5:a3:95:fc:ac:42:66:10:
+       78:48:b9:dd:63:c3:87:d2:53:8e:50:41:53:43:04:
+       20:33:ea:09:c0:84:15:5e:65:2b:0f:06:23:40:d5:
+       d4:71:7a:40:2a:9d:80:6a:6b""")
+   
+   p_ranges, pmask_msk, pmask_val = msk("""00:  :6 : 1:1 :  :b :0 : 2:c : b:2 :  : a:1 :
+       c :  : 0:  :28:0 :  :cd:  : 8:  :  :20: c:  :
+         : 5:  :9 : c:3 :  :  : a:b :c :3 :  :  :  :
+        f:  :  : f: 1: 1:b :  : c:f : a:  :a :  :  :
+        a:38:  :6 :  """)
+   
+   q_ranges, qmask_msk, qmask_val = msk("""00:e :  :d :2 :6 : 7:  :33:  :46:  : 4:  :  :
+         :5 :  : 4:6 :  : 6:  : e:d :  :  : 9: e:1 :
+         :  :  :  :  :0 :  :  :  :c : 5:  :  :a :0 :
+       6 :  :  :8 :e9:f : f:7 :5 : e:1 :  :  : 1:9 :
+        4:d :e9: 6:  """)
+   
+   _, dmask_msk, dmask_val = msk(""" f:  :  : a: a:9 :e :  : 1: 2:  :  :e :  :1 :
+   3 : 1:  :  :  : a:  :2 :  :  :  :  :  :  :  :
+   9 : a:  :  :  :  :  : 5:c1: 0:b : 3: 2:0 :b0:
+     :c : f:  :f :  :d2:  :  : d:  :1 :  :3 :  :
+     :  :  :0 : 3:  :  : 5:c :  :3 :6 :  :a4:  :
+   4 :  :  :8f:  :  :  :  : a:  : c:5f: 7: 6:  :
+    1:  : b:  : 5:  :84:0 :b : f: 3:  :  : 4: 6:
+     :  : 5:1 :  :d :  : f:  : c:  :  : 5:  :  :
+     :e :f4:b :4 :8e:  :  """)
+   
+   _, dpmask_msk, dpmask_val = msk(""" 9:d : 5:  :c :67:  : 9:  :  :  : d:  :  : 3:
+    f:6 : 0:c :  :6 :ad:  :2 :d :d :  :  :0 :7 :
+     :5 : 6:  : 5:1 :f : d:  : 2:  :  : 2: 3:  :
+   9 :  :  :  :  :67: 3:  :4 : 7:c0: 4:b :c :f :
+     :3 :b : 1""")
+   
+   _, dqmask_msk, dqmask_val = msk("""1 : 9:47:8 :  :  :  : 3:  :  :  :6 :  :  :0 :
+   e :e :8 :  :  :  :  : 1:c :74:  :  :d : 9:3 :
+   5 : e:  : 2:  :7 : 2:c :  :  :  :  :5 :  : 8:
+     :  :c :  : 1:  :a :  : 9: 5:  : 3:  : e:c :
+     :  : 6:  """)
+   
+   
+   def search(K, Kp, Kq, check_level, break_step):
+       max_step = 0
+       cands = [0]
+       for step in range(1, break_step + 1):
+           #print " ", step, "( max =", max_step, ")"
+           max_step = max(step, max_step)
+   
+           mod = 1 << (4 * step)
+           mask = mod - 1
+   
+           cands_next = []
+           for p, new_digit in product(cands, p_ranges[-step]):
+               pval = (new_digit << ((step - 1) * 4)) | p
+   
+               if check_level >= 1:
+                   qval = solve_linear(pval, N & mask, mod)
+                   if qval is None or not check_val(qval, mask, qmask_msk, qmask_val):
+                       continue
+   
+               if check_level >= 2:
+                   val = solve_linear(E, 1 + K * (N - pval - qval + 1), mod)
+                   if val is None or not check_val(val, mask, dmask_msk, dmask_val):
+                       continue
+   
+               if check_level >= 3:
+                   val = solve_linear(E, 1 + Kp * (pval - 1), mod)
+                   if val is None or not check_val(val, mask, dpmask_msk, dpmask_val):
+                       continue
+   
+               if check_level >= 4:
+                   val = solve_linear(E, 1 + Kq * (qval - 1), mod)
+                   if val is None or not check_val(val, mask, dqmask_msk, dqmask_val):
+                       continue
+   
+                   if pval * qval == N:
+                       print "Kq =", Kq
+                       print "pwned"
+                       print "p =", pval
+                       print "q =", qval
+                       p = pval
+                       q = qval
+                       d = invmod(E, (p - 1) * (q - 1))
+                       coef = invmod(p, q)
+   
+                       from Crypto.PublicKey import RSA
+                       print RSA.construct(map(long, (N, E, d, p, q, coef))).exportKey()
+                       quit()
+   
+               cands_next.append(pval)
+   
+           if not cands_next:
+               return False
+           cands = cands_next
+       return True
+   
+   
+   
+   def check_val(val, mask, mask_msk, mask_val):
+       test_mask = mask_msk & mask
+       test_val = mask_val & mask
+       return val & test_mask == test_val
+   
+   
+   for K in range(1, E):
+       if K % 100 == 0:
+           print "checking", K
+       if search(K, 0, 0, check_level=2, break_step=20):
+           print "K =", K
+           break
+   
+   for Kp in range(1, E):
+       if Kp % 1000 == 0:
+           print "checking", Kp
+       if search(K, Kp, 0, check_level=3, break_step=30):
+           print "Kp =", Kp
+           break
+   
+   for Kq in range(1, E):
+       if Kq % 100 == 0:
+           print "checking", Kq
+       if search(K, Kp, Kq, check_level=4, break_step=9999):
+           print "Kq =", Kq
+           break
+   
+   ```
+
+   ```
+   -----BEGIN RSA PRIVATE KEY-----
+   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
+   -----END RSA PRIVATE KEY-----
+   ```
+
    
 
 * #### bbencode 
