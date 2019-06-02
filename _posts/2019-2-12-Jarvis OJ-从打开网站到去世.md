@@ -1307,7 +1307,82 @@ icon: icon-html
    #WUSTCTF{U_r_real33y_m4st3r_0f_math}
    ```
 
-   
+* #### DSA
+
+   ```
+   OpenSSL> sha1 -verify dsa_public.pem -signature packet1/sign1.bin  packet1/message1
+   Verified OK
+   OpenSSL> sha1 -verify dsa_public.pem -signature packet2/sign2.bin  packet2/message2
+   Verified OK
+   OpenSSL> sha1 -verify dsa_public.pem -signature packet3/sign3.bin  packet3/message3
+   Verified OK
+   OpenSSL> sha1 -verify dsa_public.pem -signature packet4/sign4.bin  packet4/message4
+   Verified OK
+   OpenSSL> asn1parse -inform der -in packet1/sign1.bin
+       0:d=0  hl=2 l=  45 cons: SEQUENCE
+       2:d=1  hl=2 l=  21 prim: INTEGER           :8158B477C5AA033D650596E93653C730D26BA409
+      25:d=1  hl=2 l=  20 prim: INTEGER           :165B9DD1C93230C31111E5A4E6EB5181F990F702
+   OpenSSL> asn1parse -inform der -in packet2/sign2.bin
+       0:d=0  hl=2 l=  44 cons: SEQUENCE
+       2:d=1  hl=2 l=  20 prim: INTEGER           :60B9F2A5BA689B802942D667ED5D1EED066C5A7F
+      24:d=1  hl=2 l=  20 prim: INTEGER           :3DC8921BA26B514F4D991A85482750E0225A15B5
+   OpenSSL> asn1parse -inform der -in packet3/sign3.bin
+       0:d=0  hl=2 l=  44 cons: SEQUENCE
+       2:d=1  hl=2 l=  20 prim: INTEGER           :5090DA81FEDE048D706D80E0AC47701E5A9EF1CC
+      24:d=1  hl=2 l=  20 prim: INTEGER           :30EB88E6A4BFB1B16728A974210AE4E41B42677D
+   OpenSSL> asn1parse -inform der -in packet4/sign4.bin
+       0:d=0  hl=2 l=  44 cons: SEQUENCE
+       2:d=1  hl=2 l=  20 prim: INTEGER           :5090DA81FEDE048D706D80E0AC47701E5A9EF1CC
+      24:d=1  hl=2 l=  20 prim: INTEGER           :5E10DED084203CCBCEC3356A2CA02FF318FD4123
+   ```
+
+   3、4 r相同，共享了k
+
+   $s1≡(H(m1)+xr)k−1modqs1≡(H(m1)+xr)k−1modq$
+
+   $s2≡(H(m2)+xr)k−1modqs2≡(H(m2)+xr)k−1modq$
+
+   $s1k≡H(m1)+xrs1k≡H(m1)+xr$
+
+   $s2k≡H(m2)+xrs2k≡H(m2)+xr$
+
+   $k(s1−s2)≡H(m1)−H(m2)modqk(s1−s2)≡H(m1)−H(m2)modq$
+
+   可解出 k
+
+   ```python
+   from Crypto.PublicKey import DSA
+   from hashlib import sha1
+   import gmpy2
+   with open('./dsa_public.pem') as f:
+       key = DSA.importKey(f)
+       y = key.y
+       g = key.g
+       p = key.p
+       q = key.q
+   f3 = open(r"packet3/message3", 'r')
+   f4 = open(r"packet4/message4", 'r')
+   data3 = f3.read()
+   data4 = f4.read()
+   sha = sha1()
+   sha.update(data3)
+   m3 = int(sha.hexdigest(), 16)
+   sha = sha1()
+   sha.update(data4)
+   m4 = int(sha.hexdigest(), 16)
+   s3 = 0x30EB88E6A4BFB1B16728A974210AE4E41B42677D
+   s4 = 0x5E10DED084203CCBCEC3356A2CA02FF318FD4123
+   r = 0x5090DA81FEDE048D706D80E0AC47701E5A9EF1CC
+   ds = s4 - s3
+   dm = m4 - m3
+   k = gmpy2.mul(dm, gmpy2.invert(ds, q))
+   k = gmpy2.f_mod(k, q)
+   tmp = gmpy2.mul(k, s3) - m3
+   x = tmp * gmpy2.invert(r, q)
+   x = gmpy2.f_mod(x, q)
+   print(int(x))
+   #CTF{520793588153805320783422521615148687785086070744}
+   ```
 
    
 
