@@ -164,7 +164,7 @@ icon: icon-html
 
   ```python
   from pwn import *
-  r = process('./speedrun-006)
+  r = process('./speedrun-006')
   context(os='linux', arch='amd64')
   
   s1 = asm("""
