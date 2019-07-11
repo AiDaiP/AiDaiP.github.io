@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "DEF CON CTF 2019-Speedrun"
+title:  "DEFCON CTF 2019-Speedrun"
 date:   2019-7-10
 desc: ""
 keywords: ""
