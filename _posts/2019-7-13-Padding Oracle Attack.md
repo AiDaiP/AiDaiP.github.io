@@ -18,14 +18,7 @@ icon: icon-html
 * #### 条件
 
   1. 攻击者能够获得密文，以及密文对应的IV
-
-  2. 攻击者能够触发密文的解密过程，且能够知道密文的解密结果
-
-     * 密文不能正常解密
-     * 密文可以正常解密但解密结果错误
-     * 密文可以正常解密并且解密结果正确
-
-     可以判断出密文不能正常解密也就是填充不合法即可
+  2. 攻击者能够触发密文的解密过程，且能够知道解密的结果是否符合Padding
 
 * #### 攻击原理
 
@@ -45,7 +38,26 @@ icon: icon-html
 
   * ##### PKCS7Padding
 
-    假设数据长度需要填充n(n>0)个字节才对齐，那么填充n个字节，每个字节都是n;如果数据本身就已经对齐了，则填充一块长度为块大小的数据，每个字节都是块大小。 
+    假设数据长度需要填充n(n>0)个字节才对齐，那么填充n个字节，每个字节都是n;如果数据本身就已经对齐了，则填充一块长度为块大小的数据，每个字节都是块大小。
+
+  * ##### 白给样例
+
+    ```python
+    from Crypto.Cipher import DES
+    from Crypto import Random
+    def encrypt(key, raw):
+        iv = Random.new().read(DES.block_size)
+        cipher = DES.new(key, DES.MODE_CBC, iv)
+        return iv + cipher.encrypt(raw.encode("utf-8"))
+    
+    def decrypt(key, enc):
+        iv = enc[:DES.block_size]
+        cipher = DES.new(key, DES.MODE_CBC, iv)
+        return cipher.decrypt(enc[DES.block_size:]).decode("utf-8")
+    
+    ```
+
+    
 
   * ##### 解密任意明文
 
@@ -71,12 +83,20 @@ icon: icon-html
 
     $C_{i-1}$倒数第二字节与0x2异或可以得到中间值倒数第二字节
 
-    以此类推，得到中间值，中间值与针正的$C_{i-1}$异或得到明文
+    以此类推，得到中间值，中间值与针正的$C_{i-1}$异或得到明文$P_i$
 
-    
+    去掉最后一组密文，只提交第一组到倒数第二组密文，通过构造倒数第三组密文得到倒数第二组密文的明文，以此类推，最终获得全部明文
 
-    
+  * ##### 构造任意明文的密文
 
-    
+    ![5](D:\Ai\GitHub\images\Padding Oracle Attack\5.png)
 
-    
+    我寻思这和解密任意明文里构造合法填充差不多一个意思
+
+    搞出来中间值然后异或就完事了
+
+    从最后一个数据块开始，向前依次生成所需的密文
+
+* #### 防御方法
+
+  俺不让你知道解密的结果是否符合Padding 
