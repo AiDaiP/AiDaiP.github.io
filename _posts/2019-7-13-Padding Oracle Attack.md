@@ -65,9 +65,9 @@ icon: icon-html
 
     若$XOR(C_{i-1}, Dec(C_i))$不符合PKCS7Padding填充规则，则返回解密失败，此时可以构造IV也就是前一组密文来获取中间值
 
-    ![3](D:\Ai\GitHub\images\Padding Oracle Attack\3.png)
+    ![3](https://raw.githubusercontent.com/AiDaiP/images/master/Padding%20Oracle%20Attack/3.png)
 
-    ![1](D:\Ai\GitHub\images\Padding Oracle Attack\1.png)
+    ![1](https://raw.githubusercontent.com/AiDaiP/images/master/Padding%20Oracle%20Attack/1.png)
 
     枚举$C_{i-1}$最后一字节，解密，直到得到合法填充，返回解密成功，即$XOR(C_{i-1}, Dec(C_i))$最后一字节为0x1
 
@@ -75,9 +75,9 @@ icon: icon-html
 
     中间值的最后一字节最后一字节与0x2异或，得到下一轮构造的$C_{i-1}$最后一字节。
 
-    ![4](D:\Ai\GitHub\images\Padding Oracle Attack\4.png)
+    ![4](https://raw.githubusercontent.com/AiDaiP/images/master/Padding%20Oracle%20Attack/4.png)
 
-    ![2](D:\Ai\GitHub\images\Padding Oracle Attack\2.png)
+    ![2](https://raw.githubusercontent.com/AiDaiP/images/master/Padding%20Oracle%20Attack/2.png)
 
     枚举$C_{i-1}$倒数第二字节，解密，直到得到合法填充，返回解密成功，即$XOR(C_{i-1}, Dec(C_i))$最后两字节为0x2，0x2
 
@@ -89,7 +89,7 @@ icon: icon-html
 
   * ##### 构造任意明文的密文
 
-    ![5](D:\Ai\GitHub\images\Padding Oracle Attack\5.png)
+    ![5](https://raw.githubusercontent.com/AiDaiP/images/master/Padding%20Oracle%20Attack/5.png)
 
     我寻思这和解密任意明文里构造合法填充差不多一个意思
 
