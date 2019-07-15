@@ -183,8 +183,20 @@ icon: icon-html
 
   * ##### 绕过检测
 
-    1. fake chunk 的 ISMMAP 位不能为 1 
+    1. fake chunk 的 ISMMAP 位不能为 1 -
     2. fake chunk 地址需要对齐 
     3. fake chunk 的 size 大小需要满足对应的 fastbin 的需求，同时也得对齐。
     4. fake chunk 的 next chunk 的大小不能小于 `2 * SIZE_SZ`，同时也不能大于`av->system_mem`。
     5. fake chunk 对应的 fastbin 链表头部不能是该 fake chunk。
+
+- #### Alloc to Stack
+
+  把 fd 指针指向想要分配的栈上，从而实现控制栈中的一些关键数据 
+
+  
+
+- #### Arbitrary Alloc
+
+  把 chunk 分配到任意存在合法的 size 域的可写内存中 
+
+  
