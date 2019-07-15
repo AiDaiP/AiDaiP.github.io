@@ -13,8 +13,6 @@ icon: icon-html
 
 ![11](https://raw.githubusercontent.com/AiDaiP/images/master/pwn/11.png)
 
-#### Fastbin Attack
-
 - ##### 条件
 
   1. 存在堆溢出、use-after-free 等能控制 chunk 内容的漏洞
@@ -80,6 +78,10 @@ icon: icon-html
   
 
 - ##### Fastbin Double Free
+
+  * 产生原因
+    1. fastbin 的堆块被释放后 next_chunk 的 pre_inuse 位不会被清空
+    2. fastbin 在执行 free 的时候仅验证了 main_arena 直接指向的块，即链表指针头部的块。对于链表后面的块，并没有进行验证。
 
   ```c
   int main(void)
@@ -175,5 +177,14 @@ icon: icon-html
   chunk1 ==> chunk2 ==> chunk1
   ```
 
-  
+- #### House Of Spirit
 
+  在目标位置处伪造 fastbin chunk，并将其释放，从而达到分配指定地址的 chunk 的目的
+
+  * ##### 绕过检测
+
+    1. fake chunk 的 ISMMAP 位不能为 1 
+    2. fake chunk 地址需要对齐 
+    3. fake chunk 的 size 大小需要满足对应的 fastbin 的需求，同时也得对齐。
+    4. fake chunk 的 next chunk 的大小不能小于 `2 * SIZE_SZ`，同时也不能大于`av->system_mem`。
+    5. fake chunk 对应的 fastbin 链表头部不能是该 fake chunk。
