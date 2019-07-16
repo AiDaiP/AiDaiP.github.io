@@ -5,7 +5,7 @@ date:   2019-7-15
 desc: ""
 keywords: ""
 categories: [Binary]
-tags: [pwn]
+tags: [pwn,heap]
 icon: icon-html
 ---
 
