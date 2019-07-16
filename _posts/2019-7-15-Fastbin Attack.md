@@ -117,7 +117,7 @@ icon: icon-html
   0x8402280:      0x0000000000000000      0x0000000000000000
   0x8402290:      0x0000000000000000      0x0000000000020d71 <=== top chunk
   
-  chunk1 —▸ chunk1
+  chunk1 ==> chunk1
   ```
 
   
@@ -241,7 +241,7 @@ icon: icon-html
     free后
     pwndbg> bins
     tcachebins
-    0x40 [  1]: 0x7ffffffee490 ◂— 0x0
+    0x40 [  1]: 0x7ffffffee490 <== 0x0
     ```
 
     ```c
@@ -340,14 +340,14 @@ icon: icon-html
     0x84032b0:      0x0000000000000000      0x0000000000020d51
     
     pwndbg> stack
-    00:0000│ rsp  0x7ffffffee4a8 —▸ 0x8000aba (main+672) ◂— lea    rax, [rbp - 0x30] /* 0x8e88348d0458d48 */
-    01:0008│      0x7ffffffee4b0 ◂— 0x20 /* ' ' */
-    02:0010│      0x7ffffffee4b8 —▸ 0x8403260 —▸ 0x8403280 ◂— 0x8403260
-    03:0018│      0x7ffffffee4c0 —▸ 0x8403280 —▸ 0x8403260 ◂— 0x8403280
-    04:0020│      0x7ffffffee4c8 —▸ 0x84032a0 ◂— 0x0
-    05:0028│      0x7ffffffee4d0 —▸ 0x8403260 —▸ 0x8403280 ◂— 0x8403260
-    06:0030│      0x7ffffffee4d8 ◂— 0x28a5f2ef36aa0600
-    07:0038│ rbp  0x7ffffffee4e0 —▸ 0x8000b60 (__libc_csu_init) ◂— push   r15 /* 0x41d7894956415741 */
+    00:0000│ rsp  0x7ffffffee4a8 ==> 0x8000aba (main+672) <== lea    rax, [rbp - 0x30] /* 0x8e88348d0458d48 */
+    01:0008│      0x7ffffffee4b0 <== 0x20 /* ' ' */
+    02:0010│      0x7ffffffee4b8 ==> 0x8403260 ==> 0x8403280 <== 0x8403260
+    03:0018│      0x7ffffffee4c0 ==> 0x8403280 ==> 0x8403260 <== 0x8403280
+    04:0020│      0x7ffffffee4c8 ==> 0x84032a0 <== 0x0
+    05:0028│      0x7ffffffee4d0 ==> 0x8403260 ==> 0x8403280 <== 0x8403260
+    06:0030│      0x7ffffffee4d8 <== 0x28a5f2ef36aa0600
+    07:0038│ rbp  0x7ffffffee4e0 ==> 0x8000b60 (__libc_csu_init) <== push   r15 /* 0x41d7894956415741 */
     ```
 
     第二个gg
@@ -364,7 +364,7 @@ icon: icon-html
     
     pwndbg> bins
     tcachebins
-    0x20 [  0]: 0x7ffffffee4a8 —▸ 0x8000b0c (main+754) ◂— mov    edi, 8 /* 0xfbcae800000008bf */
+    0x20 [  0]: 0x7ffffffee4a8 ==> 0x8000b0c (main+754) <== mov    edi, 8 /* 0xfbcae800000008bf */
     ```
 
     第三个gg
@@ -381,7 +381,7 @@ icon: icon-html
     
     pwndbg> bins
     tcachebins
-    0x20 [ -1]: 0x8000b16 (main+764) ◂— mov    rdx, rax /* 0x1500058b48c28948 */
+    0x20 [ -1]: 0x8000b16 (main+764) <== mov    rdx, rax /* 0x1500058b48c28948 */
     ```
 
     
