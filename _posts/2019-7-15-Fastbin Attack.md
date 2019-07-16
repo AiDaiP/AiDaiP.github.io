@@ -181,6 +181,7 @@ icon: icon-html
 
   在目标位置处伪造 fastbin chunk，并将其释放，从而达到分配指定地址的 chunk 的目的
 
+
   * ##### 绕过检测
 
     1. fake chunk 的 ISMMAP 位不能为 1
@@ -360,6 +361,10 @@ icon: icon-html
     0x8403290:      0x0000000000000000      0x0000000000000021
     0x84032a0:      0x0000000000000000      0x0000000000000000
     0x84032b0:      0x0000000000000000      0x0000000000001011
+    
+    pwndbg> bins
+    tcachebins
+    0x20 [  0]: 0x7ffffffee4a8 —▸ 0x8000b0c (main+754) ◂— mov    edi, 8 /* 0xfbcae800000008bf */
     ```
 
     第三个gg
@@ -376,7 +381,7 @@ icon: icon-html
     
     pwndbg> bins
     tcachebins
-    0x20 [  0]: 0x7ffffffee4a8 —▸ 0x8000b0c (main+754) ◂— mov    edi, 8 /* 0xfbcae800000008bf */
+    0x20 [ -1]: 0x8000b16 (main+764) ◂— mov    rdx, rax /* 0x1500058b48c28948 */
     ```
 
     
