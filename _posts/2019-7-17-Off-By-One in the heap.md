@@ -135,7 +135,7 @@ icon: icon-html
 
      
 
-* ### off-by-one small bin 
+* ### Unlink 
 
   ```c
   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -145,12 +145,11 @@ icon: icon-html
   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
   ```
 
-  1. 在A块中构造fake small bin结构，绕过unlink的check，覆盖B的`pre_size`域 和 `prev_in_use` 位
+  1. 在A块中构造fake chunk，绕过unlink的check，覆盖B的`pre_size`域 和 `prev_in_use` 位
 
   2. free B，unlink
 
      
 
-* ### off-by-one large bin 
-
   
+
