@@ -13,6 +13,47 @@ icon: icon-html
 
 ![11](https://raw.githubusercontent.com/AiDaiP/images/master/pwn/11.png)
 
+* ### 堆块验证机制
+
+  * #### inuse()
+
+    ```c
+    /* extract p's inuse bit */
+    #define inuse(p)                                                               
+        ((((mchunkptr)(((char *) (p)) + chunksize(p)))->mchunk_size) & PREV_INUSE)
+    ```
+
+    仅通过下一块的 `prev_in_use` 位来判定当前块是否使用 
+
+  * #### prev_chunk()
+
+    ```c
+    /* Ptr to previous physical malloc_chunk.  Only valid if prev_inuse (P).  */
+    #define prev_chunk(p) ((mchunkptr)(((char *) (p)) - prev_size(p)))
+    ```
+
+    仅使用本块的 `prev_size` 来寻找前块的头。 
+
+  * #### next_chunk()
+
+    ```c
+    /* Ptr to next physical malloc_chunk. */
+    #define next_chunk(p) ((mchunkptr)(((char *) (p)) + chunksize(p)))
+    ```
+
+    仅通过本块头+本块size的方式来寻找下一块的头 
+
+  * #### chunksize()
+
+    ```c
+    /* Get size, ignoring use bits */
+    #define chunksize(p) (chunksize_nomask(p) & ~(SIZE_BITS))
+    ```
+
+    仅通过本块的size确定本块的大小 
+
+    
+
 * ### 原理
 
   边界验证不严或字符串操作不合适导致出现单字节溢出
