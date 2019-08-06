@@ -225,15 +225,21 @@ icon: icon-html
 
 * ### A+B Judge 
 
-  看了一眼好像啥都没禁
+  * ### 非预期解
 
-  我寻思直接cat就完事了
+    我寻思直接cat就完事了
 
-  ![3](https://raw.githubusercontent.com/AiDaiP/images/master/de1ctf/3.png)
+    ![3](https://raw.githubusercontent.com/AiDaiP/images/master/de1ctf/3.png)
 
-  ![2](https://raw.githubusercontent.com/AiDaiP/images/master/de1ctf/2.png)
+    ![2](https://raw.githubusercontent.com/AiDaiP/images/master/de1ctf/2.png)
 
-  白给
+    白给
+
+  * ### 预期解
+
+    syscall绕过限制，读取flag
+
+    
 
 * ### Baby Rsa
 
