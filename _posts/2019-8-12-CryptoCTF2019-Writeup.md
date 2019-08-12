@@ -37,8 +37,6 @@ icon: icon-html
   CCTF{sIMpL3_bU7_m1x3d_5uBs7ituT10n_C1ph3R}
   ```
 
-  
-
 * ### Time Capsule
 
   ```python
@@ -84,8 +82,6 @@ icon: icon-html
 
   
 
-  
-
 * ###Clever Girl
 
   ```python
@@ -105,8 +101,6 @@ icon: icon-html
   print 'c =', c
   
   ```
-
-  
 
   $\frac{p}{p+1}+\frac{q+1}{1}=\frac{2s-X}{s+Y}$
 
@@ -336,8 +330,6 @@ icon: icon-html
 
   
 
-  
-
 * ### Fast Speedy!
 
   ```python
@@ -374,6 +366,8 @@ icon: icon-html
   f.write(long_to_bytes(int(enc, 2)))
   f.close()
   ```
+
+  长得像lfsr
 
   flag的每一位和drift每一次的out异或得到密文
 
@@ -462,7 +456,7 @@ icon: icon-html
 
   
 
-* 
+  
 
   
 
