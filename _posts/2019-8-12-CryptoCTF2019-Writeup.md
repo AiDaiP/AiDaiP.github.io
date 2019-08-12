@@ -9,7 +9,7 @@ tags: [CTF,Crypto]
 icon: icon-html
 ---
 
-# 2019-8-12-CryptoCTF2019-Writeup
+# CryptoCTF2019-Writeup
 
 * ### Decode me!
 
