@@ -17,13 +17,13 @@ icon: icon-html
 
 * ### RSA Parity Oracle Attack
 
-  $C=P^e \bmod N$ 
+  $C=P^e  \% N$ 
 
-  $[C*(2^e \bmod N)]\bmod N=(2P)^e \bmod N​$ 
+  $[C*(2^e  \% N)] \% N=(2P)^e \% N$ 
 
-  2P可能大于N，向 Oracle 发送$[C*(2^e \bmod N)]\bmod N$ 解密结果为：
+  2P可能大于N，向 Oracle 发送$[C*(2^e  \% N)] \% N$ 解密结果为：
 
-  $2P \bmod N$ 
+  $2P  \% N​$ 
 
   2P是偶数，N是奇数
 
@@ -43,11 +43,11 @@ icon: icon-html
 
   第 i+1 次时
 
-  $[C*(2^e \bmod N)^{i+1}]\bmod N=(2^{i+1}P)^e \bmod N$
+  $[C*(2^e \% N)^{i+1}] \% N=(2^{i+1}P)^e  \% N$
 
-   Oracle 解密结果为：$2^{i+1}P \bmod N$ 
+   Oracle 解密结果为：$2^{i+1}P  \% N$ 
 
-  $2^{i+1}P \bmod N = P - kN$
+  $2^{i+1}P  \% N = P - kN$
 
   $0 \leq 2^{i+1}P-kN<N$ 
 
