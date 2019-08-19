@@ -899,6 +899,7 @@ icon: icon-html
    print(flag)
    #aaaaaflag{ok_this_is_a_flag_rsa}
    ```
+
 * #### DSA
 
    ```
@@ -928,17 +929,23 @@ icon: icon-html
       24:d=1  hl=2 l=  20 prim: INTEGER           :5E10DED084203CCBCEC3356A2CA02FF318FD4123
    ```
 
+   如果知道了随机密钥k，那么就可以根据$s\equiv (H(m)+xr)k^{-1} \bmod q$ 计算私钥x
+
+   $x \equiv r^{-1}(ks-H(m)) \bmod q$ 
+
+   
+
    3、4 r相同，共享了k
 
-   $s1≡(H(m1)+xr)k−1modqs1≡(H(m1)+xr)k−1modq$
+   $s1≡(H(m1)+xr)k−1modq$
 
-   $s2≡(H(m2)+xr)k−1modqs2≡(H(m2)+xr)k−1modq$
+   $s2≡(H(m2)+xr)k−1modq$
 
-   $s1k≡H(m1)+xrs1k≡H(m1)+xr$
+   $s1k≡H(m1)+xr$
 
-   $s2k≡H(m2)+xrs2k≡H(m2)+xr$
+   $s2k≡H(m2)+xr$
 
-   $k(s1−s2)≡H(m1)−H(m2)modqk(s1−s2)≡H(m1)−H(m2)modq$
+   $k(s1−s2)≡H(m1)−H(m2)modq$
 
    可解出 k
 
