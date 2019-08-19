@@ -85,7 +85,7 @@ icon: icon-html
       e = 
       c = 
       k = n.bit_length()
-      decimal.getcontext().prec = k  # allows for 'precise enough' floats
+      decimal.getcontext().prec = k
       lower = decimal.Decimal(0)
       upper = decimal.Decimal(n)
       c_of_2 = pow(2, e, n)
