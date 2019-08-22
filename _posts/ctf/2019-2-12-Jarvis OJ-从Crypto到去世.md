@@ -1200,3 +1200,434 @@ icon: icon-html
    ```
 
 
+
+* #### [xman2019]xbase64
+
+  ```python
+  import base64
+  base64_table = ['=','A', 'B', 'C', 'D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
+                  'a', 'b', 'c', 'd','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
+                  '0', '1', '2', '3','4','5','6','7','8','9',
+                  '+', '/'][::-1]
+  b64 = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/', '=']
+  
+  flag = 'mZOemISXmpOTkKCHkp6Rgv=='
+  fuck = ''
+  for i in flag:
+  	fuck += b64[base64_table.index(i)]
+  
+  print(base64.b64decode(fuck))
+  #flag{hello_xman}
+  ```
+
+  把base64表该回去就完事了
+
+* #### [xman2019]xcaesar
+
+  凯撒
+
+  ```python
+  def caesar_encrypt(m,k):
+      r=""
+      for i in m:
+          r+=chr((ord(i)+k)%128)
+      return r
+  
+  import base64
+  #output:bXNobgJyaHB6aHRwdGgE
+  c = base64.b64decode('bXNobgJyaHB6aHRwdGgE')
+  def decode(c):
+  	for i in range(128):
+  		p = ''
+  		for j in c:
+  			p += chr((ord(j)+i)%128)
+  		if 'flag' in p:
+  			print(p)
+  
+  decode(c)
+  #flag{kaisamima}
+  ```
+
+* ####[xman2019]xbitf
+
+   CBC字节翻转
+
+  ```
+  token="session="+session.encode("hex")+";admin=0"
+  session=8c43c5a528f96058;admin=0;checksum=562ab6fba4f1655eecd964446329e808001a0e8ee1125195faf4e365ccc2f55e
+  ```
+
+   checksum的第16个字节取出来，hex(0xf1^ord('0')^ord('1'))，得到0xf0
+
+  ```
+  session=f14ded862f9892c4;admin=1;checksum=fe5195033f70e2f0e26aeec4ee8be2f092595319deeb4407209e3ffffb72d242
+  flag{xman_bit_flip_112233}
+  
+  ```
+
+* #### [xman2019]xcc
+
+  AES_CBC，选择密文攻击
+
+  iv是flag
+
+  ```
+  输入0000000000000000000000000000000000000000000000000000000000000000
+  得到a8d9e8fd083614bca497153a56ac552cc1afb7947b6970ddcaf07048098d740d
+  a8d9e8fd083614bca497153a56ac552c是aes.dec(00000000000000000000000000000000)^iv
+  c1afb7947b6970ddcaf07048098d740d是aes.dec(00000000000000000000000000000000)^0
+  所以'a8d9e8fd083614bca497153a56ac552c'^'c1afb7947b6970ddcaf07048098d740d'可以得到iv
+  ```
+
+  ```python
+  fuck = 'a8d9e8fd083614bca497153a56ac552cc1afb7947b6970ddcaf07048098d740d'
+  fuck1 = fuck[0:32].decode("hex")
+  fuck2 = fuck[32:].decode("hex")
+  flag = ''
+  for i in range(16):
+  	flag += chr(ord(fuck1[i])^ord(fuck2[i]))
+  print(flag)
+  #iv_is_danger_!!!
+  ```
+
+* #### [xman2019]xfz
+
+  ```
+  L,R
+  R,L^R^K1
+  L^R^K1,L^K1^K2
+  L^K1^K2,R^K2^K3
+  R^K2^K3,L^R^K1^K3^K4
+  L^R^K1^K3^K4,L^K1^K2^K4^K5
+  L^K1^K2^K4^K5,R^K2^K3^K5^K6
+  R^K2^K2^K5^K6,L^R^K1^K3^K4^K6^K7
+  ```
+
+  ```python
+  def xor(a,b):
+      assert len(a)==len(b)
+      c=""
+      for i in range(len(a)):
+          c+=chr(ord(a[i])^ord(b[i]))
+      return c
+  
+  test = '50543fc0bca1bb4f21300f0074990f846a8009febded0b2198324c1b31d2e2563c908dcabbc461f194e70527e03a807e9a478f9a56f7'
+  test_enc = '66bbd551d9847c1a10755987b43f8b214ee9c6ec2949eef01321b0bc42cffce6bdbd604924e5cbd99b7c56cf461561186921087fa1e9'
+  flag_enc = '44fc6f82bdd0dff9aca3e0e82cbb9d6683516524c245494b89c272a83d2b88452ec0bfa0a73ffb42e304fe3748896111b9bdf4171903'
+  
+  test_L = test.decode('hex')[0:27]
+  test_R = test.decode('hex')[27:54]
+  
+  test_c_L = test_enc.decode('hex')[0:27]
+  test_c_R = test_enc.decode('hex')[27:54]
+  
+  flag_c_L = flag_enc.decode('hex')[0:27]
+  flag_c_R = flag_enc.decode('hex')[27:54]
+  
+  K2256 = xor(test_c_L,test_R)
+  K13467 = xor(test_c_R,xor(test_R,test_L))
+  
+  flag_R = xor(K2256,flag_c_L)
+  flag_L = xor(xor(K13467,flag_c_R),flag_R)
+  flag = flag_L+flag_R
+  print(flag)
+  #flag{festel_weak_666_10fjid9vh12h3nvm}
+  ```
+
+* #### [xman2019]babyrpd
+
+  随机数种子是当前的时间
+
+  这题pwntools连不上去，俺只能靠手速了
+
+  ```python
+  import random
+  import time
+  
+  random.seed(int(time.time()))
+  print(random.randint(0,2**64))
+  #flag{good_good_study_dayday_up}
+  ```
+
+  
+
+* #### [xman2019]mediumrpd
+
+   java随机数预测，给出两个随机数反推seed
+
+  ```java
+  import java.util.Random;
+  public class Main {
+      // These three values come from `java.util.Random`.  Note that these changed between Java 6 and 7.
+      private static final long multiplier = 0x5DEECE66DL;
+      private static final long addend = 0xBL;
+      private static final long mask = (1L << 48) - 1;
+  
+      public static void main(String[] args) {
+          Random target = new Random();
+          //input here
+          int v1 = 1011265127;
+          int v2 = 1105605218;
+          long seed = guessSeed(v1, v2);
+          System.out.printf("Guessed seed: 0x%016x.  Testing...\n", seed);
+          //testGuess(seed, target, v2);
+          System.out.println("Success!!!");
+          Random target1 = new Random(seed);
+          int v11 = target1.nextInt();
+          int v22 = target1.nextInt();
+          System.out.printf("v1 = 0x%08x, v2 = %d\n", v11, v22);
+      }
+  
+  
+      /**
+       * We can guess the state of the generator just from observing two consecutive {@code int}s.
+       */
+      private static long guessSeed(int v1, int v2) {
+          System.out.printf("v1 = 0x%08x, v2 = 0x%08x\n", v1, v2);
+          return guessSeed(maskToLong(v1), maskToLong(v2));
+      }
+  
+      private static long guessSeed(long v1, long v2) {
+          for (int i = 0; i < 65536; i++) {
+              long guess = v1 * 65536 + i;
+              if ((((guess * multiplier + addend) & mask) >>> 16) == v2) {
+                  return (guess ^ multiplier) & mask;
+              }
+          }
+          throw new IllegalStateException("CAN'T HAPPEN: Could not guess the seed!");
+      }
+  
+      /**
+       * Convert an int to a long in a way that preserves all the bits (negative numbers/twos complement issues).
+       */
+      private static long maskToLong(int n) {
+          return n & 0x00000000ffffffffL;
+      }
+  
+  
+      private static void testGuess(long seed, Random target, int expected) {
+          Random experiment = new Random(seed);
+          int actual = experiment.nextInt();
+          for (int i = 0; i < 100_000; i++) {
+              if (actual != expected) {
+                  // This will never actually happen.
+                  String msg = "i = %d, expected = 0x%08x, actual = 0x%08x";
+                  throw new IllegalStateException(String.format(msg, i, expected, actual));
+              }
+              expected = target.nextInt();
+              actual = experiment.nextInt();
+          }
+      }
+  
+  }
+  ```
+
+  ```
+  14361601
+  flag{random_get_rrrr10mjs0f}
+  ```
+
+* #### [xman2019]hardrpd
+
+  前624个随机数，预测后面的随机数
+
+  ```python
+  from pwn import *
+  r = remote("47.97.215.88",20002)
+  nums = []
+  for i in range(624):
+      r.recvuntil('#')
+      r.sendline('fuck')
+      num = r.recvline()
+      print(num)
+      nums.append(int(num))
+  print(nums)
+  
+  
+  def sign(iv):
+      # converts a 32 bit uint to a 32 bit signed int
+      if(iv&0x80000000):
+          iv = -0x100000000 + iv
+      return iv
+  def crack_prng(outputs_624_list):
+      get_in=[]
+      for i in outputs_624_list:
+          get_in.append(sign(i))
+  
+      o = subprocess.check_output(["java", "Main"] + map(str, get_in))
+      stateList = [int(s) % (2 ** 32) for s in o.split()]
+      r = random.Random()
+      state = (3, tuple(stateList + [624]), None)
+      r.setstate(state)
+      return r
+  
+  print(crack_prng(nums))
+  
+  r.interactive()
+  ```
+
+  ```java
+  # Main.java
+  public class Main {
+  
+      static int[] state;
+      static int currentIndex;
+  
+      public static void main(String[] args) {
+          state = new int[624];
+          currentIndex = 0;
+  
+          if (args.length != 624) {
+              System.err.println("must be 624 args");
+              System.exit(1);
+          }
+          int[] arr = new int[624];
+          for (int i = 0; i < args.length; i++) {
+              arr[i] = Integer.parseInt(args[i]);
+          }
+  
+          rev(arr);
+  
+          for (int i = 0; i < 624; i++) {
+              System.out.println(state[i]);
+          }
+  
+      }
+  
+      static void nextState() {
+          // Iterate through the state
+          for (int i = 0; i < 624; i++) {
+              // y is the first bit of the current number,
+              // and the last 31 bits of the next number
+              int y = (state[i] & 0x80000000)
+                      + (state[(i + 1) % 624] & 0x7fffffff);
+              // first bitshift y by 1 to the right
+              int next = y >>> 1;
+              // xor it with the 397th next number
+              next ^= state[(i + 397) % 624];
+              // if y is odd, xor with magic number
+              if ((y & 1L) == 1L) {
+                  next ^= 0x9908b0df;
+              }
+              // now we have the result
+              state[i] = next;
+          }
+      }
+  
+      static int nextNumber() {
+          currentIndex++;
+          int tmp = state[currentIndex];
+          tmp ^= (tmp >>> 11);
+          tmp ^= (tmp << 7) & 0x9d2c5680;
+          tmp ^= (tmp << 15) & 0xefc60000;
+          tmp ^= (tmp >>> 18);
+          return tmp;
+      }
+  
+      static void initialize(int seed) {
+  
+          // http://code.activestate.com/recipes/578056-mersenne-twister/
+  
+          // global MT
+          // global bitmask_1
+          // MT[0] = seed
+          // for i in xrange(1,624):
+          // MT[i] = ((1812433253 * MT[i-1]) ^ ((MT[i-1] >> 30) + i)) & bitmask_1
+  
+          // copied Python 2.7's impl (probably uint problems)
+          state[0] = seed;
+          for (int i = 1; i < 624; i++) {
+              state[i] = ((1812433253 * state[i - 1]) ^ ((state[i - 1] >> 30) + i)) & 0xffffffff;
+          }
+      }
+  
+      static int unBitshiftRightXor(int value, int shift) {
+          // we part of the value we are up to (with a width of shift bits)
+          int i = 0;
+          // we accumulate the result here
+          int result = 0;
+          // iterate until we've done the full 32 bits
+          while (i * shift < 32) {
+              // create a mask for this part
+              int partMask = (-1 << (32 - shift)) >>> (shift * i);
+              // obtain the part
+              int part = value & partMask;
+              // unapply the xor from the next part of the integer
+              value ^= part >>> shift;
+              // add the part to the result
+              result |= part;
+              i++;
+          }
+          return result;
+      }
+  
+      static int unBitshiftLeftXor(int value, int shift, int mask) {
+          // we part of the value we are up to (with a width of shift bits)
+          int i = 0;
+          // we accumulate the result here
+          int result = 0;
+          // iterate until we've done the full 32 bits
+          while (i * shift < 32) {
+              // create a mask for this part
+              int partMask = (-1 >>> (32 - shift)) << (shift * i);
+              // obtain the part
+              int part = value & partMask;
+              // unapply the xor from the next part of the integer
+              value ^= (part << shift) & mask;
+              // add the part to the result
+              result |= part;
+              i++;
+          }
+          return result;
+      }
+  
+      static void rev(int[] nums) {
+          for (int i = 0; i < 624; i++) {
+  
+              int value = nums[i];
+              value = unBitshiftRightXor(value, 18);
+              value = unBitshiftLeftXor(value, 15, 0xefc60000);
+              value = unBitshiftLeftXor(value, 7, 0x9d2c5680);
+              value = unBitshiftRightXor(value, 11);
+  
+              state[i] = value;
+          }
+      }
+  }
+  ```
+
+* #### [xman2019]xyf
+
+  只给了n，e，c，e=65537
+
+  yafu跑一下试试
+
+  ```
+  ***factors found***
+  
+  P308 = 56225103425920179745019828423382255030086226600783237398582720244250840205090747144995470046432814267877822949968612053620215667790366338413979256357713975498764498045710766375614107934719809398451422359883451257033337168560937824719275885709824193760523306327217910106187213556299122895037021898556005848927
+  P308 = 56225103425920179745019828423382255030086226600783237398582720244250840205090747144995470046432814267877822949968612053620215667790366338413979256357713975498764498045710766375614107934719809398451422359883451257033337168560937824719275885709824193760523306327217910106187213556299122895037021898556005848447
+  
+  ans = 1
+  
+  #flag{yafu_is_great_2}
+  ```
+
+* #### [xman2019]xbk
+
+  e=3，爆破就完事了
+
+  ```
+  flag{let_me_do_sth_good}
+  ```
+
+* #### [xman2019]xgm
+
+  共模攻击
+
+  ```
+  flag{gongmogongji}
+  ```
+
+   
+
