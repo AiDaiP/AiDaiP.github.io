@@ -15,6 +15,27 @@ icon: icon-html
 
   binwalk看一下然后dd分离得到二维码
 
+* ### Too cold for steg 
+
+  文件里找到password，然后
+
+  ```
+  stegsnow -C -p "d4rkc0de-IIITD" final.txt
+  d4rk{h@ving_fun_w1th_st3gsn0w?}c0de
+  ```
+
+* ### Secret Agent
+
+  把User-Agent改成Should d4rkc0de make their own browser
+
+  d4rk{useragent_ftwwwwwww}c0de
+
+  
+
+  wdnmd我以为是User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) d4rkc0de/69.0.3497.100 Safari/537.36
+
+  淦
+
 * ### OTP
 
   两个密文异或之后得到两个明文异或的结果，根据明文里有"meme"分析
@@ -53,7 +74,7 @@ icon: icon-html
   #d4rk{meme__meme}c0de
   ```
 
-* Noki
+* ### Noki
 
   ```
    g4iu{ocs_oaeiiamqqi_qk_moam!}e0gi
@@ -64,6 +85,16 @@ icon: icon-html
   根据d4rk看一波发现密钥和明文相同，然后就是他填字游戏了
 
   
+
+* ### Ez Pz
+
+  只能完成两次交互，两次加密或两次解密或一次加密一次解密
+
+  解密可以接受除flag密文外任意整数，输入-1试一下，如果e为奇数就可以得到n-1
+
+  得到n-1后一次加密一次解密爆破e
+
+  然后解密`（c*pow（2，e，n））%n`得到2m，除以2得到m
 
 * ### baby b0f
 
