@@ -186,5 +186,31 @@ icon: icon-html
   
   ```
 
+* ### Weird Text
+
+  Malbolge 
+
+  wdnmd我以为是brainfuck
+
+*  ### Invisible programming
+
+  根据空格与制表符跑出来
+
+  ```python
+  import re
+  h = open('hello_world.cpp')
+  lines = [ x[:-1] for x in h.readlines() ]  # remove newline char
+  h.close()
   
+  flag = []
+  for line in lines:
+      num =''.join(re.findall(r'\s+', line)).replace('\t','1').replace(' ','0')
+      if num:
+          try:
+              flag.append(chr(int(num,2)))
+          except:
+              pass
+  
+  print ''.join(flag)
+  ```
 
