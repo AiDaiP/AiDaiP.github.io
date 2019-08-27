@@ -91,6 +91,10 @@ icon: icon-html
     
     ```
 
+* ### 2019
+
+  zsteg找到一串base64，解码得到一串base85，解码得到flag
+
 * ### Babycry
 
   输入十六个相同字符发现密文前两个块相同，应该是ECB
