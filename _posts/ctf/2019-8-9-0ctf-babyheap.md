@@ -302,7 +302,7 @@ icon: icon-html
 
   - ### 泄露libc基址
 
-    overlap。Off-By-One改chunk的size，使其包含两个chunk，size范围在unsorted bin范围内，free后fd和bk指向unsorted bin链表头部。此时被chunk2可以查看，再申请一个chunk，chunk2的fd和bk变为chunk1的fd和bk，view(2)可以得到unsorted bin链表头部地址
+    overlap。Off-By-One改chunk的size，使其包含两个chunk，size范围在unsorted bin范围内，free后fd和bk指向unsorted bin链表头部。此时chunk2可以查看，再申请一个chunk，chunk2的fd和bk变为chunk1的fd和bk，view(2)可以得到unsorted bin链表头部地址
 
     ```python
     offset = 0x399b00
