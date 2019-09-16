@@ -62,7 +62,7 @@ icon: icon-html
 
   SROP
 
-  ```
+  ```python
   from pwn import *
   context.arch = 'amd64'
   r = remote('pwn.chal.csaw.io', 1002)
@@ -212,11 +212,11 @@ icon: icon-html
 
   正确使用CRT加密
 
-  ![1](C:\Users\wdbbw\Desktop\1.png)
+  ![1](https://raw.githubusercontent.com/AiDaiP/images/master/CSAWCTF/1.png)
 
   题目中的TEST_CRT_encrypt中c2与fun异或
 
-  ![2](C:\Users\wdbbw\Desktop\2.png)
+  ![2](https://raw.githubusercontent.com/AiDaiP/images/master/CSAWCTF/2.png)
 
   所以$p=gcd(c-m^e,n)$
 
