@@ -656,6 +656,14 @@ icon: icon-html
   r.interactive()
   ```
 
+* ### judgement_mna_2016
+
+  flag在栈上
+
+  ```c
+  %28$s
+  ```
+
   
 
 
