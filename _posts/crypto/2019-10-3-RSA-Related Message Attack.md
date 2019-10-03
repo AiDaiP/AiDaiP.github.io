@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "RSA-RSA-Related Message Attack"
+title:  "RSA-Related Message Attack"
 date:   2019-10-3
 desc: ""
 keywords: ""
