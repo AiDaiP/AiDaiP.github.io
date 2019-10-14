@@ -92,7 +92,7 @@ icon: icon-html
 
   然后求z
 
-  众所周知，next_prime(z)-z<10000
+  根据next_prime(z)-z<10000
 
   所以
 
