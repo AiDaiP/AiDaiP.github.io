@@ -123,6 +123,8 @@ icon: icon-html
 
   根据z求pq，解c
 
+  没给出e，盲猜65537
+
   ```python
   p=nextprime((z)*x*y)
   q=nextprime((z))
@@ -136,7 +138,6 @@ icon: icon-html
   print(p*q==n)
   phin = (p-1)*(q-1)
   
-  #guess e = 65537
   e=65537
   d = gmpy2.invert(e,phin)
   m = pow(c,d,n)
