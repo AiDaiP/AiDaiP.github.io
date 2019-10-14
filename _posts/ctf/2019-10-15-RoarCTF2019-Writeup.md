@@ -118,7 +118,7 @@ icon: icon-html
   			if x%(166*2) == 0:
   				print(gmpy2.iroot(fuck,2))
   				print(a,b)
-  				print(x/(166*2))'''
+  				print(x/(166*2))
   ```
 
   根据z求pq，解c
