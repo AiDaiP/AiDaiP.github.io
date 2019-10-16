@@ -51,7 +51,7 @@ icon: icon-html
   ?> 
   ```
 
-  传入字母出Forbidden，num前加空格可以绕过
+  传入字母出Forbidden，num前加空格可以绕过(HTTP请求走私)
 
   然后白给
 
