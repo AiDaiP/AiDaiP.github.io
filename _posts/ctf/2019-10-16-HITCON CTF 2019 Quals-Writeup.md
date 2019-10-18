@@ -192,7 +192,7 @@ for x in range(1,100):
 
 
 
-## notsohardRSA
+## not so hard RSA
 
 ```python
 from Crypto.Util.number import *

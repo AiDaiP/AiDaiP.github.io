@@ -51,7 +51,7 @@ icon: icon-html
   ?> 
   ```
 
-  传入字母出Forbidden，num前加空格可以绕过(HTTP请求走私)
+  传入字母出Forbidden，num前加空格，waf不会过滤这个空格num，但是php识别空格num和num是一样的
 
   然后白给
 
