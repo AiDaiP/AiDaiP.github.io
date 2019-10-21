@@ -108,9 +108,9 @@ username=aidai&amount=500&proof=MJFPi+KmhuQdJ945Td6b4gSuUxbH535aogkELbMGBmwHMSAw
 
 非预期解：测试发现可以打负数，果断开俩号恰烂钱
 
-![1](D:\Ai\GitHub\images\seccon2019\1.jpg)
+![1](https://raw.githubusercontent.com/AiDaiP/images/master/seccon2019/1.jpg)
 
-![2](D:\Ai\GitHub\images\seccon2019\2.jpg)
+![2](https://raw.githubusercontent.com/AiDaiP/images/master/seccon2019/2.jpg)
 
 预期解应该是伪造proof，等一波wp
 
@@ -284,7 +284,7 @@ LibcSearcher，libcdatabase没用，必须在程序中下载
 
 很白给，但是记录一下走的弯路
 
-![3](D:\Ai\GitHub\images\seccon2019\3.jpg)
+![3](https://raw.githubusercontent.com/AiDaiP/images/master/seccon2019/3.jpg)
 
 跳过chdir，直接到call listing，可以打一波文件名，但是无法下载
 
@@ -324,7 +324,7 @@ q
 
 继续尝试下载libc
 
-![4](D:\Ai\GitHub\images\seccon2019\4.jpg)
+![4](https://raw.githubusercontent.com/AiDaiP/images/master/seccon2019/4.jpg)
 
 chdir可控，private中下载限制较多，如果我在public中得到private目录的下载权限，就可以下载libc
 
