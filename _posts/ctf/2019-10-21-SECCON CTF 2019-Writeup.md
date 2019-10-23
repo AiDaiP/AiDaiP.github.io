@@ -776,17 +776,19 @@ https://github.com/harveyslash/Deep-Steganography
 
 凌晨折腾了一波没啥用就去做lazy了
 
-lazy做完又开始看这个，如图所示
+lazy做完又开始看这个，跟王阳明格竹子一样
 
 ![14](https://raw.githubusercontent.com/AiDaiP/images/master/seccon2019/14.jpg)
 
-跟王阳明格竹子一样
+如图所示，逐渐暴躁
 
 看了wp之后知道是Adam7算法
 
 https://en.wikipedia.org/wiki/Adam7_algorithm
 
 我人傻了为啥我搜出来的都是深度学习
+
+深度学习，学个🔨
 
 ```
 convert  sandstorm.png -filter Point -fx "p{i-i%8,j-j%8}" fuck.png
