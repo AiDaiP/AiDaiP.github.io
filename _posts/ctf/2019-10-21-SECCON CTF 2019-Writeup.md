@@ -786,6 +786,8 @@ lazy做完又开始看这个，跟王阳明格竹子一样
 
 https://en.wikipedia.org/wiki/Adam7_algorithm
 
+[https://blog.awm.jp/2016/01/26/png/#%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%BC%E3%83%AC%E3%83%BC%E3%82%B9%E6%96%B9%E5%BC%8F-adam7](https://blog.awm.jp/2016/01/26/png/#インターレース方式-adam7)
+
 我人傻了为啥我搜出来的都是深度学习
 
 深度学习，学个🔨
