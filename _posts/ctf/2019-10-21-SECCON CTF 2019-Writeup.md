@@ -745,3 +745,52 @@ cat 2 |grep exec
 ```
 
 ![11](https://raw.githubusercontent.com/AiDaiP/images/master/seccon2019/11.jpg)
+
+
+
+## Sandstorm
+
+![12](https://raw.githubusercontent.com/AiDaiP/images/master/seccon2019/12.png)
+
+开局一张图系列
+
+隐写基本操作来一波啥都没找到
+
+Adam，这个人名很关键，
+
+再看一眼题目描述
+
+```
+I've received a letter... Uh, Mr. Smith?
+```
+
+有个Smith，查一波
+
+![12](https://raw.githubusercontent.com/AiDaiP/images/master/seccon2019/12.jpg)
+
+看了一波《国富论》感觉没啥用
+
+后来又查到了Adam算法，和深度学习有关，又在github找了和深度学习有关的隐写方法
+
+https://github.com/harveyslash/Deep-Steganography
+
+凌晨折腾了一波没啥用就去做lazy了
+
+lazy做完又开始看这个，如图所示
+
+![14](https://raw.githubusercontent.com/AiDaiP/images/master/seccon2019/14.jpg)
+
+跟王阳明格竹子一样
+
+看了wp之后知道是Adam7算法
+
+https://en.wikipedia.org/wiki/Adam7_algorithm
+
+我人傻了为啥我搜出来的都是深度学习
+
+```
+convert  sandstorm.png -filter Point -fx "p{i-i%8,j-j%8}" fuck.png
+```
+
+![13](https://raw.githubusercontent.com/AiDaiP/images/master/seccon2019/13.png)
+
