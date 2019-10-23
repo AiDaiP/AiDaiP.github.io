@@ -710,6 +710,10 @@ def fuck(str)
 
 ## 7w1n5
 
+gg，真就没想到
+
+
+
 两个程序，都打印`Let's start analysis! :)`
 
 gdb下还会打印`No no no no no`
@@ -721,7 +725,7 @@ strace -f -s 8192 -o 1 ./Brother1
 cat 1 |grep exec
 ```
 
-![10](D:\Ai\GitHub\images\seccon2019\10.jpg)
+![10](https://raw.githubusercontent.com/AiDaiP/images/master/seccon2019/10.jpg)
 
 出了半截flag，另外一半应该在Brother2
 
@@ -740,4 +744,4 @@ strace -f -s 8192 -o 2  bash -c ./Brother2
 cat 2 |grep exec
 ```
 
-![11](D:\Ai\GitHub\images\seccon2019\11.jpg)
+![11](https://raw.githubusercontent.com/AiDaiP/images/master/seccon2019/11.jpg)
