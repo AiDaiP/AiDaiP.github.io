@@ -708,3 +708,36 @@ def fuck(str)
 
 
 
+## 7w1n5
+
+两个程序，都打印`Let's start analysis! :)`
+
+gdb下还会打印`No no no no no`
+
+ida找不到这两个字符串，应该是加密了，能查出来gdb应该和系统调用有关，strace查一波
+
+```
+strace -f -s 8192 -o 1 ./Brother1
+cat 1 |grep exec
+```
+
+![10](D:\Ai\GitHub\images\seccon2019\10.jpg)
+
+出了半截flag，另外一半应该在Brother2
+
+同样的方法来一波
+
+```
+strace -f -s 8192 -o 1 ./Brother2
+/usr/bin/strace: must have PROG [ARGS] or -p PID
+Try '/usr/bin/strace -h' for more information.
+```
+
+用bash -c
+
+```
+strace -f -s 8192 -o 2  bash -c ./Brother2
+cat 2 |grep exec
+```
+
+![11](D:\Ai\GitHub\images\seccon2019\11.jpg)
