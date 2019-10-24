@@ -50,14 +50,15 @@ icon: icon-html
   chars = string.printable
   a = 
   b = 
+  enc = 
   for t in range(1,37):
   	num = 0
   	step = t*2
   	print(step)
   	for i in flag_chars:
   		nmsl = False
-  		for j in range(0, len(a), step):
-  			fuck = a[j:j+step]
+  		for j in range(0, len(enc), step):
+  			fuck = enc[j:j+step]
   			if(len(fuck)<b):
   				continue
   			if chr(ord(i)^int(fuck[a:b],16)) not in chars:
@@ -71,18 +72,18 @@ icon: icon-html
   	if num != 0:
   		list.append(t)
   print(list)
-  ```
-
-  俺寻思手动爆破挺快
-
-  得到密钥长度只能为30
-
-  按照密钥长度对明文和密钥异或的结果分组，然后跑明文
-
-  原理是c1⊕c2 = m1⊕m2，通过m1⊕m2可以分析出m1和m2 
-
-  https://github.com/Jwomers/many-time-pad-attack
-
+```
+  
+俺寻思手动爆破挺快
+  
+得到密钥长度只能为30
+  
+按照密钥长度对明文和密钥异或的结果分组，然后跑明文
+  
+原理是c1⊕c2 = m1⊕m2，通过m1⊕m2可以分析出m1和m2 
+  
+https://github.com/Jwomers/many-time-pad-attack
+  
   ```python
   ## OTP - Recovering the private key from a set of messages that were encrypted w/ the same private key (Many time pad attack) - crypto100-many_time_secret @ alexctf 2017
   # Original code by jwomers: https://github.com/Jwomers/many-time-pad-attack/blob/master/attack.py)
@@ -183,12 +184,12 @@ icon: icon-html
   
   for i in ciphers:
       target_fix(i)
-  ```
-
-  其实这是个填字游戏
-
-  还学了一波洋文单词
-
+```
+  
+其实这是个填字游戏
+  
+还学了一波洋文单词
+  
   ```
   Fix this sentence:
   In faith I d& not,lcve thee wg
