@@ -225,3 +225,79 @@ icon: icon-html
   然后解密flag
 
   
+  
+* ### byte_me
+
+  ECB
+
+  加密逻辑如下
+
+  ```python
+  def bolck_encrypt(plain):
+      res = ''
+      for i in range(0, len(plain), 16):
+          res += enc(plain[i:i+16])
+      return res
+  
+  bolck_encrypt(salt + user_input + flag)
+  ```
+
+  先找salt长度，假设salt长度为12
+
+  ```
+  'saltsaltsaltsalt'+'aaaaaa'+flag
+  'saltsaltsaltsalt'+'aaaaaa'+'a'+flag
+  ```
+
+  根据前密文前16字节相同可以得到salt长度
+
+  然后爆破flag
+
+  ```
+  'aaaaaaaaaaaaaaa'+''
+  'aaaaaaaaaaaaaaa'+'f'
+  ```
+
+  密文16字节相同
+
+  ```
+  from pwn import *
+  r = remote('node3.buuoj.cn',28028)
+  
+  def oracle(x):
+      r.sendlineafter('Tell me something: ', x)
+      r.recvline()
+      return r.recvline().strip()
+  
+  
+  enc = r.recvline().strip()
+  prev = enc[:32]
+  for i in range(1, 17):
+      now = oracle('a' * i)[:32]
+      if prev == now:
+          salt = 16 - i + 1
+          break
+      prev = now
+  
+  log.success(salt)
+  
+  flag = ''
+  for block in range(1, 5):
+      log.info(block)
+      for i in range(16):
+          x = 'a' * (16 - salt) + 'a' * (16 - 1 - i)
+          target = oracle(x)[32 * block:32 * (block + 1)]
+          for c in string.printable:
+              now = oracle(x + flag + c)[32 * block:32 * (block + 1)]
+              if now == target:
+                  flag += c
+                  log.info(flag)
+                  if flag.endswith('}'):
+                      log.success(flag)
+                      exit()
+                  break
+  
+  
+  ```
+
+  
