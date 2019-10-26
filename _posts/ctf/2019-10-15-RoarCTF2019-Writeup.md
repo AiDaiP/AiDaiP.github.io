@@ -455,25 +455,25 @@ calc.php?%20num=ls;var_dump(file_get_contents(chr(47).chr(102).chr(49).chr(97).c
 
   申请大量fastbin chunk然后free，scanf触发malloc_conslidate合并构造unsorted bin
 
-  ![2](D:\Ai\GitHub\images\roar\2.jpg)
+  ![2](https://raw.githubusercontent.com/AiDaiP/images/master/roar/2.jpg)
 
-  ![1](D:\Ai\GitHub\images\roar\1.jpg)
+  ![1](https://raw.githubusercontent.com/AiDaiP/images/master/roar/1.jpg)
 
   开局username 和 password 构造house of spirit
 
   利用666的calloc(0xa0)构造unlink，使666的ptr指向0x602080
 
-  ![4](D:\Ai\GitHub\images\roar\4.jpg)
+  ![4](https://raw.githubusercontent.com/AiDaiP/images/master/roar/4.jpg)
 
   然后free，下一次add申请到这里可以修改0x602090开show，泄露libc
 
-  ![5](D:\Ai\GitHub\images\roar\5.jpg)
+  ![5](https://raw.githubusercontent.com/AiDaiP/images/master/roar/5.jpg)
 
   show之后标准输出和标准错误关闭
 
   拿回fastbin，fastbin attack打malloc_hook
 
-  ![3](D:\Ai\GitHub\images\roar\3.jpg)
+  ![3](https://raw.githubusercontent.com/AiDaiP/images/master/roar/3.jpg)
 
   
 
