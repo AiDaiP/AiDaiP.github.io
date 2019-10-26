@@ -25,7 +25,7 @@ Test iframe显示输入payload后的页面
 
 如图
 
-![1](D:\Ai\GitHub\images\xss\1.jpg)
+![1](https://raw.githubusercontent.com/AiDaiP/images/master/xss/1.jpg1.jpg)
 
 
 
@@ -323,7 +323,7 @@ Output
 
 ## Template
 
-```
+```javascript
 function escape(s) {
   function htmlEscape(s) {
     return s.replace(/./g, function(x) {
