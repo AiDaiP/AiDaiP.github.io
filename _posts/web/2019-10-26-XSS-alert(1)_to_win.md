@@ -168,7 +168,13 @@ function escape(s) {
 <a href="http://a">http://a</a>
 ```
 
-`text.replace(/\[\[(\w+)\|(.+?)\]\]/g, '<img alt="$2" src="$1.gif">');`将所有形如`[[a|b]]`的字符串转化为`<img alt="b" src="a.gif"> `
+
+
+```
+text.replace(/\[\[(\w+)\|(.+?)\]\]/g, '<img alt="$2" src="$1.gif">');
+```
+
+将所有形如`[[a|b]]`的字符串转化为`<img alt="b" src="a.gif"> `
 
 利用`<a href="`的`"`闭合alt的`"`
 
