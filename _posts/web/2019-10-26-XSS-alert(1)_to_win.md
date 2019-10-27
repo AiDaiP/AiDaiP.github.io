@@ -1241,7 +1241,7 @@ TODO
 
 
 
-##Entities
+## Entities
 
 ```javascript
 // submitted by securityMB
