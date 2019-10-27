@@ -46,3 +46,13 @@ Stack trace:
 ```
 
 所以使用docker配置
+
+
+
+
+
+懒得配了，buu上面有
+
+https://buuoj.cn/
+
+Basic-sqli-labs
