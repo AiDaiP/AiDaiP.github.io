@@ -44,7 +44,7 @@ sudo apt-get install \
 添加密钥
 
 ```
-url -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 ```
 
 ```
