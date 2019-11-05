@@ -134,6 +134,7 @@ void unimplemented(int);//http 501错误-未实现
 //Accept-Language: zh-CN,zh;q=0.9
 //Cookie: session=dd3ca7df-0729-436d-864b-d1f1851b2d97
 //Connection: close
+
 //color=red
 
 void accept_request(void *arg)
@@ -602,4 +603,5 @@ int main(void)
 
 ```
 
-![1](D:\Ai\GitHub\images\tinyhttpd\1.png)
+![1](https://raw.githubusercontent.com/AiDaiP/images/master/tinyhttpd/1.png)
+
