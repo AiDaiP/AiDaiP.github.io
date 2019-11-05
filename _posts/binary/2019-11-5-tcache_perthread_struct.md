@@ -85,3 +85,5 @@ tcache关于index的宏定义
 
 若能控制`tcache_perthread_struct`，可以把counts改为7，下一次free对应size的chunk就会进入unsorted bin
 
+
+
