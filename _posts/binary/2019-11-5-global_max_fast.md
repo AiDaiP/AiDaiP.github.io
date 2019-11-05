@@ -11,6 +11,8 @@ icon: icon-html
 
 # global_max_fast
 
+## 源码
+
 glibc-2.23
 
 ```c
