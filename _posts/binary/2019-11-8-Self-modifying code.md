@@ -1,7 +1,7 @@
 ---
 clayout: post
 title:  "Self-modifying code"
-date:   2019-11-7
+date:   2019-11-8
 desc: ""
 keywords: ""
 categories: [Binary]
