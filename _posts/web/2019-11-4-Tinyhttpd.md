@@ -13,7 +13,7 @@ icon: icon-html
 
 Tinyhttpd 是J. David Blackstone在1999年写的超轻量型 Http Serve
 
-项目地址:https://github.com/nengm/Tinyhttpd
+项目地址:https://github.com/EZLippi/Tinyhttpd
 
 ## 踩坑带师
 
