@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Off-By-One in the heap"
+title:  "Off-By-One"
 date:   2019-7-17
 desc: ""
 keywords: ""
