@@ -33,7 +33,11 @@ splice
 2. bitflip 2/1，每次翻转2bit，按照1bit的步长从头开始
 3. bitflip 4/1，每次翻转4bit，按照1bit的步长从头开始
 
+### 自动检测token
 
+bitflip 1/1时，自动检测token
+
+如果连续多个byte的最低位被翻转后，执行路径都没有变化且与原始路径不同，就把这一段连续byte判断为token
 
 ##byte flips
 
@@ -41,13 +45,29 @@ splice
 
 根据翻转量/步长进行多种不同的变异，依次为
 
-1. byteflip 8/8，每次翻转1byte，按照1byte步长从头开始
+1. bitflip 8/8，每次翻转1byte，按照1byte步长从头开始
+2. bitflip 16/8，每次翻转2byte，按照1byte步长从头开始
+3. bitflip 32/8，每次翻转4byte，按照1byte步长从头开始
 
-2. byteflip 16/8，每次翻转2byte，按照1byte步长从头开始
+### effector map
 
-3. byteflip 32/8，每次翻转4byte，按照1byte步长从头开始
+bitflip 8/8时，生成effector map
 
-   
+```
+/* Effector map setup. These macros calculate:                        设置效应地图：
+   EFF_APOS      - position of a particular file offset in the map.   文件偏移
+   EFF_ALEN      - length of a map with a particular number of bytes. 特殊字符的长度
+   EFF_SPAN_ALEN - map span for a sequence of bytes.                  一个字节序列的映射
+   */
+#define EFF_APOS(_p)          ((_p) >> EFF_MAP_SCALE2)
+#define EFF_REM(_x)           ((_x) & ((1 << EFF_MAP_SCALE2) - 1))
+#define EFF_ALEN(_l)          (EFF_APOS(_l) + !!EFF_REM(_l))
+#define EFF_SPAN_ALEN(_p, _l) (EFF_APOS((_p) + (_l) - 1) - EFF_APOS(_p) + 1)
+```
+
+在对每个byte进行翻转时，如果翻转后造成执行路径与原始路径不同，就将该byte在effector map中标记为1，有效，否则标记为0，无效
+
+如果一个byte完全翻转不影响执行路径，那么这个byte对整个fuzzing意义不大，后续的变异中会跳过这些byte
 
 ## arithmetics
 
@@ -147,7 +167,7 @@ config.h中
 
 ## dictionary
 
-字典替换或插入，来源为用户提供的token和自动检测生成的token，依次为
+字典替换或插入，来源为用户提供的tokens和自动检测生成的tokens，依次为
 
 1. user extras (over)，从头开始，将用户提供的tokens依次替换到原文件中
 2. user extras (insert)，从头开始，将用户提供的tokens依次插入到原文件中
