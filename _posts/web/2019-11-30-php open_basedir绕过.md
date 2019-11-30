@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Tinyhttpd"
+title:  "php open_basedir绕过"
 date:   2019-11-30
 desc: ""
 keywords: ""
