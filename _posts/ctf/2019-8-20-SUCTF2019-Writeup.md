@@ -17,8 +17,6 @@ icon: icon-html
 
   按f进入坦克
 
-  这是俺第一次拿一血
-
 * ### SignIn 
 
   ![1](https://raw.githubusercontent.com/AiDaiP/images/master/suctf2019/1.png)
