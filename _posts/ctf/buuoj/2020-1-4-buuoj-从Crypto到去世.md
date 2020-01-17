@@ -5,7 +5,7 @@ date:   2020-1-4
 desc: ""
 keywords: ""
 categories: [Ctf]
-tags: [CTF,buuoj,Pwn]
+tags: [CTF,buuoj,Crypto]
 icon: icon-html
 ---
 
@@ -13,13 +13,15 @@ icon: icon-html
 
 # buuoj-从Crypto到去世
 
+### [GXYCTF2019]CheckIn
+
+base64+rot47
+
 ### [NCTF2019]Keyboard
 
 qwertyuiop对应1234567890
 
 然后九宫格键盘
-
-
 
 ### [NCTF2019]childRSA
 
