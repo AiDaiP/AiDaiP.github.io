@@ -45,3 +45,35 @@ for i in range(8):
 print(flag)
 ```
 
+
+
+### [GWCTF 2019]pyre
+
+pyc，反编译拿源码
+
+```python
+print 'Welcome to Re World!'
+print 'Your input1 is your flag~'
+l = len(input1)
+for i in range(l):
+    num = ((input1[i] + i) % 128 + 128) % 128
+    code += num
+
+for i in range(l - 1):
+    code[i] = code[i] ^ code[i + 1]
+
+print code
+code = ['\x1f', '\x12', '\x1d', '(', '0', '4', '\x01', '\x06', '\x14', '4', ',', '\x1b', 'U', '?', 'o', '6', '*', ':', '\x01', 'D', ';', '%', '\x13']
+```
+
+```
+code = ['\x1f', '\x12', '\x1d', '(', '0', '4', '\x01', '\x06', '\x14', '4', ',', '\x1b', 'U', '?', 'o', '6', '*', ':', '\x01', 'D', ';', '%', '\x13']
+code = code[::-1]
+for i in range(len(code)-1):
+    code[i+1] = chr(ord(code[i+1])^ord(code[i]))
+code = code[::-1]
+for i in range(len(code)):
+    code[i] = chr((ord(code[i]) - i)%128)
+print(''.join(code))
+```
+
