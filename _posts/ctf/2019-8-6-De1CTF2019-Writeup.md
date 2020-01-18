@@ -72,6 +72,7 @@ icon: icon-html
   	if num != 0:
   		list.append(t)
   print(list)
+  ```
 ```
   
 俺寻思手动爆破挺快
@@ -185,11 +186,11 @@ https://github.com/Jwomers/many-time-pad-attack
   for i in ciphers:
       target_fix(i)
 ```
-  
+
 其实这是个填字游戏
-  
+
 还学了一波洋文单词
-  
+
   ```
   Fix this sentence:
   In faith I d& not,lcve thee wg
@@ -241,6 +242,50 @@ https://github.com/Jwomers/many-time-pad-attack
     syscall绕过限制，读取flag
 
     
+
+* ### babylsfr
+
+  ```
+  from sage.all_cmdline import *
+  import hashlib
+  GF2 = GF(2)
+  N = 256
+  for x in range(2 ** 8):
+  	a ='001010010111101000001101101111010000001111011001101111011000100001100011111000010001100101110110011000001100111010111110000000111011000110111110001110111000010100110010011111100011010111101101101001110000010111011110010110010011101101010010100101011111011001111010000000001011000011000100000101111010001100000011010011010111001010010101101000110011001110111010000011010101111011110100011110011010000001100100101000010110100100100011001000101010001100000010000100111001110110101000000101011100000001100010'
+  	a = a + bin(x)[2:].zfill(8)
+  	A = []
+  	for i in range(256):
+  		A.append([int(op) for op in a[i:i+256]])
+  	A = matrix(GF2,A)
+  	if A.rank() != 256:
+  		continue
+  	last = [int(op) for op in a[256:]]
+  	last = vector(GF2, last)
+  	mask = A.solve_right(last)#(c_n,...,c_1)
+  	mask = int(''.join(map(str, list(mask))),2)
+  
+  	R = [vector(GF2, N) for i in range(N)]
+  	for i in range(N):
+  		R[i][N - 1] = mask >> (N-1 - i) & 1
+  	for i in range(N - 1):
+  		R[i + 1][i] = 1
+  	M = Matrix(GF2, R)#线性变换矩阵
+  	M = M ** N
+  
+  	first = [int(op) for op in a[0:256]]
+  	first = vector(GF2, first)
+  	if M.rank() != 256:
+  		continue
+  	res = M.solve_left(first)
+  	KEY = int(''.join(map(str, list(res))),2)
+	FLAG = "de1ctf{"+hashlib.sha256(hex(KEY)[2:].rstrip('L')).hexdigest()+"}"
+  	if FLAG[7:11]=='1224':
+		print FLAG
+  		break
+#de1ctf{1224473d5e349dbf2946353444d727d8fa91da3275ed3ac0dedeb7e6a9ad8619}
+  ```
+  
+  
 
 * ### Baby Rsa
 
