@@ -589,4 +589,79 @@ calc.php?%20num=ls;var_dump(file_get_contents(chr(47).chr(102).chr(49).chr(97).c
   r.interactive()
   ```
 
+* ### polyre
+
+  去平坦化再去掉虚假控制流程
+
+  ```c
+  __int64 __fastcall main(__int64 a1, char **a2, char **a3)
+  {
+    v10 = 0;
+    memset(s, 0, 0x30uLL);
+    memset(s1, 0, 0x30uLL);
+    printf("Input:", 0LL);
+    v11 = s;
+    __isoc99_scanf("%s", v11);
+  
+    for ( i = 0; ; ++i )
+    {
+      v18 = i;
+      v20 = s;
+      v4 = *&v20[8 * i];
+      v7 = 0;
+      while ( 1 )
+      {
+        v21 = v7;
+        if ( v21 >= 64 )
+          break;
+        v23 = v4;
+        v24 = v4 < 0;
+        if ( v4 >= 0 )
+        {
+          v27 = v4;
+          v28 = 2 * v27;
+          v4 = v28;
+        }
+        else
+        {
+          v25 = 2 * v4;
+          v26 = v25;
+          v4 = v26 ^ 0xB0004B7679FA26B3LL;
+        }
+        v29 = v7;
+        v7 = v29 + 1;
+      }
+      v30 = 8 * i;
+      v31 = &s1[8 * i];
+      *v31 = v4;
+  
+      v32 = i + 1;
+    }
+    v33 = memcmp(s1, &unk_402170, 0x30uLL);
+    v34 = v33 != 0;
+    if ( v34 )
+      puts("Wrong!");
+    else
+      puts("Correct!");
+    return v10;
+  }
+  ```
+
+  输入长度48的字符串，每8字节一组，对每组取第一个字节判断正负，正左移一位，负右移一位，再异或0xB0004B7679FA26B3，重复64次，与unk_402170比较
+
+  ```python
+  fuck = [0xBC8FF26D43536296, 0x520100780530EE16, 0x4DC0B5EA935F08EC, 0x342B90AFD853F450, 0x8B250EBCAA2C3681, 0x55759F81A2C68AE4]
+  flag = ''
+  for s in fuck:
+      for i in range(64):
+          nmsl = s & 1
+          if nmsl == 1:
+              s ^= 0xB0004B7679FA26B3
+          s //= 2
+          if nmsl == 1:
+              s |= 0x8000000000000000
+      print(hex(s))
+  
+  ```
+
   
