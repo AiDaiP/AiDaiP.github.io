@@ -20,7 +20,7 @@ f1 'GXY{do_not_
 ```
       case 4:
         v6 = 0;
-        s = 'fo`guci';
+        s = ' fo`guci';
         strcat(&f2, (const char *)&s);
         break;
       case 5:
@@ -555,3 +555,55 @@ class Untitled {
 ```
 
 直接跑出flag
+
+
+
+### [FlareOn2]very_success
+
+堆栈不平衡，0x401000改nop
+
+输入的文件在0x402159
+
+从0x401084开始跑，设置参数，返回到0x401064，找success
+
+```python
+import angr
+
+fuck_addr = 0x402159
+p = angr.Project('very_success', auto_load_libs=False)
+s = p.factory.blank_state(addr=0x401084)
+s.mem[s.regs.esp+8:].dword = fuck_addr
+s.mem[s.regs.esp+4:].dword = 0x4010e4
+s.mem[s.regs.esp:].dword = 0x401064
+s.memory.store(fuck_addr, s.solver.BVS('flag', 8*40))
+sm = p.factory.simulation_manager(s)
+sm.explore(find=0x40106b, avoid=0x401072)
+print(sm.found[0].solver.eval(sm.found[0].memory.load(fuck_addr, 40), cast_to=bytes))
+
+```
+
+
+
+下断点拿v7
+
+```
+    v7 = (_BYTE *)(a2 + 36);
+```
+
+```
+004010E0  1C FF FF FF AF AA AD EB  AE AA EC A4 BA AF AE AA
+004010F0  8A C0 A7 B0 BC 9A BA A5  A5 BA AF B8 9D B8 F9 AE
+00401100  9D AB B4 BC B6 B3 90 9A  A8 00 00 00 00 00 00 00
+```
+
+```python
+sum = 0
+flag = ''
+fuck = [0xa8,0x9a,0x90,0xb3,0xb6,0xbc,0xb4,0xab,0x9d,0xae,0xf9,0xb8,0x9d,0xb8,0xaf,0xba,0xa5,0xa5,0xba,0x9a,0xbc,0xb0,0xa7,0xc0,0x8a,0xaa,0xae,0xaf,0xba,0xa4,0xec,0xaa,0xae,0xeb,0xad,0xaa,0xaf]
+for i in range(37):
+    nmsl = (1 << (sum & 3))
+    flag += chr((455 ^ (fuck[i] - nmsl - 1)) % 256)
+    sum += fuck[i]
+print(flag)
+```
+
