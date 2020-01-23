@@ -11,6 +11,21 @@ icon: icon-html
 
 # buuoj-从Reverse到去世
 
+### reverse3
+
+```
+import base64
+enc = 'e3nifIH9b_C@n@dH'
+flag = ''
+for i in range(len(enc)):
+    flag += chr(ord(enc[i]) - i)
+
+flag = base64.b64decode(flag)
+print(flag)
+```
+
+flag{i_l0ve_you}
+
 ### [GXYCTF2019]luck_guy
 
 ```
