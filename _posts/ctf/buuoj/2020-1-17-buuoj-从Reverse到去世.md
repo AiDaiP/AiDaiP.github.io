@@ -13,7 +13,7 @@ icon: icon-html
 
 ### reverse3
 
-```
+```python
 import base64
 enc = 'e3nifIH9b_C@n@dH'
 flag = ''
