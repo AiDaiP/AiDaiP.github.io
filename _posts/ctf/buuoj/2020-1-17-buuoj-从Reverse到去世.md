@@ -90,6 +90,20 @@ flag{c164675262033b4c49bdf7f9cda28a75}
 
 
 
+### 相册
+
+libcore.so，看字符串
+
+```
+MTgyMTg0NjUxMjVAMTYzLmNvbQ==
+dXF0c3F5aXpsZXN0dGxqdg==
+
+18218465125@163.com
+uqtsqyizlesttljv
+```
+
+
+
 ### [GXYCTF2019]luck_guy
 
 ```
