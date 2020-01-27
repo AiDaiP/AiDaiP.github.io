@@ -26,6 +26,70 @@ print(flag)
 
 flag{i_l0ve_you}
 
+### 不一样的flag
+
+走迷宫
+
+```
+*1111
+01000
+01010
+00010
+1111#
+```
+
+222441144222
+
+### 刮开有奖
+
+base64
+
+```
+V1Axak1w
+WP1jMp
+```
+
+flag长度为8，还剩前面两位，👴⑧想看了直接爆破
+
+UJWP1jMp
+
+###  SimpleRev
+
+```python
+chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+key1 = 'ADSFKNDCLS'.lower()
+key2 = 'killshadow'
+
+flag = ''
+for i in range(len(key2)):
+    str2 = key2[i]
+    for j in chars:
+        if str2 == chr((ord(j) - 39 - ord(key1[i % len(key1)]) + 97) % 26 + 97):
+            flag += j
+print(flag)
+```
+
+### Java逆向解密
+
+```python
+fuck = [180, 136, 137, 147, 191, 137, 147, 191, 148, 136, 133, 191, 134, 140, 129, 135, 191, 65]
+flag = ''
+for i in range(len(fuck)):
+	flag += chr(fuck[i] - ord('@') ^ 0x20)
+print(flag)
+```
+
+### findit
+
+凯撒
+
+```
+pvkq{m164675262033l4m49lnp7p9mnk28k75}
+flag{c164675262033b4c49bdf7f9cda28a75}
+```
+
+
+
 ### [GXYCTF2019]luck_guy
 
 ```
