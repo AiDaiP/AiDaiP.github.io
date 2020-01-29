@@ -963,3 +963,34 @@ v4 = sub_401160(Text, &unk_402008, 0x1C);
 ```
 
 把0x1c改大，运行出flag
+
+
+
+### [FlareOn4]IgniteMe
+
+```c
+signed int check()
+{
+  int v0; // ST04_4
+  int i; // [esp+4h] [ebp-8h]
+  unsigned int j; // [esp+4h] [ebp-8h]
+  char v4; // [esp+Bh] [ebp-1h]
+
+  v0 = get_len((int)flag);
+  v4 = fuck_v4();
+  for ( i = v0 - 1; i >= 0; --i )
+  {
+    res[i] = v4 ^ flag[i];
+    v4 = flag[i];
+  }
+  for ( j = 0; j < 0x27; ++j )
+  {
+    if ( res[j] != (unsigned __int8)key[j] )
+      return 0;
+  }
+  return 1;
+}
+//v4 = __ROL4__(0x80070000, 4) >> 1;
+//v4 = 0x4;
+```
+
