@@ -950,3 +950,16 @@ while True:
 	r.close()
 ```
 
+
+
+###  [FlareOn4]login
+
+rot13
+
+### [FlareOn6]Overlong
+
+```c
+v4 = sub_401160(Text, &unk_402008, 0x1C);
+```
+
+把0x1c改大，运行出flag
