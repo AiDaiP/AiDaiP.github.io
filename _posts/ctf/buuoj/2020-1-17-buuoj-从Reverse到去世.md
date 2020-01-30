@@ -1102,3 +1102,123 @@ for i in range(100000):
 ```
 
 汉堡底，臭豆腐，白拆，白拆，胡罗贝，汉堡顶，你看这汉堡做的行不行。奥利给，兄弟们，造它就完了
+
+
+
+### [FlareOn5]Minesweeper Championship Registration
+
+解压，strings
+
+### [FlareOn5]Ultimate Minesweeper
+
+flag
+
+```c#
+// UltimateMinesweeper.MainForm
+// Token: 0x0600000D RID: 13 RVA: 0x000023E4 File Offset: 0x000005E4
+private string GetKey(List<uint> revealedCells)
+{
+	revealedCells.Sort();
+	Random random = new Random(Convert.ToInt32(revealedCells[0] << 20 | revealedCells[1] << 10 | revealedCells[2]));
+	byte[] array = new byte[32];
+	byte[] array2 = new byte[]
+	{
+		245,
+		75,
+		65,
+		142,
+		68,
+		71,
+		100,
+		185,
+		74,
+		127,
+		62,
+		130,
+		231,
+		129,
+		254,
+		243,
+		28,
+		58,
+		103,
+		179,
+		60,
+		91,
+		195,
+		215,
+		102,
+		145,
+		154,
+		27,
+		57,
+		231,
+		241,
+		86
+	};
+	random.NextBytes(array);
+	uint num = 0U;
+	while ((ulong)num < (ulong)((long)array2.Length))
+	{
+		byte[] array3 = array2;
+		uint num2 = num;
+		array3[(int)num2] = (array3[(int)num2] ^ array[(int)num]);
+		num += 1U;
+	}
+	return Encoding.ASCII.GetString(array2);
+}
+
+```
+
+随机数👴懒得看，搞成无敌跑一遍就完事了
+
+```c#
+// UltimateMinesweeper.MainForm
+// Token: 0x0600000C RID: 12 RVA: 0x00002348 File Offset: 0x00000548
+private void SquareRevealedCallback(uint column, uint row)
+{
+	if (this.MineField.BombRevealed)
+	{
+		this.stopwatch.Stop();
+		Application.DoEvents();
+		Thread.Sleep(1000);
+		new FailurePopup().ShowDialog();
+		Application.Exit();
+	}
+	this.RevealedCells.Add(row * MainForm.VALLOC_NODE_LIMIT + column);
+	if (this.MineField.TotalUnrevealedEmptySquares == 0)
+	{
+		this.stopwatch.Stop();
+		Application.DoEvents();
+		Thread.Sleep(1000);
+		new SuccessPopup(this.GetKey(this.RevealedCells)).ShowDialog();
+		Application.Exit();
+	}
+}
+```
+
+BombRevealed删掉
+
+把所有块都点出来，只有三个没雷，点出来之后弹flag是乱码
+
+记录三个块的位置，重开直接点这三个块弹flag
+
+
+
+### [FlareOn3]Challenge1
+
+```python
+import base64
+fuck_b64 = ['Z','Y', 'X', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'z', 'y', 'x', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/']
+
+b64 = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/', '=']
+  
+flag = 'x2dtJEOmyjacxDemx2eczT5cVS9fVUGvWTuZWjuexjRqy24rV29q'
+fuck = ''
+for i in flag:
+	fuck += b64[fuck_b64.index(i)]
+  
+print(base64.b64decode(fuck))
+
+```
+
