@@ -55,3 +55,18 @@ icon: icon-html
 
   1. 👴能伪造fake fastbin，目标区域的前后都是可控的，前面伪造size，后面伪造下一个chunk的size
   2. 👴能控制free的指针
+
+
+
+### House of Roman
+
+* 原理
+
+  fastbin attack + unsortedbin attack
+
+  通过unsortedbin搞出来libc地址(main_arena+88)，写到fastbin的fd，然后👴改一字节指向malloc_hook-0x23，因为这有个0x7f👴fastbin attack能打过去，👴就可以控制malloc_hook了
+
+* 条件
+
+  1. 👴能搞出来unsortbin
+  2. 👴能控制fastbin的fd
