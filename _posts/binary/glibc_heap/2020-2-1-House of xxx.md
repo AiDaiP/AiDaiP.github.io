@@ -27,7 +27,21 @@ icon: icon-html
 
   2. 👴能自由控制分配的size
 
+### house of einherjar
 
+* 原理
+
+  把最后一个chunk的pre_inuse置零，在👴想控制的地方伪造一个chunk，根据伪造的chunk和最后一个chunk的距离设置最后一个chunk的pre_size，free最后一个chunk，free认为上一个chunk已经free，根据pre_size找上一个chunk，然后伪造的chunk，最后一个chunk，top chunk unlink，top chunk就到了👴想让他去的地方
+
+* 条件
+
+  1. 👴能控制最后一个chunk的pre_size和pre_inuse
+
+     两个物理相邻的 chunk 会共享 prev_size字段
+
+  2. 最后一个chunk的size必须是0x100的倍数，否则过不了check
+
+  3. 👴能伪造chunk
 
 ### house of spirit
 
