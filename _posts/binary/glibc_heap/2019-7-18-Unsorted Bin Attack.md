@@ -51,4 +51,12 @@ icon: icon-html
   将一个unsorted bin取出时， bck->fd变为取出的unsorted bin的位置
 
   如果可以控制bk，就能将`unsorted_chunks (av) `写到任意地址
+  
+  
+  
+  控制bk，bk = fuck_addr-0x10 (64bit)，malloc，main+arena+xx就写到fuck_addr
+  
+  
+  
+  
 
