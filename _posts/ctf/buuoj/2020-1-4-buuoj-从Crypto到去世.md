@@ -529,3 +529,8 @@ for i in range(len(a), lent):
     ff.write(chr(tmp^ord(s[i])))
 ```
 
+### [CISCN2018]picture
+
+binwalk -e->base64 -d>文件头KP改PK->打开压缩包拿hint:ZeroDivisionError，得到密码integer division or modulo by zero，解压->uuencode
+
+👴寻思这是misc⑧
