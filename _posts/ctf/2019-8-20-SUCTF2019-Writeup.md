@@ -133,12 +133,10 @@ icon: icon-html
 
 * ### MT
 
-  块密码，四字节一组，无密钥加密，加密过程中每轮明文与明文位运算结果异或
-
   对明文重复加密最终可以得到明文，所以对密文重复加密，就可以得到明文
 
   ```python
-  from Crypto.Random import random
+from Crypto.Random import random
   from Crypto.Util import number
   
   def convert(m):
