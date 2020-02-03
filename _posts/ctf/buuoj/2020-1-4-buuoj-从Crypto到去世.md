@@ -299,6 +299,32 @@ print(long_to_bytes(f2)+long_to_bytes(f1)
 
 摩斯+培根
 
+```
+..-.-.-.–…….–..-…-..-…–.-.-….-..-..–.-.-..-.-..—-
+```
+
+先替换
+
+… = ...
+
+—=---
+
+–=--
+
+```
+..-.-.-.--.......--..-...-..-...--.-.-....-..-..--.-.-..-.-..----
+```
+
+无间隔解摩斯
+
+http://ctftools.com/down/down/passwd/
+
+```
+aababababbaaaaaaabbaabaaabaabaaabbababaaaabaabaabbababaababaabbbb
+```
+
+FLAGISGUETKK
+
 ### [GUET-CTF2019]BabyRSA
 
 没n，d、(p+1)(q+1) 、p+q白给
