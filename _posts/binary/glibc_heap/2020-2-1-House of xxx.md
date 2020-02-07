@@ -39,7 +39,7 @@ fd=ptr - 0x18，bk=ptr - 0x10，unlink时ptr的指针变为ptr - 0x18
 
 ### Unsortedbin Attack
 
-👴能控制bk，就能把unsorted_chunks (av)写到bk指向的地址，unsorted_chunks (av)是个libc地址
+👴能控制bk，就能把unsorted_chunks (av)写到bk->fd(bk指向的地址+0x10)，unsorted_chunks (av)是个libc地址
 
 ### House of Force
 
