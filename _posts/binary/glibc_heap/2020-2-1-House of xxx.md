@@ -13,6 +13,34 @@ icon: icon-html
 
 👴之前没记录过House of xxx，现在随便写写
 
+### Heap Overflow
+
+没验size，👴能填到后面的chunk
+
+### Use After Free
+
+free之后还能用
+
+### Double Free
+
+也算是个uaf，多次free，多次进链
+
+### Unlink
+
+fd=ptr - 0x18，bk=ptr - 0x10，unlink时ptr的指针变为ptr - 0x18
+
+### Fastbin Attack
+
+伪造chunk，改fd打过去
+
+### Tcache Attack
+
+没验证，改fd直接打
+
+### Unsortedbin Attack
+
+👴能控制bk，就能把unsorted_chunks (av)写到bk指向的地址，unsorted_chunks (av)是个libc地址
+
 ### House of Force
 
 * 原理
