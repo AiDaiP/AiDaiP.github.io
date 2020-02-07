@@ -560,3 +560,12 @@ for i in range(len(a), lent):
 binwalk -e->base64 -d>文件头KP改PK->打开压缩包拿hint:ZeroDivisionError，得到密码integer division or modulo by zero，解压->uuencode
 
 👴寻思这是misc⑧
+
+### [QCTF2018]Xman-RSA
+
+enc.py做了单表替换，先还原
+
+共模攻击求n1，模不互素拿p1，求d，解明文然后拼接
+
+
+
