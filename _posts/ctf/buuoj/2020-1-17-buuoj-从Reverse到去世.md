@@ -1289,3 +1289,162 @@ for i in range(5,32):
 print(flag)
 ```
 
+
+
+### [XNUCA2018]Code_Interpreter
+
+```C
+__int64 __fastcall sub_400806(__int64 ptr)
+{
+  __int64 result; // rax
+  unsigned int v2; // eax
+  int v3; // ST1C_4
+  unsigned int v4; // eax
+  int v5; // ST1C_4
+  unsigned int v6; // eax
+  int v7; // ST1C_4
+  unsigned __int8 v8; // ST1A_1
+  unsigned __int8 v9; // ST1A_1
+  unsigned __int8 v10; // ST1A_1
+  unsigned __int8 v11; // ST1A_1
+  unsigned __int8 v12; // ST1A_1
+  unsigned __int8 v13; // ST1A_1
+  unsigned __int8 v14; // ST1A_1
+  unsigned __int8 v15; // ST1A_1
+  char flag; // [rsp+19h] [rbp-7h]
+
+  data[0] = num1;
+  data2 = num2;
+  result = num3;
+  data3 = num3;
+  index0 = 0;
+  index = 2;
+  code = 0;
+  flag = 1;
+  while ( flag )
+  {
+    switch ( *(code + ptr) )
+    {
+      case 0u:
+        flag = 0;
+        break;
+      case 1u:
+        v2 = ++code;
+        ++code;
+        v3 = *(v2 + ptr);
+        v4 = code++;
+        v5 = (*(v4 + ptr) << 8) + v3;
+        v6 = code++;
+        v7 = (*(code + ptr) << 24) + (*(v6 + ptr) << 16) + v5;
+        data[++index] = v7;
+        break;
+      case 2u:
+        --index;
+        break;
+      case 3u:
+        v8 = *(++code + ptr);
+        r[v8] += r[*(++code + ptr)];
+        break;
+      case 4u:
+        v9 = *(++code + ptr);
+        r[v9] -= r[*(++code + ptr)];
+        break;
+      case 5u:
+        v10 = *(++code + ptr);
+        r[v10] *= *(++code + ptr);
+        break;
+      case 6u:
+        v11 = *(++code + ptr);
+        r[v11] = r[v11] >> *(++code + ptr);
+        break;
+      case 7u:
+        v12 = *(++code + ptr);
+        r[v12] = r[*(++code + ptr)];
+        break;
+      case 8u:
+        v13 = *(++code + ptr);
+        r[v13] = data[index0 + *(++code + ptr)];
+        break;
+      case 9u:
+        v14 = *(++code + ptr);
+        r[v14] ^= r[*(++code + ptr)];
+        break;
+      case 0xAu:
+        v15 = *(++code + ptr);
+        r[v15] |= r[*(++code + ptr)];
+        break;
+      default:
+        fprintf(stderr, "Invalid opcode. %d\n", *(code + ptr));
+        exit(1);
+        return result;
+    }
+    result = (code++ + 1);
+  }
+  return result;
+}
+```
+
+```c
+data[0]=num1
+data[1]=num2
+data[2]=num3
+09 04 04        r[4] ^= r[4]                    
+09 00 00        r[0] ^= r[0]                  
+08 01 00        r[1] = data[0]       
+08 02 01        r[2] = data[1]        
+08 03 02        r[3] = data[2]      
+06 01 04        r[1] = r1>>4                 
+05 01 15        r[1] *= 0x15                          
+07 00 01        r[0] = r1                  
+04 00 03        r[0] -= r3                   
+01 6B CC 7E 1D  data[++index] = 0x1d7ecc6b  index = 3 
+08 01 03        r[1] = data[3]
+04 00 01        r[0] -= r[1] 
+02              --index  index = 2
+0A 04 00        r[4] |= r[0] 
+
+09 00 00        r[0] ^= r[0]                 
+08 01 00        r[1] = data[0]     
+08 02 01        r[2] = data[1]     
+08 03 02        r[3] = data[2]   
+06 03 08        r[3] = r[3]>>8           
+05 03 03        r[3] *= 3                  
+07 00 03        r[0] = r[3]                  
+03 00 02        r[0] += r[2]                   
+01 7C 79 79 60  data[++index]=0x6079797c  index = 3  
+08 01 03        r[1] = data[3]  
+04 00 01        r[0] -= r[1]                  
+02              --index  index = 2
+0A 04 00        r[4] |= r[0]
+
+09 00 00        r[0] ^= r[0] 
+08 01 00        r[1] = data[0] 
+08 02 01        r[2] = data[1]     
+08 03 02        r[3] = data[2]  
+06 01 08        r[1] = r[1]>>8            
+07 00 01        r[0] = r[1] 
+03 00 02        r[0] += r[2]                  
+01 BD BD BC 5F  data[++index]=0x5fbcbdbd  index = 3 
+08 01 03        r[1]=data[3]
+04 00 01        r[0] -= r[1]                  
+02              --index  index = 2
+0A 04 00        r[4] |= r[0]       
+
+00              ret              
+```
+
+```python
+from z3 import *
+s = Solver()
+a,b,c = BitVecs('a b c',32) 
+s.add((((a>>4))*0x15-c==0x1d7ecc6b))
+s.add(((c>>8))*3+b==0x6079797c)
+s.add(((a>>8))+b==0x5fbcbdbd)
+s.add(a&0xff==0x5e)
+s.add(b&0x0ff0000==0x5e0000)
+s.add(a&0xff==0x5e)
+print(s.check())
+print(s.model())
+#[c = 1583243102, a = 1583308382, b = 1600020063]
+```
+
