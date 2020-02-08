@@ -1448,3 +1448,104 @@ print(s.model())
 #[c = 1583243102, a = 1583308382, b = 1600020063]
 ```
 
+
+
+### [XNUCA2018]Strange_Interpr
+
+deflat.py解混淆
+
+```c
+ dword_6138F4 = dword_6138E8 + 480;
+  data[dword_6138E8] ^= data[dword_6138E8 + 480];
+  dword_6138F8 = ++dword_6138E8;
+  dword_6138F4 = dword_6138E8 + 480;
+  data[dword_6138E8] ^= data[dword_6138E8 + 480];
+  dword_6138F8 = ++dword_6138E8;
+  dword_6138F4 = dword_6138E8 + 480;
+  data[dword_6138E8] ^= data[dword_6138E8 + 480];
+  dword_6138F8 = ++dword_6138E8;
+  dword_6138F4 = dword_6138E8 + 480;
+  data[dword_6138E8] ^= data[dword_6138E8 + 480];
+  dword_6138F8 = ++dword_6138E8;
+  dword_6138F4 = dword_6138E8 + 480;
+  data[dword_6138E8] ^= data[dword_6138E8 + 480];
+  dword_6138F8 = ++dword_6138E8;
+  dword_6138F4 = dword_6138E8 + 480;
+  data[dword_6138E8] ^= data[dword_6138E8 + 480];
+  dword_6138F8 = ++dword_6138E8;
+  dword_6138F4 = dword_6138E8 + 480;
+  data[dword_6138E8] ^= data[dword_6138E8 + 480];
+  dword_6138F8 = ++dword_6138E8;
+  dword_6138F4 = dword_6138E8 + 480;
+  data[dword_6138E8] ^= data[dword_6138E8 + 480];
+  dword_6138F8 = ++dword_6138E8;
+  dword_6138F4 = dword_6138E8 + 480;
+  data[dword_6138E8] ^= data[dword_6138E8 + 480];
+  dword_6138F8 = ++dword_6138E8;
+  dword_6138F4 = dword_6138E8 + 480;
+  data[dword_6138E8] ^= data[dword_6138E8 + 480];
+  dword_6138F8 = ++dword_6138E8;
+  dword_6138F4 = dword_6138E8 + 480;
+  data[dword_6138E8] ^= data[dword_6138E8 + 480];
+  dword_6138F8 = ++dword_6138E8;
+  dword_6138F4 = dword_6138E8 + 480;
+  data[dword_6138E8] ^= data[dword_6138E8 + 480];
+  dword_6138F8 = ++dword_6138E8;
+  dword_6138F4 = dword_6138E8 + 480;
+  data[dword_6138E8] ^= data[dword_6138E8 + 480];
+  dword_6138F8 = ++dword_6138E8;
+  dword_6138F4 = dword_6138E8 + 480;
+  data[dword_6138E8] ^= data[dword_6138E8 + 480];
+  dword_6138F8 = ++dword_6138E8;
+  dword_6138F4 = dword_6138E8 + 480;
+  data[dword_6138E8] ^= data[dword_6138E8 + 480];
+  dword_6138F8 = ++dword_6138E8;
+  dword_6138F4 = dword_6138E8 + 480;
+  v4 = dword_6138E8;
+  data[dword_6138E8] ^= data[dword_6138E8 + 480];
+
+  for ( j = 0; j < 16; ++j )
+  {
+    v4 = (j + 16);
+    data[v4] ^= data[j + 480] ^ data[j] ^ data[j + 496];
+  }
+  v7 = 1;
+  for ( k = 31; k >= 0; --k )
+  {
+    v3 = data[k];
+    v4 = k;
+    if ( v3 != key[k] )
+      v7 = 0;
+  }
+  if ( v7 )
+    printf("Congratulations! \nflag is: %s\n", v10, v4, 223293186LL);
+  else
+    printf("Try again.\n", v3, v4, 223293186LL);
+  return 0LL;
+}
+```
+
+下断点拿数据
+
+```
+a = [0x68,0x1C,0x7C,0x66,0x77,0x74,0x1A,0x57,0x06,0x53,0x52,0x53,0x02,0x5D,0x0C,0x5D]
+b = [0x04,0x74,0x46,0x0E,0x49,0x06,0x3D,0x72,0x73,0x76,0x27,0x74,0x25,0x78,0x79,0x30]
+c = [0x68,0x1C,0x7C,0x66,0x77,0x74,0x1A,0x57,0x06,0x53,0x52,0x53,0x02,0x5D,0x0C,0x5D]
+```
+
+```python
+a = [0x68,0x1C,0x7C,0x66,0x77,0x74,0x1A,0x57,0x06,0x53,0x52,0x53,0x02,0x5D,0x0C,0x5D]
+b = [0x04,0x74,0x46,0x0E,0x49,0x06,0x3D,0x72,0x73,0x76,0x27,0x74,0x25,0x78,0x79,0x30]
+c = [0x68,0x1C,0x7C,0x66,0x77,0x74,0x1A,0x57,0x06,0x53,0x52,0x53,0x02,0x5D,0x0C,0x5D]
+key = '012345abcdefghijklmnopqrstuvwxyz'
+
+flag = ''
+for i in range(16):
+    flag += chr(ord(key[i])^a[i])
+
+for i in range(16):
+    flag += chr(ord(key[i+16])^b[i]^c[i]^ord(key[i]))
+print(flag)
+
+```
+
