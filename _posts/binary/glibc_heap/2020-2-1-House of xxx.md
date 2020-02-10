@@ -29,6 +29,12 @@ free之后还能用
 
 fd=ptr - 0x18，bk=ptr - 0x10，unlink时ptr的指针变为ptr - 0x18
 
+###Unlink overlap
+
+free1 used2 used3
+
+通过used2伪造used3的prev_size为free1和used2size和，prev_inuse为0，free3，unlink，再取出来，得到两个used2
+
 ### Fastbin Attack
 
 伪造chunk，改fd打过去
