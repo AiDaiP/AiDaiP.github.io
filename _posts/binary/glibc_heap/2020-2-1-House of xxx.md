@@ -1,6 +1,6 @@
 ---
 clayout: post
-title:  "House of xxx"
+title:  "Heap trick"
 date:   2020-2-1
 desc: ""
 keywords: ""
@@ -9,9 +9,7 @@ tags: [pwn]
 icon: icon-html
 ---
 
-# House of xxx
-
-👴之前没记录过House of xxx，现在随便写写
+# Heap trick
 
 ### Heap Overflow
 
