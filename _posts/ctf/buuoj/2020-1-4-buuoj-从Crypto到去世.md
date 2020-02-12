@@ -641,3 +641,37 @@ m = pow(c,d)
 print (''.join([chr(c) for c in m.list()]))
 ```
 
+### [watevrCTF 2019]ECC-RSA
+
+$q^2 ≡ p^3 + a*p + b (mod p)$
+
+$n^2 ≡ p^5 + a*p^3 + b*p^2 (mod p)$
+
+可以分解出pq
+
+```python
+from binascii import *
+
+P = 0x1ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+a = -0x3
+b = 0x51953eb9618e1c9a1f929a21a0b68540eea2da725b99b315f3b8b489918ef109e156193951ec7e937b1652c0bd3bb1bf073573df883d2c34f1ef451fd46b503f00
+n = 0x118aaa1add80bdd0a1788b375e6b04426c50bb3f9cae0b173b382e3723fc858ce7932fb499cd92f5f675d4a2b05d2c575fc685f6cf08a490d6c6a8a6741e8be4572adfcba233da791ccc0aee033677b72788d57004a776909f6d699a0164af514728431b5aed704b289719f09d591f5c1f9d2ed36a58448a9d57567bd232702e9b28f
+
+R.<x> = PolynomialRing(GF(P))
+f = x^5 + a*x^3 + b*x^2 - n^2
+factors = f.factor()
+print(factors)
+for i in factors:
+    i = i[0]
+    if i.degree()==1:
+        if i > 0:
+            tmp = Integer(mod(-i[0],P))
+        else:
+            tmp = i
+        if gcd(tmp,n) != 1:
+            p = tmp
+            q = n/tmp
+print(p)
+print(q)
+```
+
