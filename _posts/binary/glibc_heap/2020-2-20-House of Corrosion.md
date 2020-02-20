@@ -11,6 +11,10 @@ icon: icon-html
 
 # House of Corrosion
 
+无内鬼，来个链接
+
+https://github.com/CptGibbon/House-of-Corrosion
+
 先学洋文
 
 ```
@@ -21,7 +25,7 @@ n. 腐蚀; 侵蚀;
 [其他] 复数：corrosions-
 ```
 
-## 原理
+## 源码
 
 glibc2.27
 
@@ -98,19 +102,23 @@ malloc_init_state (mstate av)
 
 fastbinsY存放fastbin top，index由size决定
 
-### House of Corrosion
+## House of Corrosion
 
 如果能改写global_max_fast，就可以申请超出fastbin范围的chunk
 
-free时根据size得到index，把free chunk写到fastbinsY[idx]，实现在fastbinsY后的目标地址写入一个堆地址
+* 写原语
 
-如果存在uaf，改free chunk的fd再取回来，fd写到fastbinsY[idx]，实现在fastbinsY后的目标地址任意写
+  fastbinsY后任意地址写
 
-size计算：size = offset*2 + 0x20，offset为目标地址到fastbinsY的偏移
+  free时根据size得到index，把free chunk写到fastbinsY[idx]，实现在fastbinsY后的目标地址写入一个堆地址
 
-* Transplant
+  如果存在uaf，改free chunk的fd再取回来，fd写到fastbinsY[idx]，实现在fastbinsY后的目标地址任意写
 
-  向目标地址写目标libc地址，并且把chunk申请到libc
+  size计算：size = offset*2 + 0x20，offset为目标地址到fastbinsY的偏移
+
+* transplant原语
+
+  向目标地址写目标libc地址（把目标libc地址转移到目标地址）
 
   1. 改global_max_fast
 
@@ -128,12 +136,30 @@ size计算：size = offset*2 + 0x20，offset为目标地址到fastbinsY的偏移
 
   6. 把A的size改回去，malloc(size1)，A->fd进addr1也就是目标libc地址进addr1
 
-  7. malloc(size1)到目标libc地址
+* get shell（glibc2.27）
 
-## 基本操作
+  1. 改global_max_fast
 
-### glibc2.27
+     * unsorted bin attack 直接打global_max_fast，需要爆破2字节（glibc2.29不好使）
 
-1. 改global_max_fast
-2. 
+     * UAF改tcache fd使其指向一个unsorted bin，再取回来，main_arena地址进tcache，再uaf改fd指向global_max_fast，需要爆破2字节（glibc2.29好使）
 
+  2. transplant原语把`__default_morecore`地址转移到stderr的`_IO_buf_end`
+
+  3. 写原语写`_IO_buf_base`，`_IO_buf_base+_IO_buf_end=onegadget`
+
+  4. 写原语把`_flags`写为0，过`_IO_str_overflow`check，`_IO_write_ptr`写为0x7fffffff，过`_IO_write_ptr-_IO_write_base>_IO_buf_base+_IO_buf_end`
+
+  5. 写原语把stdout的`_mode`写为0
+
+  6. 找一个call eax，不能直接找到可以用transplant原语找，写原语写到`stderr+0xe0(tdout的_flags)`
+
+  7. 写原语部分覆写vtable，指向`IO_str_jumps-0x10`
+
+  8. 写原语把`global_max_fast`改回去
+
+  9. 触发stderr，执行call rax
+
+* get shell（glibc2.29）
+
+  👴选择死亡
