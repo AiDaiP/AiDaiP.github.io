@@ -1,13 +1,13 @@
 # links section data
 - last_name: Cai
   first_name: YX
-  desc: 蔡佬
+  desc: 
   website: https://cyx0706.github.io/
   email: 
 
 - last_name: Liu
   first_name: K
-  desc: lknb
+  desc: 
   website: https://ppcrab.github.io/
   email: 
 
@@ -21,4 +21,10 @@
   first_name: 
   desc: 
   website: http://39.107.244.116/
+  email: 
+
+- last_name: xkx
+  first_name: 
+  desc: 
+  website: https://blog.iostream.site/
   email: 
