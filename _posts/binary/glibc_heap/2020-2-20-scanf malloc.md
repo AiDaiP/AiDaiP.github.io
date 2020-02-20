@@ -27,7 +27,7 @@ add 新建note
 
 edit 根据content指针找content，只能edit一次
 
-```C
+```c
 int edit()
 {
   if ( !ptr || dword_6020A4 )
