@@ -11,10 +11,6 @@ icon: icon-html
 
 #scanf malloc
 
-# scanf
-
-# scanf malloc
-
 glibc2.23后，scanf的缓冲区在堆中，利用scanf可以触发malloc申请比较大的堆块
 
 ## Hitcon2016-babyheap
