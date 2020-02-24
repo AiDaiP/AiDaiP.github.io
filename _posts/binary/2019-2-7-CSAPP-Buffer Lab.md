@@ -4,7 +4,7 @@ title:  "CSAPP-Buffer Lab"
 date:   2019-2-7
 desc: ""
 keywords: ""
-categories: [Cetus]
+categories: [Binary]
 tags: [CSAPP]
 icon: icon-html
 ---

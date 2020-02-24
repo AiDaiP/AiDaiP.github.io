@@ -4,7 +4,7 @@ title:  "CSAPP-Cache Lab"
 date:   2019-2-21
 desc: ""
 keywords: ""
-categories: [Cetus]
+categories: [Binary]
 tags: [CSAPP]
 icon: icon-html
 ---

@@ -4,7 +4,7 @@ title:  "CSAPP-Data Lab"
 date:   2019-1-23
 desc: ""
 keywords: ""
-categories: [Cetus]
+categories: [Binary]
 tags: [CSAPP]
 icon: icon-html
 ---

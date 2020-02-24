@@ -4,7 +4,7 @@ title:  "LeetCode从打开网站到自闭"
 date:   2019-1-21
 desc: ""
 keywords: ""
-categories: [Cetus]
+categories: [Misc]
 tags: [LeetCode]
 icon: icon-html
 ---

@@ -4,7 +4,7 @@ title:  "CSAPP-Bomb Lab"
 date:   2019-1-26
 desc: ""
 keywords: ""
-categories: [Cetus]
+categories: [Binary]
 tags: [CSAPP]
 icon: icon-html
 ---
