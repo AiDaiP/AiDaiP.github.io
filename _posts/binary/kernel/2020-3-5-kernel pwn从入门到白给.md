@@ -330,19 +330,27 @@ struct cred {
 
 除了用户态程序的保护机制还有：
 
-* SMAP
+* SMAP/SMEP
+
+  SMAP
 
   Supervisor Mode Access Prevention，管理模式访问保护
 
   禁止内核访问用户空间的数据
 
-* SMEP
+  SMEP
 
   Supervisor Mode Execution Prevention，管理模式执行保护
 
   禁止内核执行用户空间的代码
 
-  arm中成为PXN(Privileged Execute Never)
+  arm中称为PXN(Privileged Execute Never)
+
+  ```
+   -cpu qemu64,smep,smap 2>/dev/null  
+  ```
+
+  
 
 * mmap_min_addr
 
