@@ -16,7 +16,7 @@ layout: null
         <title type="html">{{ post.title | xml_escape }}</title>
         <description type="html">{{ post.content | xml_escape }}</description>
         <pubDate type="html">{{ post.date | date_to_rfc822 }}</pubDate>
-        <link type="html">{{ post.url | prepend: site.baseurl | prepend: site.url }}</link>
+        <link type="url">{{ post.url | prepend: site.baseurl | prepend: site.url }}</link>
         <guid isPermaLink="true">{{ post.url | prepend: site.baseurl | prepend: site.url }}</guid>
         {% for tag in post.tags %}
         <category>{{ tag | xml_escape }}</category>
