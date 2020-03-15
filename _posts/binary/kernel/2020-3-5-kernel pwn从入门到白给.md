@@ -246,11 +246,13 @@ echo 1 > /proc/sys/kernel/kptr_restrict
 
 * int commit_creds(struct cred *new)
 
-  改变进程权限
+  更新进程creds
 
 * struct cred* prepare_kernel_cred(struct task_struct* daemon)
 
-  改变进程权限
+  创建cred struct
+  
+  提权`commit_creds(prepare_kernel_cred(0))`
 
 
 
