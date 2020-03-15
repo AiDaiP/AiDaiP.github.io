@@ -23,7 +23,7 @@ commit_creds和prepare_kernel_cred是内核态函数，rop控制LKM执行rop执�
 
 rop链
 
-1. rop执行commit_creds(prepare_kernel_cred(0))
+1. rop执行内核空间的commit_creds(prepare_kernel_cred(0))
 2. 返回到用户态执行system("/bin/sh")
 
 如何返回到用户态
