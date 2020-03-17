@@ -380,6 +380,14 @@ struct cred {
 
   可以找gadget
 
+  ROPgadget不好使，太慢
+
+  ```
+  ropper --file ./vmlinux --nocolor 
+  ```
+
+  
+
 * bzImage
 
   压缩后的内核文件
