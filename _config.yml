@@ -43,7 +43,7 @@ valine_comment:
 # analytics
 ## google analytics
 ga:  # if you wanna this feature, go to https://www.google.com/analytics/ to get your configuration; if not, comment following line.
-  id: UA-93473370-3
+  id: UA-161833481-1
 
 ## google optimize
 go:
