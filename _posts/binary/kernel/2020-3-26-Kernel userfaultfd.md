@@ -325,7 +325,7 @@ static void * fault_handler_thread(void *arg)
        uffdio_copy.len = page_size;
        uffdio_copy.mode = 0;
        uffdio_copy.copy = 0;
-       if (ioctl(uffd, UFFDIO_COPY, &uffdio_copy) == -1)
+       if (ioctl(uffd, UFFDIO_COPY, &uffdio_copy) == -1)////恢复执行copy_from_user
            errExit("ioctl-UFFDIO_COPY");
 
        printf("        (uffdio_copy.copy returned %lld)\n",
