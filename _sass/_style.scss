@@ -2407,7 +2407,7 @@ body {
     border-color: transparent;
     transition: all .3s ease-in-out 0s;
     .nav li a {
-      color: #fff;
+      color: #676a6c;
       font-family: 'Open Sans', helvetica, arial, sans-serif;
       font-weight: 700;
       letter-spacing: 1px;
@@ -2423,11 +2423,11 @@ body {
     .navbar-nav > {
       .active > a {
         background: 0 0;
-        color: #fff;
+        color: #3385FF;
         border-top: 6px solid #3385FF;
         &:hover {
           background: 0 0;
-          color: #fff;
+          color: #3385FF;
           border-top: 6px solid #3385FF;
         }
       }
@@ -2651,10 +2651,11 @@ body {
     padding-top: 80px;
     padding-bottom: 90px;
     background-color: #3385FF;
-    background-image: url(../assets/img/landing/avatar_all.png);
+    /* background-image: url(../assets/img/landing/avatar_all.png); */
   }
   .contact {
-    background-image: url(../assets/img/landing/word_map.png);
+    /* background-image: url(../assets/img/landing/word_map.png); */
+    background-color: #fff;
     background-position: 50% 50%;
     background-repeat: no-repeat;
     margin-top: 60px;

@@ -12,19 +12,19 @@
   tpl: career.html
   css: timeline
 
-- id: skills
-  i18n: nav.skills
-  name: Skills
-  tpl: skills.html
-  css: team
+# - id: skills
+#   i18n: nav.skills
+#   name: Skills
+#   tpl: skills.html
+#   css: team
 
 
 - id: blog
-  i18n: nav.blog
+#  i18n: nav.blog
   name: Blog
   tpl: blog.html
   page: blog/
-  css: testimonials navy-section
+#  css: testimonials navy-section
 
 - id: links
   i18n: nav.link

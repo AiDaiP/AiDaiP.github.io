@@ -1,6 +1,20 @@
 # careers section data
 # if you don't have language feature(language.yml is empty), ignore "i18n" items
 - name:
+    detail: 阿姆斯特丹
+    i18n: 
+  desc:
+    detail: 种地
+    i18n: 
+  date:
+    detail: Apr. 2010
+    i18n: 
+  job:
+    detail: 农民
+    i18n: 
+  icon: fa-plus-square
+
+- name:
     detail: Ocean University of China
     i18n: 
   desc:
@@ -10,7 +24,34 @@
     detail: Apr. 2018
     i18n: 
   job:
-    detail: Student
+    detail: 学生
     i18n: 
   icon: fa-plus-square
 
+- name:
+    detail: Blue-Whale
+    i18n: 
+  desc:
+    detail: 饮水机管理员
+    i18n: 
+  date:
+    detail: Apr. 2018
+    i18n: 
+  job:
+    detail: 学生
+    i18n: 
+  icon: fa-plus-square
+
+- name:
+    detail: 阿姆斯特丹
+    i18n: 
+  desc:
+    detail: 送水
+    i18n: 
+  date:
+    detail: Apr. 2020
+    i18n: 
+  job:
+    detail: 工人
+    i18n: 
+  icon: fa-plus-square
