@@ -39,6 +39,9 @@ ga:  # if you wanna this feature, go to https://www.google.com/analytics/ to get
 go:
   # id:
 
+disqus:  # if you wanna comment feature, go to https://disqus.com/ to get your configuration; if not, comment following two lines.
+  name: aidai-blog
+
 ## growingIO
 gio:  # if you wanna this feature, go to https://www.growingio.com/ to get your configuration; if not, comment following line.
   # id:
