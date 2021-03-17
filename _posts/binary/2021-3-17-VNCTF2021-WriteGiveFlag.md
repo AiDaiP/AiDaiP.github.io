@@ -9,6 +9,9 @@ tags: []
 icon: icon-html
 ---
 # VNCTF2021-WriteGiveFlag
+
+# 0x00
+
 [X-NUCA2020 Final](https://aidaip.github.io/life/2020/12/16/X-NUCA-Final-WriteUp.html) 有一道 AWD-CryptoPwn（lemon），用到了 `read()` 返回 0 泄露数据，👴🚪都是龙鸣，比赛现场没一个人想起来 `shutdown()`，手动 ctrl+d ☀全场打了一下午。
 
 赛后查 [pwntools 文档](https://docs.pwntools.com/en/stable/tubes.html?highlight=EOF#pwnlib.tubes.tube.tube.shutdown)，👴是弱智
