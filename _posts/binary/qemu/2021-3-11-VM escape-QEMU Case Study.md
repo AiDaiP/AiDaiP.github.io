@@ -5,7 +5,7 @@ date:   2021-3-11
 desc: ""
 keywords: ""
 categories: [Binary]
-tags: []
+tags: [qemu]
 icon: icon-html
 ---
 
